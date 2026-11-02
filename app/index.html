@@ -158,7 +158,8 @@ tbody tr:hover td{background:#fbf4e6}
 <section id="settings" class="hide">
   <div class="card"><h3>Business</h3><form id="fs"><label>Business name<input id="sbn" placeholder="Everafter Events"></label><label>Currency label<input id="scu" placeholder="Rs" style="width:90px"></label><label>Low-stock alert at (in warehouse)<input id="slo" type="number" min="0" placeholder="0 = off" style="width:150px"></label><label style="flex-basis:100%">Zoho Books invoice link (opens each invoice in Zoho Books)<input id="szl" placeholder="https://books.zoho.com/app/YOUR_ORG_ID#/invoices" style="width:460px;max-width:100%"></label><button class="b">Save settings</button></form><div id="sm" class="msg" style="margin-top:8px"></div></div>
  <div class="card"><h3>Sync</h3><p class="mu" style="margin:0 0 10px;font-size:13px">The app works offline and keeps its own copy of everything. Changes sync with your Google Sheet whenever the device is online.</p><form id="fcfg"><label>Sync URL (Apps Script web app)<input id="cfu" placeholder="https://script.google.com/macros/s/.../exec" style="width:380px;max-width:100%"></label><label>Access key<input id="cfk" type="password" autocomplete="off" style="width:230px"></label><label>This device is called<input id="cfd" placeholder="e.g. Warehouse phone" style="width:190px"></label><button class="b">Save and sync</button></form><div id="cfs" class="msg" style="margin-top:8px"></div></div>
- <div class="card"><h3>Data</h3><p class="mu" style="margin:0 0 10px">Download your item list as a CSV file. It uses the same columns as the importer.</p><button class="g" id="ex" type="button">Export items (CSV)</button></div>
+ <div class="card"><h3>About and version history</h3><div class="row" style="margin-bottom:10px"><b id="vcur"></b><span id="vst" class="msg"></span><button class="g" type="button" id="vchk">Check for updates</button><button class="b hide" type="button" id="vrel">Reload to update</button></div><div id="vlog"></div></div>
+<div class="card"><h3>Data</h3><p class="mu" style="margin:0 0 10px">Download your item list as a CSV file. It uses the same columns as the importer.</p><button class="g" id="ex" type="button">Export items (CSV)</button></div>
 </section>
 
 <section id="item" class="hide">
@@ -855,4 +856,22 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  const id=rid();openEv[id]=true;
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
+
+const APP_VERSION="1.4.0";
+const CHANGES=[
+ ["1.4.0","2 Nov 2026",["Create an event from an invoice (+ Event on the Invoices page)","Version history and update check in Settings"]],
+ ["1.3.1","2 Nov 2026",["Draft invoices now show on the calendar and in the invoice list","Fixed overdue invoices covering the whole calendar"]],
+ ["1.3.0","1 Nov 2026",["Open the invoice in Zoho Books from the invoice list","Billing location on invoices","Clone a picklist and tick items off a loading checklist","Camera photos in Repairs; light theme only"]],
+ ["1.2.0","1 Nov 2026",["Picklists that turn into Out and In movements","Repairs module","Kanban board for every module","Filters and saved filters","Longer availability preview"]],
+ ["1.1.0","31 Oct 2026",["Zoho-Books-style item pages with photos and history","CSV import and export","Invoices module sorted by due date","Calendar search","Sync with Google Sheets, works offline"]],
+ ["1.0.0","30 Oct 2026",["Stock, events, warehouse movements and calendar"]]];
+function renderVer(){$("vcur").textContent="Version "+APP_VERSION;$("vlog").innerHTML=CHANGES.map(c=>`<div style="margin-bottom:12px"><b>${c[0]}</b> <span class="mu">${c[1]}${c[0]===APP_VERSION?" \u00b7 installed":""}</span><ul style="margin:4px 0 0;padding-left:20px">${c[2].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}
+async function checkVer(manual){const st=$("vst");if(manual)st.textContent="Checking\u2026";
+ try{const r=await fetch("version.json?"+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json(),n=String(j.version||"");
+  if(n&&n!==APP_VERSION){st.innerHTML='<span class="warn">Version '+esc(n)+' is available.</span>';$("vrel").classList.remove("hide");say("A new version ("+n+") is available. See Settings.")}
+  else{st.innerHTML='<span class="ok">You have the latest version.</span>';$("vrel").classList.add("hide")}}
+ catch(e){st.textContent=manual?"Could not check (offline, or this copy cannot reach the website).":""}}
+$("vchk").onclick=()=>checkVer(true);
+$("vrel").onclick=async()=>{try{for(const r of await navigator.serviceWorker.getRegistrations())await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()};
+renderVer();setTimeout(()=>checkVer(false),4000);
 </script></body></html>
