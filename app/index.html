@@ -926,8 +926,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.6.4";
+const APP_VERSION="1.6.5";
 const CHANGES=[
+ ["1.6.5","3 Nov 2026",["Item names now come only from the Ref on whatapp column of the item sheet"]],
  ["1.6.4","3 Nov 2026",["Item list import understands Opening Stock, Item Name (or Ref on whatsapp when the name is empty), Sub-Category, Notes and Rate columns","Item list can come from any tab or any Google Sheet file (set in Code.gs)"]],
  ["1.6.3","3 Nov 2026",["Planner days now stretch to fill the screen, so a shorter range gives wider days"]],
  ["1.6.2","3 Nov 2026",["Fixed the Add button alignment in Team & resources"]],
@@ -1055,7 +1056,7 @@ function applyItemList(rows){
  const g=(o,...k)=>{for(const x of k)if(o[x]!==undefined&&String(o[x]).trim()!=="")return String(o[x]).trim();return""};
  const byKey={};Object.entries(S.items).forEach(([id,v])=>{if(v.sku)byKey["s:"+v.sku.toLowerCase()]=id;byKey["n:"+v.name.toLowerCase()]=id});
  let add=0,upd=0;
- for(const o of rows){const name=g(o,"name","item","item_name","product","ref_on_whatapp","ref_on_whatsapp","ref");if(!name)continue;
+ for(const o of rows){const hasRef=["ref_on_whatapp","ref_on_whatsapp","ref"].some(k=>k in o),name=hasRef?g(o,"ref_on_whatapp","ref_on_whatsapp","ref"):g(o,"name","item","item_name","product");if(!name)continue;
   const sku=g(o,"sku","code","item_code"),cat=g(o,"category","type","group"),qs=g(o,"quantity","qty","total","stock","stock_on_hand","opening_stock"),ps=g(o,"price","rate","rental_price","unit_price"),unit=g(o,"unit","uom"),desc=g(o,"description","desc","notes"),rs=g(o,"reorder_level","reorder","reorder_point"),sub=g(o,"sub_category","subcategory","sub_type");
   const snap=JSON.stringify([name,sku,cat,qs,ps,unit,desc,rs,sub]),id=(sku&&byKey["s:"+sku.toLowerCase()])||byKey["n:"+name.toLowerCase()],ex=id?S.items[id]:null;
   if(ex&&ex.sh===snap)continue;
