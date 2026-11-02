@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Everafter Inventory</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#2a211b"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#161a22;--mu:#667085;--bd:#e3e6ec;--ac:#8f6a2e;--acx:#fff;--acs:#f6efe2;--bad:#c0392b;--ok:#1f8a58;--warn:#b26a00;--sb:#171a23;--sbt:#aab0be;--sh:0 1px 2px rgba(16,24,40,.05),0 1px 3px rgba(16,24,40,.06);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 Inter,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.app{display:flex;min-height:100vh}
+.sb{width:236px;flex:none;background:var(--sb);color:#fff;padding:20px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:0 6px}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font:600 18px Georgia,serif;flex:none}
+.brand b{display:block;font:600 15px/1.2 Georgia,serif;letter-spacing:.2px}.brand span{font-size:11px;color:var(--sbt);letter-spacing:.08em;text-transform:uppercase}
+nav{display:flex;flex-direction:column;gap:2px}
+nav button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;color:var(--sbt);padding:9px 12px;border-radius:8px;font:inherit;cursor:pointer;text-align:left;white-space:nowrap}
+nav button:hover{background:rgba(255,255,255,.05);color:#fff}nav button.on{background:rgba(255,255,255,.1);color:#fff}
+nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mn{flex:1;min-width:0}
+.tb{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 32px 4px;flex-wrap:wrap}
+.tb h2{margin:0;font-size:22px;font-weight:650;letter-spacing:-.01em}
+.bd2{padding:14px 32px 48px;max-width:1120px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.card h3{margin:0 0 10px;font-size:15px}
+form{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+label{display:flex;flex-direction:column;font-size:12px;font-weight:500;color:var(--mu);gap:4px}
+input,select{font:inherit;font-size:14px;height:36px;padding:0 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);min-width:0}
+input[type=file]{height:auto;padding:5px}input[type=checkbox]{height:auto}
+input:focus,select:focus,textarea:focus{outline:2px solid color-mix(in srgb,var(--ac) 45%,transparent);border-color:var(--ac)}
+textarea{font:inherit;width:100%;min-height:80px;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);margin:6px 0}
+button.b{background:var(--ac);color:var(--acx);border:0;border-radius:8px;height:36px;padding:0 16px;font:inherit;font-weight:600;cursor:pointer}
+button.b:hover{filter:brightness(1.08)}
+button.g{background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer}
+button.g:hover{border-color:var(--ac)}button.g.on{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+.lk{background:none;border:0;color:var(--tx);font:inherit;font-weight:600;padding:0;cursor:pointer;text-align:left}.lk:hover{color:var(--ac)}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);text-align:left;font-weight:600}
+th,td{padding:10px 10px;border-bottom:1px solid var(--bd);white-space:nowrap}tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:color-mix(in srgb,var(--ac) 6%,transparent)}
+td.n,th.n{text-align:right}td input[type=number]{width:76px}
+.pill{font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--acs);color:var(--ac)}
+.bad{color:var(--bad)}.ok{color:var(--ok)}.warn{color:var(--warn)}.mu{color:var(--mu)}
+.msg{font-size:13px;min-height:18px}#note{color:var(--warn)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.sum.card{background:none;border:0;box-shadow:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.sum div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;box-shadow:var(--sh)}.sum b{display:block;font-size:26px;letter-spacing:-.02em}
+.tiles{display:flex;gap:10px;flex-wrap:wrap}.tiles div{flex:1;min-width:110px;background:var(--bg);border-radius:10px;padding:10px 12px}.tiles b{display:block;font-size:20px}
+.th{width:40px;height:40px;border-radius:8px;object-fit:cover;background:var(--acs);flex:none}
+.th.ph{display:grid;place-items:center;color:var(--ac);font-weight:700}.th.lg{width:96px;height:96px;border-radius:14px;font-size:34px}
+.nm{display:flex;align-items:center;gap:12px}.hdr{display:flex;gap:16px;align-items:center}.ttl{font-size:20px;letter-spacing:-.01em}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:8px;overflow:hidden}.seg button{background:none;border:0;padding:8px 18px;font:inherit;color:var(--mu);cursor:pointer}.seg button.on{background:var(--ac);color:var(--acx)}
+details summary{cursor:pointer;font-weight:600}
+.hide{display:none!important}
+.ct{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.ct b{min-width:150px;text-align:center}
+.mg{display:grid;grid-template-columns:repeat(7,minmax(90px,1fr));min-width:640px;border-top:1px solid var(--bd);border-left:1px solid var(--bd)}
+.mg>div{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);min-height:88px;padding:4px;font-size:12px}
+.mg .hd{min-height:0;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-size:11px;text-align:center;font-weight:600}
+.mg .out{opacity:.4}.mg .td{background:color-mix(in srgb,var(--ac) 10%,transparent)}
+.chip{display:block;width:100%;text-align:left;border:0;border-radius:5px;color:#fff;padding:2px 6px;margin-top:2px;font:inherit;font-size:11px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl td,.pl th{text-align:center;padding:6px 4px;font-size:12px;min-width:32px}.pl td:first-child,.pl th:first-child{text-align:left;position:sticky;left:0;background:var(--card);min-width:150px;padding-left:8px}.pl .td{outline:1px solid var(--ac)}
+.flush{padding:0;overflow:hidden}
+.ltb{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bd);flex-wrap:wrap;align-items:center}.lt,.la{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.lt select{font-weight:600;font-size:15px}
+.rw{cursor:pointer}.off{opacity:.65}.pill.off{background:var(--bd);color:var(--mu)}
+.split{display:grid;grid-template-columns:290px 1fr;gap:14px;align-items:start}
+.il{max-height:calc(100vh - 110px);overflow:auto;position:sticky;top:12px;margin:0}
+.ilh{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--card);z-index:1}
+.ili{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd);padding:10px 12px;font:inherit;color:var(--tx);cursor:pointer}
+.ili:hover{background:color-mix(in srgb,var(--ac) 6%,transparent)}.ili.on{background:var(--acs);box-shadow:inset 3px 0 0 var(--ac)}.ili small{display:block;color:var(--mu);font-size:12px}
+.dh{display:flex;justify-content:space-between;gap:12px;padding:16px;flex-wrap:wrap;align-items:flex-start}.acts{display:flex;gap:8px;flex-wrap:wrap}.dng{color:var(--bad)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--bd);padding:0 12px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:inherit;color:var(--mu);cursor:pointer;white-space:nowrap}.tabs button.on{color:var(--tx);border-color:var(--ac);font-weight:600}
+.tbd{padding:16px}.tbd h4{margin:22px 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mu)}.tbd h4:first-child{margin-top:0}
+.ov2{display:grid;grid-template-columns:1fr 220px;gap:20px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;margin:0}.kv dt{color:var(--mu)}.kv dd{margin:0;word-break:break-word}
+.phbox{aspect-ratio:1;border:1px dashed var(--bd);border-radius:12px;overflow:hidden;display:grid;place-items:center;background:var(--bg)}.phbox img{width:100%;height:100%;object-fit:cover}
+.ph0{text-align:center;color:var(--ac);font-size:48px;font-weight:700}.ph0 small{display:block;font-size:12px;color:var(--mu);font-weight:400}
+.chk{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:12px}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;align-items:start}.fg .w2{grid-column:1/-1}.fg input,.fg select{width:100%}.fg input[type=checkbox]{width:auto}
+.mg .hl{outline:2px solid var(--ac);outline-offset:-2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:50;padding:16px}
+.dlg{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;width:min(420px,100%);flex-direction:column;align-items:stretch;gap:12px}.dlg input,.dlg select{width:100%}.dlg h3{margin:0}
+.chip.inv{background:var(--card);color:var(--tx);border:1px dashed var(--ac)}.chip.inv.ov{border-color:var(--bad);color:var(--bad)}.chip.inv.pd{border-color:var(--ok);color:var(--ok);opacity:.7}
+.fpanel{padding:14px 16px;border-bottom:1px solid var(--bd);background:var(--bg)}.fpanel.card{border:1px solid var(--bd)}
+.fr{margin-bottom:8px}.fr select,.fr input{max-width:210px}
+.fchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:99px;padding:2px 4px 2px 12px;background:var(--card)}.fchip.on{border-color:var(--ac);background:var(--acs)}
+.kb{display:flex;gap:12px;overflow-x:auto;align-items:flex-start;padding:2px 2px 14px;margin-top:2px}
+.kc{flex:1 0 250px;max-width:340px;min-width:250px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:8px;min-height:110px}
+.kc.dz{outline:2px dashed var(--ac);outline-offset:-2px;background:var(--acs)}
+.kh{display:flex;justify-content:space-between;align-items:center;padding:4px 6px 8px;font-weight:600}
+.kcard{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer;box-shadow:var(--sh);font-size:13px}
+.kcard:hover{border-color:var(--ac)}.kcard[draggable=true]{cursor:grab}.kcard b{font-size:14px}
+.la .seg button{padding:6px 12px}
+.avt td,.avt th{padding:6px 5px;min-width:30px}
+@media print{.sb,.tb,.la,.ltb,.acts,nav,button,.ov{display:none!important}.app{display:block}body{background:#fff;color:#000}.card{border:0;box-shadow:none}.bd2{padding:0;max-width:none}}
+.th.md{width:56px;height:56px;border-radius:10px;font-size:22px}
+@media(max-width:820px){.app{flex-direction:column}.sb{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:10px 12px;gap:12px;overflow-x:auto}.brand span{display:none}nav{flex-direction:row}nav button{width:auto;padding:8px 10px}.tb{padding:16px 16px 0}.bd2{padding:12px 16px 40px}.split{grid-template-columns:1fr}.il{display:none}.ov2{grid-template-columns:1fr}.kv{grid-template-columns:110px 1fr}}
+
+/* ===== picklist checklist ===== */
+.ldr{display:flex;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--bd);cursor:pointer;border-radius:8px}.ldr:last-of-type{border-bottom:0}.ldr.done{background:#eef7f1}
+.ldbox{width:34px;height:34px;border-radius:10px;border:2px solid #d8cbb4;background:#fff;display:inline-grid;place-items:center;font-size:20px;color:#fff;cursor:pointer;flex:none;padding:0}.ldbox.on{background:var(--ok);border-color:var(--ok)}
+.bar{height:8px;border-radius:99px;background:var(--bd);overflow:hidden;margin:10px 0 6px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#c29a4b,var(--ok))}
+@media print{.ldbox{display:inline-grid!important}}
+/* ===== refreshed look ===== */
+:root{--bg:#f6f1e9;--card:#fffdf9;--tx:#2b241e;--mu:#857a6d;--bd:#eadfce;--ac:#a67c37;--acx:#fff;--acs:#f7edd8;--bad:#b8412f;--ok:#2e7d57;--warn:#b7701a;--sb:#2a211b;--sbt:#cbbba6;--sh:0 1px 2px rgba(60,40,10,.04),0 8px 22px rgba(60,40,10,.06);color-scheme:light}
+body{background:radial-gradient(1100px 480px at 88% -8%,#fbf1da 0%,transparent 62%),var(--bg)}
+.sb{background:linear-gradient(185deg,#33281f 0%,#201813 100%)}
+.logo{background:linear-gradient(135deg,#dcb86d,#a67c37);color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.brand b{font-size:16px;letter-spacing:.3px}.brand span{color:#b79b6a}
+nav button{border-radius:10px;padding:10px 12px;transition:background .15s}
+nav button.on{background:linear-gradient(90deg,rgba(220,184,109,.24),rgba(220,184,109,.04));color:#fff;box-shadow:inset 3px 0 0 #dcb86d}
+.tb{padding-top:26px}.tb h2{font-family:Georgia,"Times New Roman",serif;font-size:28px;font-weight:600;letter-spacing:-.01em}
+#pdt{font-size:13px;margin-top:2px}
+.card{border-radius:16px}
+.sum div{position:relative;overflow:hidden;border-radius:16px;padding:16px 18px 16px 22px}
+.sum div::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(#dcb86d,#a67c37)}
+.sum b{font-family:Georgia,serif;font-size:28px;font-weight:600}
+.tiles div{background:var(--acs);border:1px solid #f0e2c3}
+button.b{background:linear-gradient(135deg,#c29a4b,#a67c37);border-radius:10px;box-shadow:0 2px 8px rgba(166,124,55,.35)}
+button.g{border-radius:10px;background:#fff}
+input,select,textarea{border-radius:10px;background:#fff}
+th{background:#fbf6ec;color:#8d7f6c}
+thead th:first-child{border-top-left-radius:8px}thead th:last-child{border-top-right-radius:8px}
+tbody tr:hover td{background:#fbf4e6}
+.pill{background:var(--acs);color:#8a6422;border:1px solid #efdfbb}.pill.off{background:#f0ebe2;color:var(--mu);border-color:var(--bd)}
+.kc{background:#faf4e9;border-radius:14px}.kcard{border-radius:12px}
+.seg{border-radius:10px;background:#fff}
+.dlg{max-height:92vh;overflow:auto;border-radius:16px;box-shadow:0 20px 60px rgba(40,25,5,.35)}
+.ov{backdrop-filter:blur(3px)}
+.th{border-radius:10px}.th.ph{background:linear-gradient(135deg,#f7edd8,#efdcae);color:#8a6422}
+.zl{color:var(--ac);text-decoration:none;font-weight:600}.zl:hover{text-decoration:underline}
+.rth{width:54px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--bd);display:inline-block;background:var(--acs);cursor:zoom-in}
+.ths{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.phs{display:flex;gap:8px;flex-wrap:wrap}
+.pth{position:relative;display:inline-block}
+.pdel{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:0;background:var(--bad);color:#fff;cursor:pointer;font-size:13px;line-height:1;padding:0}
+.pbtn{display:inline-flex;flex-direction:row;align-items:center;gap:6px;cursor:pointer;color:var(--tx);font-size:13px;font-weight:500;padding:7px 12px;border:1px solid var(--bd);border-radius:10px;background:#fff}
+.pbtn:hover{border-color:var(--ac)}.pbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+</style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
+<nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
+<main class="mn"><header class="tb"><div><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div style="display:flex;align-items:center;gap:10px"><span id="note" class="msg"></span><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
+
+<section id="stock">
+ <div class="card flush">
+  <div class="ltb"><div class="lt"><select id="lf"><option value="all">All Items</option><option value="active">Active Items</option><option value="inactive">Inactive Items</option><option value="low">Low stock</option></select><input id="q" placeholder="Search name, SKU or category" style="width:260px;max-width:100%"></div><div class="la"><button class="b" data-nw="1" type="button">+ New</button><button class="g" id="im" type="button">Import</button><button class="g" id="ex2" type="button">Export</button></div></div>
+  <div class="sc"><table><thead><tr><th>Name</th><th>SKU</th><th>Category</th><th class="n">Rate</th><th class="n">Stock on hand</th><th class="n">In warehouse</th><th class="n">Reorder level</th></tr></thead><tbody id="st"></tbody></table></div>
+ </div>
+ <div class="card hide" id="imc"><h3>Import items from CSV</h3>
+  <p class="mu" style="font-size:13px;margin-top:0">First row must be a header. Only <b>name</b> is required. Other recognised columns: <b>category</b>, <b>quantity</b>, <b>sku</b>, <b>price</b>, <b>unit</b>, <b>description</b>, <b>reorder level</b>. Existing items (same SKU, otherwise same name) are updated, not duplicated.</p>
+  <input type="file" id="cf" accept=".csv,text/csv,text/plain"><p class="mu" style="margin:8px 0 0;font-size:13px">or paste CSV text:</p>
+  <textarea id="ct" placeholder="name,category,quantity,sku,price&#10;Gold chiavari chair,Seating,200,CH-001,150"></textarea><button class="b" id="cb" type="button">Import pasted CSV</button><div id="cm" class="msg"></div></div>
+ <datalist id="cats"></datalist>
+</section>
+
+<section id="events" class="hide">
+ <div class="card"><form id="fe"><label>Event / project<input id="en" required></label><label>Client<input id="ec"></label><label>Start (out)<input id="es" type="date" required></label><label>End (back)<input id="ee" type="date" required></label><button class="b">Add event</button></form></div>
+ <div id="el"></div>
+</section>
+
+<section id="settings" class="hide">
+  <div class="card"><h3>Business</h3><form id="fs"><label>Business name<input id="sbn" placeholder="Everafter Events"></label><label>Currency label<input id="scu" placeholder="Rs" style="width:90px"></label><label>Low-stock alert at (in warehouse)<input id="slo" type="number" min="0" placeholder="0 = off" style="width:150px"></label><label style="flex-basis:100%">Zoho Books invoice link (opens each invoice in Zoho Books)<input id="szl" placeholder="https://books.zoho.com/app/YOUR_ORG_ID#/invoices" style="width:460px;max-width:100%"></label><button class="b">Save settings</button></form><div id="sm" class="msg" style="margin-top:8px"></div></div>
+ <div class="card"><h3>Sync</h3><p class="mu" style="margin:0 0 10px;font-size:13px">The app works offline and keeps its own copy of everything. Changes sync with your Google Sheet whenever the device is online.</p><form id="fcfg"><label>Sync URL (Apps Script web app)<input id="cfu" placeholder="https://script.google.com/macros/s/.../exec" style="width:380px;max-width:100%"></label><label>Access key<input id="cfk" type="password" autocomplete="off" style="width:230px"></label><label>This device is called<input id="cfd" placeholder="e.g. Warehouse phone" style="width:190px"></label><button class="b">Save and sync</button></form><div id="cfs" class="msg" style="margin-top:8px"></div></div>
+ <div class="card"><h3>Data</h3><p class="mu" style="margin:0 0 10px">Download your item list as a CSV file. It uses the same columns as the importer.</p><button class="g" id="ex" type="button">Export items (CSV)</button></div>
+</section>
+
+<section id="item" class="hide">
+ <p style="margin:0 0 10px"><button class="g" data-bk="1">‹ All items</button></p>
+ <div class="split"><aside class="card flush il" id="il"></aside><div id="ir"></div></div>
+ <datalist id="units"><option value="pcs"><option value="set"><option value="pair"><option value="m"><option value="kg"></datalist>
+</section>
+
+<section id="cal" class="hide">
+ <div class="card"><div class="ct"><input id="cs" type="search" placeholder="Search item, client, invoice or date (e.g. Smith, chair, INV-0012, 15/12/2026)" style="flex:1;min-width:220px"></div><div class="ct"><button class="g" data-cn="-1">‹</button><b id="cl"></b><button class="g" data-cn="1">›</button><button class="g" data-ct="1">Today</button><span style="flex:1"></span><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="cinv" checked> Show invoices</label><button class="g" data-cm="month">Month</button><button class="g" data-cm="plan">Planning</button></div><div id="cr"></div><div id="cri"></div><div class="sc" id="cv"></div><p class="mu" style="font-size:12px;margin:8px 0 0">Month: events across the month — tap one to open it. Planning: pieces reserved per item per day; red means more reserved than you own.</p></div>
+</section>
+
+<section id="inv" class="hide">
+ <div class="sum card" id="isum"></div>
+ <div class="card flush">
+  <div class="ltb"><div class="lt"><select id="invf"><option value="unpaid">Unpaid</option><option value="overdue">Overdue</option><option value="soon">Due in 7 days</option><option value="paid">Paid</option><option value="all">All invoices</option></select><input id="invq" placeholder="Search invoice, customer or date" style="width:250px;max-width:100%"><select id="invs"><option value="due">Sort: due date, earliest first</option><option value="dued">Sort: due date, latest first</option><option value="amt">Sort: balance, highest first</option><option value="cust">Sort: customer A\u2013Z</option></select></div><div class="la"><span id="invlast" class="mu" style="font-size:12px"></span><button class="g" id="invi" type="button">Import from Zoho Books</button></div></div>
+  <div class="sc"><table><thead><tr><th>Invoice #</th><th>Customer</th><th>Billing location</th><th>Invoice date</th><th>Due date</th><th>Due</th><th class="n">Total</th><th class="n">Balance</th><th>Status</th><th>Picklist</th></tr></thead><tbody id="invt"></tbody></table></div>
+ </div>
+ <div class="card hide" id="invc"><h3>Import invoices from Zoho Books</h3>
+  <p class="mu" style="font-size:13px;margin-top:0">In Zoho Books open <b>Invoices</b>, use the \u22ef menu, then <b>Export Invoices</b> as CSV and upload it here. You can also paste JSON from a Zoho Books custom function (an <code>invoices</code> list using Zoho field names such as <code>invoice_number</code>, <code>customer_name</code>, <code>date</code>, <code>due_date</code>, <code>total</code>, <code>balance</code>, <code>status</code>). Optional: <code>billing_address</code> (or <code>billing_city</code>, <code>billing_country</code> and similar) adds the billing location. Re-importing updates invoices that already exist.</p>
+  <input type="file" id="invfile" accept=".csv,.json,text/csv,application/json,text/plain"><p class="mu" style="margin:8px 0 0;font-size:13px">or paste CSV / JSON:</p><textarea id="invtxt"></textarea>
+  <label style="flex-direction:row;align-items:center;gap:8px;margin-bottom:10px"><input type="checkbox" id="invr"> Replace the current list (remove invoices that are not in this import)</label>
+  <button class="b" id="invb" type="button">Import pasted data</button><div id="invm" class="msg"></div></div>
+</section>
+
+<section id="pl" class="hide">
+ <div class="card flush" id="plL">
+  <div class="ltb"><div class="lt"><select id="plf"><option value="open">Open picklists</option><option value="draft">Drafts</option><option value="out">Out on site</option><option value="done">Returned</option><option value="all">All picklists</option></select><input id="plq" placeholder="Search number, event, invoice or item" style="width:270px;max-width:100%"></div><div class="la"><button class="b" data-npl="" type="button">+ New picklist</button></div></div>
+  <div class="sc"><table><thead><tr><th>Picklist</th><th>Event</th><th>Invoice</th><th class="n">Pieces</th><th>Created</th><th>Status</th><th></th></tr></thead><tbody id="plt"></tbody></table></div>
+ </div>
+ <div id="plE" class="hide"></div>
+</section>
+
+<section id="rp" class="hide">
+ <div class="sum card" id="rsum"></div>
+ <div class="card flush">
+  <div class="ltb"><div class="lt"><select id="rpf"><option value="open">Open repairs</option><option value="reported">Reported</option><option value="in_repair">In repair</option><option value="repaired">Repaired</option><option value="written_off">Written off</option><option value="all">All records</option></select><input id="rpsq" placeholder="Search item, issue or person" style="width:240px;max-width:100%"></div><div class="la"><button class="b" data-nr="" type="button">+ Report repair</button></div></div>
+  <div class="sc"><table><thead><tr><th>Ref</th><th>Item</th><th class="n">Qty</th><th>Issue</th><th>Status</th><th>Reported</th><th>Assigned to</th><th class="n">Cost</th><th></th></tr></thead><tbody id="rpt"></tbody></table></div>
+ </div>
+</section>
+
+<section id="moves" class="hide">
+ <div class="card"><form id="fm"><label>Event<select id="me" required></select></label><label>Item<select id="mi" required></select></label><label>Movement<select id="mt"><option value="out">Out of warehouse</option><option value="in">Returned</option></select></label><label>Qty<input id="mq" type="number" min="1" value="1" style="width:80px" required></label><label>Date<input id="md" type="date" required></label><label>Note<input id="mn" placeholder="optional"></label><button class="b">Log</button></form><div id="mm" class="msg"></div></div>
+ <div class="card sc"><table><thead><tr><th>Date</th><th>Event</th><th>Item</th><th>Type</th><th class="n">Qty</th><th>Note</th><th></th></tr></thead><tbody id="ml"></tbody></table></div>
+</section>
+</div></main>
+<div id="ovr" class="ov hide"><form id="frp" class="dlg"><h3 id="rph">Report repair</h3><label>Item<select id="rpi" required></select></label><div class="row"><label style="flex:1">Quantity<input id="rpn" type="number" min="1" value="1" required></label><label style="flex:1">Reported on<input id="rpd" type="date" required></label></div><label>What is wrong?<input id="rpis" required placeholder="e.g. cracked leg, torn fabric"></label><label>Assigned to / repairer<input id="rpa"></label><label>Estimated cost<input id="rpc" type="number" min="0" step="any"></label><label>Notes<input id="rpno"></label><div>Photos<div id="rpph" class="phs" style="margin:6px 0"></div><div class="row"><label class="pbtn"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Take photo<input id="rpcam" type="file" accept="image/*" capture="environment" hidden></label><label class="pbtn">Choose from gallery<input id="rppick" type="file" accept="image/*" multiple hidden></label></div></div><div id="rpm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form>
+<form id="frs" class="dlg hide"><h3 id="rsh">Resolve repair</h3><label>Outcome<select id="rso"><option value="repaired">Repaired \u2014 back in stock</option><option value="written_off">Cannot be repaired \u2014 write off</option></select></label><div class="row"><label style="flex:1">Final cost<input id="rsc" type="number" min="0" step="any"></label><label style="flex:1">Date<input id="rsd" type="date" required></label></div><label>Notes<input id="rsn"></label><div id="rsm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form></div>
+<div id="lb" class="ov hide" style="z-index:60"><img id="lbi" alt="" style="max-width:100%;max-height:92vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"></div>
+<div id="ov" class="ov hide"><form id="fadj" class="dlg"><h3>Adjust stock</h3><div id="adjn" class="mu"></div><label>Change in quantity (+ to add, − to remove)<input id="adq" type="number" step="1" required></label><label>Reason<select id="adr"><option>New purchase</option><option>Damaged</option><option>Lost</option><option>Recount</option><option>Other</option></select></label><label>Notes<input id="adn"></label><div id="adm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-cx="1">Cancel</button></div></form></div></div>
+<script>
+const S={items:{},events:{},movements:{},settings:{},itemlog:{},invoices:{},picklists:{},repairs:{},filters:{}};let assets=true,db=null,openEv={},armed=null;
+// ---------- offline storage + Google Sheets sync ----------
+const CFG={get url(){try{return localStorage.getItem("ev_url")||""}catch(e){return""}},get key(){try{return localStorage.getItem("ev_key")||""}catch(e){return""}},get dev(){try{return localStorage.getItem("ev_dev")||""}catch(e){return""}}};
+let idb=null,syncing=false,syncTimer=null,lastErr="",lastSync=0;const PH={},phBusy=new Set();
+const idbp=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open("everafter",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("rec",{keyPath:["c","id"]});d.createObjectStore("meta",{keyPath:"k"});d.createObjectStore("photos",{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+const tx=(st,mode)=>idb.transaction(st,mode||"readonly").objectStore(st);
+const saveMeta=(k,v)=>{if(idb)tx("meta","readwrite").put({k,v})};
+const getMeta=async k=>{const r=await idbp(tx("meta").get(k));return r?r.v:undefined};
+function saveRec(c,id,data,deleted){if(c==="invoices"){saveMeta("invoices",S.invoices);return}if(idb)tx("rec","readwrite").put({c,id,updated:Date.now(),deleted:deleted?1:0,data,dirty:1})}
+async function loadLocal(){idb=await openDB();(await idbp(tx("rec").getAll())).forEach(r=>{if(!r.deleted)S[r.c][r.id]=r.data});const inv=await getMeta("invoices");if(inv)S.invoices=inv;lastSync=(await getMeta("lastSync"))||0}
+const online=()=>navigator.onLine!==false;
+function blobUrl(mime,b64){try{const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return URL.createObjectURL(new Blob([u],{type:mime}))}catch(e){return`data:${mime};base64,${b64}`}}
+const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=()=>rej(new Error("Could not read the image"));r.readAsDataURL(b)});
+async function uploadPhoto(file){const b64=await blobB64(await shrink(file)),id="tmp_"+rid();await idbp(tx("photos","readwrite").put({id,mime:"image/jpeg",b64,pending:1}));PH[id]=blobUrl("image/jpeg",b64);return id}
+function photoSrc(id){if(PH[id])return PH[id];if(idb&&!phBusy.has(id)){phBusy.add(id);loadPhoto(id)}return""}
+async function loadPhoto(id){let ok=false;try{let p=await idbp(tx("photos").get(id));if(!p&&online()&&CFG.url){const r=await api({action:"photo_get",id});p={id,mime:r.mime,b64:r.b64};await idbp(tx("photos","readwrite").put(p))}if(p){PH[id]=blobUrl(p.mime,p.b64);ok=true;render()}}catch(e){}setTimeout(()=>phBusy.delete(id),ok?0:60000)}
+async function api(body){const r=await fetch(CFG.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({key:CFG.key,...body})});if(!r.ok)throw new Error("Server error "+r.status);const j=await r.json();if(j.error)throw new Error(j.error==="unauthorized"?"Wrong access key":j.error);return j}
+const schedSync=()=>{clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(),2500);updSyn()};
+async function updSyn(){const b=$("syn");if(!b||!idb)return;
+ const n=(await idbp(tx("rec").getAll())).filter(r=>r.dirty).length+(await idbp(tx("photos").getAll())).filter(p=>p.pending).length;let t,bad=false;
+ if(syncing)t="Syncing\u2026";else if(!CFG.url)t="Not connected";else if(!online())t="Offline"+(n?" \u00b7 "+n+" pending":"");else if(lastErr){t="Sync failed";bad=true}else t=n?"Sync \u00b7 "+n+" pending":(lastSync?"Synced "+new Date(lastSync).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):"Sync");
+ b.textContent=t;b.style.color=bad?"var(--bad)":"";
+ const s=$("cfs");if(s)s.innerHTML=lastErr?`<span class="bad">${esc(lastErr)}</span>`:CFG.url?`${online()?"Online":"Offline"}. ${n} change${n===1?"":"s"} waiting to sync.${lastSync?" Last sync "+new Date(lastSync).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})+".":""}`:"Not connected yet."}
+async function syncNow(manual){
+ if(syncing)return;
+ if(!CFG.url||!CFG.key){if(manual)say("Add the sync URL and access key in Settings first.");updSyn();return}
+ if(!online()){if(manual)say("You are offline. Changes are saved on this device and will sync later.");updSyn();return}
+ syncing=true;lastErr="";updSyn();
+ try{
+  for(const p of (await idbp(tx("photos").getAll())).filter(x=>x.pending)){
+   const r=await api({action:"photo_put",b64:p.b64,mime:p.mime,name:p.id});
+   await idbp(tx("photos","readwrite").put({id:r.id,mime:p.mime,b64:p.b64}));await idbp(tx("photos","readwrite").delete(p.id));
+   PH[r.id]=PH[p.id]||blobUrl(p.mime,p.b64);
+   for(const [id,it] of Object.entries(S.items))if(it.photo===p.id){const d={...it,photo:r.id};S.items[id]=d;saveRec("items",id,d,0)}
+   for(const [id,rp] of Object.entries(S.repairs))if((rp.photos||[]).includes(p.id)){const d={...rp,photos:rp.photos.map(x=>x===p.id?r.id:x)};S.repairs[id]=d;saveRec("repairs",id,d,0)}}
+  const dirty=(await idbp(tx("rec").getAll())).filter(r=>r.dirty),changes={};
+  dirty.forEach(r=>{(changes[r.c]=changes[r.c]||[]).push({id:r.id,updated:r.updated,deleted:!!r.deleted,data:r.data})});
+  const res=await api({action:"sync",since:(await getMeta("since"))||0,changes});
+  for(const c of ["items","events","movements","itemlog","settings","picklists","repairs","filters"])for(const row of (res[c]||[])){
+   const loc=await idbp(tx("rec").get([c,row.id]));if(loc&&loc.dirty&&loc.updated>row.updated)continue;
+   await idbp(tx("rec","readwrite").put({c,id:row.id,updated:row.updated,deleted:row.deleted?1:0,data:row.data,dirty:0}));
+   if(row.deleted)delete S[c][row.id];else S[c][row.id]=row.data}
+  for(const r of dirty){const cu=await idbp(tx("rec").get([r.c,r.id]));if(cu&&cu.dirty&&cu.updated===r.updated)await idbp(tx("rec","readwrite").put({...cu,dirty:0}))}
+  if(Array.isArray(res.invoices)){const m={};parseInvoices(JSON.stringify(res.invoices)).forEach(v=>{const d={...v};delete d.key;m[v.key]=d});S.invoices=m;saveMeta("invoices",m)}
+  saveMeta("since",res.now);lastSync=Date.now();saveMeta("lastSync",lastSync);
+ }catch(e){lastErr=String(e&&e.message||e)}
+ syncing=false;render();updSyn()}
+
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10);
+const rid=()=>Math.random().toString(36).slice(2,10);
+function put(c,id,d){S[c][id]=d;saveRec(c,id,d,0);render();schedSync();return Promise.resolve()}
+function del(c,id){delete S[c][id];saveRec(c,id,{},1);render();schedSync();return Promise.resolve()}
+function say(t){$("note").textContent=t}
+const items=()=>Object.entries(S.items).map(([id,v])=>({id,...v})).sort((a,b)=>a.name.localeCompare(b.name));
+const events=()=>Object.entries(S.events).map(([id,v])=>({id,...v})).sort((a,b)=>(a.start||"").localeCompare(b.start||""));
+const moves=()=>Object.entries(S.movements).map(([id,v])=>({id,...v})).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.ts||0)-(a.ts||0));
+function net(itemId,evId){let n=0;for(const m of Object.values(S.movements)){if(m.itemId!==itemId||(evId&&m.eventId!==evId))continue;n+=m.type==="out"?m.qty:-m.qty}return n}
+function reservedElsewhere(itemId,ev){let n=0;for(const [id,e] of Object.entries(S.events)){if(id===ev.id||!e.start||!ev.start)continue;if(e.start<=ev.end&&ev.start<=e.end)n+=(e.reservations||{})[itemId]||0}return n}
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const evName=id=>!id?"\u2014":S.events[id]?S.events[id].name:"(deleted event)";
+const itName=id=>S.items[id]?S.items[id].name:"(deleted item)";
+
+function keepSel(sel,html){const v=sel.value;sel.innerHTML=html;if([...sel.options].some(o=>o.value===v))sel.value=v}
+function render(){
+ const its=items();
+ $("cats").innerHTML=[...new Set(its.map(i=>i.category).filter(Boolean))].map(c=>`<option value="${esc(c)}">`).join("");
+ renderList();
+ const evs=events();
+ $("el").innerHTML=evs.filter(e=>fpass("events",e)).map(e=>{const res=e.reservations||{},ids=Object.keys(res),o=openEv[e.id];
+  const rows=ids.map(iid=>{const r=res[iid],out=net(iid,e.id),it=S.items[iid],av=it?it.total-repQty(iid)-reservedElsewhere(iid,{...e}):0,short=r>av;return`<tr><td>${esc(itName(iid))}</td><td class="n">${r}</td><td class="n">${out}</td><td class="n ${out>0?"warn":"ok"}">${r-out>0?r-out+" to send":out>0?out+" not back":"—"}</td><td class="n ${short?"bad":"mu"}">${short?"short "+(r-av):"ok"}</td><td><button class="g" data-rr="${e.id}|${iid}">×</button></td></tr>`}).join("");
+  return`<div class="card"><div class="top"><div><b>${esc(e.name)}</b> <span class="mu">${esc(e.client)}</span><br><span class="mu">${esc(e.start)} → ${esc(e.end)} · ${ids.length} item types reserved</span></div><div><button class="g" data-tg="${e.id}">${o?"Hide":"Open"}</button> <button class="g" data-de="${e.id}">${armed==="e"+e.id?"Sure?":"Delete"}</button></div></div>${o?`<div class="sc" style="margin-top:8px"><table><thead><tr><th>Item</th><th class="n">Reserved</th><th class="n">Out</th><th class="n">Status</th><th class="n">Availability</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="mu">Nothing reserved yet.</td></tr>`}</tbody></table></div><form data-rf="${e.id}" style="margin-top:8px"><label>Reserve item<select name="i">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("")}</select></label><label>Qty<input name="q" type="number" min="1" value="1" style="width:80px"></label><button class="b">Reserve</button></form>`:""}</div>`}).join("")||`<p class="mu">No events yet. Add your first project above.</p>`;
+ keepSel($("me"),evs.map(e=>`<option value="${e.id}">${esc(e.name)} (${esc(e.start)})</option>`).join(""));
+ keepSel($("mi"),its.filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join(""));
+ $("ml").innerHTML=moves().filter(m=>fpass("moves",m)).map(m=>`<tr><td>${esc(m.date)}</td><td>${esc(evName(m.eventId))}</td><td>${esc(itName(m.itemId))}</td><td class="${m.type==="out"?"warn":"ok"}">${m.type==="out"?"Out":"Returned"}</td><td class="n">${m.qty}</td><td class="mu">${esc(m.note)}</td><td><button class="g" data-dm="${m.id}">${armed==="m"+m.id?"Sure?":"×"}</button></td></tr>`).join("")||`<tr><td colspan="7" class="mu">No movements logged yet.</td></tr>`;
+ renderCal();
+ renderInv();
+ renderPL();renderRP();renderBoards();renderFilters();
+ if(imode)renderItem();
+ applySettings();document.querySelectorAll(".pf").forEach(l=>l.classList.toggle("hide",!assets));
+}
+let cur=null;
+const ph=(it,z)=>it.photo&&photoSrc(it.photo)?`<img class="th ${z}" src="${photoSrc(it.photo)}" alt="">`:`<span class="th ph ${z}">${esc((it.name||"?").trim().charAt(0).toUpperCase())}</span>`;
+const lowT=()=>+((S.settings.main||{}).low)||0;
+const money=v=>{const c=(S.settings.main||{}).cur;return(c?c+" ":"")+v};
+function shrink(file,max=900){return new Promise((res,rej)=>{const rd=new FileReader();rd.onerror=()=>rej(new Error("Could not read that file"));rd.onload=()=>{const im=new Image();im.onerror=()=>rej(new Error("That file is not a readable image"));im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(new Error("Image conversion failed")),"image/jpeg",.82)};im.src=rd.result};rd.readAsDataURL(file)})}
+
+function applySettings(){const st=S.settings.main||{};$("bn").textContent=st.biz||"Everafter Events";document.title=(st.biz||"Everafter Events")+" \u00b7 Inventory";const a=document.activeElement;if(!a||!$("fs").contains(a)){$("sbn").value=st.biz||"";$("scu").value=st.cur||"";$("slo").value=st.low||"";$("szl").value=st.zlink||""}}
+$("fs").onsubmit=e=>{e.preventDefault();put("settings","main",{biz:$("sbn").value.trim(),cur:$("scu").value.trim(),low:parseInt($("slo").value)||0,zlink:$("szl").value.trim().replace(/(#\/invoices)\/[^\/?#]+.*$/,"$1")}).then(()=>{$("sm").innerHTML='<span class="ok">Settings saved.</span>'})};
+$("ex").onclick=()=>{const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"',rows=[["name","category","quantity","sku","price","unit","reorder level","description"],...items().map(i=>[i.name,i.category,i.total,i.sku,i.price,i.unit,i.reorder,i.description])];
+ const bl=new Blob(["\uFEFF"+rows.map(r=>r.map(q).join(",")).join("\r\n")],{type:"text/csv"}),l=document.createElement("a");l.href=URL.createObjectURL(bl);l.download="inventory-items.csv";document.body.appendChild(l);l.click();l.remove()};
+function parseCSV(t){t=t.replace(/^\uFEFF/,"");const first=t.split(/\r?\n/)[0]||"";const nc=first.split(",").length;const sep=first.split(";").length>nc?";":first.split("\t").length>nc?"\t":",";
+ const rows=[];let r=[],f="",q=false;
+ for(let i=0;i<t.length;i++){const c=t[i];
+  if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c==='"')q=true;
+  else if(c===sep){r.push(f);f=""}
+  else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;r.push(f);f="";rows.push(r);r=[]}
+  else f+=c}
+ if(f!==""||r.length){r.push(f);rows.push(r)}
+ return rows.filter(x=>x.some(v=>v.trim()))}
+async function doImport(text){
+ const out=$("cm"),rows=parseCSV(text);
+ if(rows.length<2){out.innerHTML='<span class="bad">No data rows found. The first row must be a header.</span>';return}
+ if(rows.length>2001){out.innerHTML='<span class="bad">Please import at most 2,000 rows at a time.</span>';return}
+ const H=rows[0].map(h=>h.trim().toLowerCase()),col=(...n)=>H.findIndex(h=>n.includes(h));
+ const cN=col("name","item","item name","product"),cC=col("category","type","group"),cQ=col("quantity","qty","total","total qty","stock","stock on hand"),cS=col("sku","code","item code"),cP=col("price","rate","rental price","unit price"),cU=col("unit","uom"),cD=col("description","desc"),cR=col("reorder level","reorder","reorder point");
+ if(cN<0){out.innerHTML='<span class="bad">Could not find a <b>name</b> column in the header row.</span>';return}
+ const key={},local={};Object.entries(S.items).forEach(([id,v])=>{if(v.sku)key["s:"+v.sku.toLowerCase()]=id;key["n:"+v.name.toLowerCase()]=id});
+ let add=0,upd=0,skip=0;const jobs=[];
+ for(const r of rows.slice(1)){const name=(r[cN]||"").trim();if(!name){skip++;continue}
+  const sku=cS>=0?(r[cS]||"").trim():"",ex=(sku&&key["s:"+sku.toLowerCase()])||key["n:"+name.toLowerCase()];
+  const d={...(ex?(local[ex]||S.items[ex]):{}),name};
+  if(cC>=0&&(r[cC]||"").trim())d.category=r[cC].trim();
+  if(cQ>=0&&(r[cQ]||"").trim()!=="")d.total=Math.max(0,Math.round(parseFloat(r[cQ].replace(/[^\d.\-]/g,""))||0));
+  if(sku)d.sku=sku;
+  if(cU>=0&&(r[cU]||"").trim())d.unit=r[cU].trim();if(cD>=0&&(r[cD]||"").trim())d.description=r[cD].trim();if(cR>=0&&(r[cR]||"").trim()!=="")d.reorder=parseInt(r[cR])||0;
+  if(cP>=0&&(r[cP]||"").trim()!=="")d.price=parseFloat(r[cP].replace(/[^\d.]/g,""))||0;
+  if(d.total==null)d.total=0;if(d.category==null)d.category="";
+  const id=ex||rid();ex?upd++:add++;local[id]=d;key["n:"+name.toLowerCase()]=id;if(sku)key["s:"+sku.toLowerCase()]=id;
+  jobs.push(put("items",id,d))}
+ await Promise.all(jobs);
+ out.innerHTML=`<span class="ok">Done: ${add} added, ${upd} updated${skip?`, ${skip} skipped (no name)`:""}.</span>`}
+$("cf").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{doImport(String(rd.result));e.target.value=""};rd.readAsText(f)};
+$("cb").onclick=()=>doImport($("ct").value);
+
+let imode="",itab="overview",txf="all",fdraft={},usr=null,myId="";
+const chk={f:"",t:""},NAMES={},asked=new Set();
+const isLow=(i,w)=>{const r=i.reorder>0?i.reorder:lowT();return r>0&&w<=r};
+const FL={name:"Name",sku:"SKU",unit:"Unit",category:"Category",price:"Rate",reorder:"Reorder level",description:"Description",photo:"Photo"};
+function diff(a,b){return Object.keys(FL).filter(k=>(a[k]||"")!==(b[k]||"")).map(k=>k==="photo"?"Photo changed":k==="description"?"Description changed":`${FL[k]}: ${a[k]||"\u2014"} \u2192 ${b[k]||"\u2014"}`).join("; ")}
+function logIt(id,action,detail){put("itemlog",rid(),{itemId:id,action,detail:detail||"",ts:Date.now(),by:CFG.dev||""})}
+function needNames(ids){const n=[...new Set(ids)].filter(i=>i&&!asked.has(i));if(!n.length||!usr||!usr.profiles)return;n.forEach(i=>asked.add(i));usr.profiles(n).then(p=>{n.forEach(i=>NAMES[i]=(p&&p[i]&&p[i].name)||"");renderItem()}).catch(()=>{})}
+function filtered(){const f=$("lf").value,q=$("q").value.toLowerCase();return items().filter(i=>{if(!fpass("stock",i))return false;const w=i.total-net(i.id)-repQty(i.id),act=i.active!==false;
+ if((f==="active"&&!act)||(f==="inactive"&&act)||(f==="low"&&!isLow(i,w)))return false;
+ return !q||(i.name+" "+(i.sku||"")+" "+(i.category||"")).toLowerCase().includes(q)})}
+function renderList(){const st=filtered();
+ $("st").innerHTML=st.map(i=>{const w=i.total-net(i.id)-repQty(i.id),low=isLow(i,w);return`<tr data-id="${i.id}" class="rw${i.active===false?" off":""}"><td><div class="nm">${ph(i,"sm")}<div><button class="lk" data-oi="${i.id}">${esc(i.name)}</button>${i.active===false?` <span class="pill off">Inactive</span>`:""}${i.description?`<br><span class="mu">${esc(i.description.slice(0,60))}</span>`:""}</div></div></td><td class="mu">${esc(i.sku)}</td><td class="mu">${esc(i.category)}</td><td class="n">${i.price?money(i.price):""}</td><td class="n">${i.total} <span class="mu">${esc(i.unit)}</span></td><td class="n ${w<0?"bad":low?"warn":""}">${w}${low?" \u25B2":""}</td><td class="n mu">${i.reorder||""}</td></tr>`}).join("")||`<tr><td colspan="7" class="mu" style="padding:22px">No items found. Click <b>+ New</b> or import a CSV to get started.</td></tr>`}
+$("st").onclick=e=>{if(e.target.closest("button"))return;const tr=e.target.closest("tr[data-id]");if(tr)showItem(tr.dataset.id)};
+$("lf").onchange=render;
+$("im").onclick=()=>$("imc").classList.toggle("hide");
+$("ex2").onclick=$("ex").onclick;
+
+function renderIL(){const st=filtered();$("il").innerHTML=`<div class="ilh"><b>${esc($("lf").selectedOptions[0].text)}</b><button class="b" data-nw="1" style="height:30px;padding:0 12px">+ New</button></div>`+(st.map(i=>`<button class="ili${i.id===cur&&imode!=="new"?" on":""}" data-oi="${i.id}">${ph(i,"sm")}<span><b>${esc(i.name)}</b><small>${i.sku?esc(i.sku)+" \u00b7 ":""}${i.total} on hand</small></span></button>`).join("")||'<p class="mu" style="padding:12px">No items.</p>')}
+function showItem(id){if(!S.items[id])return;cur=id;imode="view";itab="overview";txf="all";chk.f=chk.t=today();showTab("item");window.scrollTo(0,0);render()}
+function openForm(mode,draft){imode=mode;fdraft=mode==="edit"?S.items[cur]:(draft||{});if(mode==="new")cur=null;showTab("item");renderForm();window.scrollTo(0,0);renderIL()}
+function renderForm(){const it=fdraft||{},isNew=imode==="new";
+ $("ir").innerHTML=`<div class="card"><h3>${isNew?"New Item":"Edit Item"}</h3><form id="fx" class="fg"><label class="w2">Name*<input name="name" required value="${esc(it.name)}"></label><label>SKU<input name="sku" value="${esc(it.sku)}"></label><label>Unit<input name="unit" list="units" value="${esc(it.unit||"pcs")}"></label><label>Category<input name="category" list="cats" value="${esc(it.category)}"></label><label>Rate (rental price)<input name="price" type="number" min="0" step="any" value="${it.price||""}"></label>${isNew?`<label>Opening stock<input name="total" type="number" min="0" value="${it.total||0}"></label>`:`<label>Stock on hand<input value="${it.total}" disabled></label>`}<label>Reorder level<input name="reorder" type="number" min="0" value="${it.reorder||""}"></label><label class="w2">Description<textarea name="description" style="min-height:70px">${esc(it.description)}</textarea></label>${assets?`<label>Photo<input name="photo" type="file" accept="image/*"></label>${it.photo&&!isNew?`<label>Remove photo<input name="rm" type="checkbox"></label>`:""}`:""}<div class="w2 row"><button class="b">Save</button><button class="g" type="button" data-fc="1">Cancel</button><span id="xm" class="msg"></span></div></form>${isNew?"":`<p class="mu" style="font-size:13px;margin:12px 0 0">To change the quantity owned, use <b>Adjust stock</b> so the change is recorded in the history.</p>`}</div>`;
+ $("fx").onsubmit=saveForm}
+async function saveForm(e){e.preventDefault();const f=new FormData(e.target),xm=$("xm"),isNew=imode==="new",old=isNew?{}:S.items[cur];
+ const sku=f.get("sku").trim(),dup=Object.entries(S.items).find(([id,v])=>id!==(isNew?"":cur)&&sku&&v.sku&&v.sku.toLowerCase()===sku.toLowerCase());
+ if(dup){xm.innerHTML=`<span class="bad">SKU already used by ${esc(dup[1].name)}.</span>`;return}
+ let photo=(isNew?fdraft.photo:old.photo)||"";if(f.get("rm"))photo="";
+ const file=f.get("photo");if(file&&file.size){try{xm.textContent="Uploading photo\u2026";photo=await uploadPhoto(file)}catch(x){xm.innerHTML=`<span class="bad">${esc(x.message||"Photo upload failed")}</span>`;return}}
+ const d={...old,name:f.get("name").trim(),sku,unit:f.get("unit").trim(),category:f.get("category").trim(),price:parseFloat(f.get("price"))||0,reorder:parseInt(f.get("reorder"))||0,description:f.get("description").trim(),photo};
+ if(isNew){d.total=Math.max(0,parseInt(f.get("total"))||0);d.active=true;d.created=Date.now()}
+ const id=isNew?rid():cur;await put("items",id,d);S.items[id]=d;
+ if(isNew)logIt(id,"Item created","Opening stock "+d.total);else{const ch=diff(old,d);if(ch)logIt(id,"Item updated",ch)}
+ cur=id;imode="view";itab="overview";chk.f=chk.t=today();render()}
+function openAdj(){const it=S.items[cur];$("adjn").textContent=it.name+" \u2014 "+it.total+" on hand, "+net(cur)+" currently out";$("adq").value="";$("adn").value="";$("adm").textContent="";$("ov").classList.remove("hide");$("adq").focus()}
+function closeAdj(){$("ov").classList.add("hide")}
+$("fadj").onsubmit=e=>{e.preventDefault();const it=S.items[cur],dq=parseInt($("adq").value)||0,nt=it.total+dq,nn=$("adn").value.trim();
+ if(!dq){$("adm").innerHTML='<span class="bad">Enter a quantity other than zero.</span>';return}
+ if(nt<net(cur)+repQty(cur)){$("adm").innerHTML=`<span class="bad">Stock cannot go below the ${net(cur)+repQty(cur)} pieces out or in repair.</span>`;return}
+ put("items",cur,{...it,total:nt});logIt(cur,"Stock adjusted",`${dq>0?"+":""}${dq} (${$("adr").value}): ${it.total} \u2192 ${nt}${nn?". "+nn:""}`);closeAdj()};
+function toggleActive(){const it=S.items[cur],on=it.active!==false;put("items",cur,{...it,active:!on});logIt(cur,on?"Marked as inactive":"Marked as active","")}
+function delItem(){const used=Object.values(S.movements).some(m=>m.itemId===cur)||Object.values(S.events).some(e=>(e.reservations||{})[cur]);
+ if(used){say("This item is used in reservations or movements and cannot be deleted. Mark it as inactive instead.");setTimeout(()=>say(""),7000);return}
+ confirmDel("i"+cur,()=>{const id=cur;cur=null;imode="";showTab("stock");del("items",id)})}
+function availHtml(){const it=S.items[cur];if(!it||!chk.f||!chk.t||chk.t<chk.f)return"";let r=0;events().forEach(e=>{if(e.start<=chk.t&&chk.f<=e.end)r+=(e.reservations||{})[cur]||0});const a=it.total-repQty(cur)-r;
+ return`<b class="${a<0?"bad":"ok"}">${a} available</b> <span class="mu">(${r} reserved by overlapping events)</span>`}
+function renderItem(){
+ if(!imode)return;
+ renderIL();
+ if(imode!=="view")return;
+ const it=S.items[cur];if(!it){cur=null;imode="";showTab("stock");return}
+ const t=today(),site=net(cur),evs=events().filter(e=>(e.reservations||{})[cur]),act=it.active!==false;
+ const resOn=d=>evs.reduce((a,e)=>a+(e.start<=d&&d<=e.end?e.reservations[cur]:0),0),rank=e=>e.end<t?2:e.start>t?1:0;
+ let committed=0;evs.forEach(e=>{if(e.end>=t)committed+=Math.max(0,e.reservations[cur]-net(cur,e.id))});
+ const rq=repQty(cur),inW=it.total-site-rq,avail=inW-committed,low=isLow(it,inW),lg=Object.values(S.itemlog).filter(x=>x.itemId===cur).sort((a,b)=>b.ts-a.ts);
+ const kv=(l,v)=>`<dt>${l}</dt><dd>${v?esc(v):'<span class="mu">\u2014</span>'}</dd>`;
+ let body="";
+ if(itab==="overview"){
+  const first=lg.length?lg[lg.length-1].ts:it.created,st0=avFrom||t,days=Array.from({length:avN},(_,i)=>{const d=new Date(st0+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+i);return d.toISOString().slice(0,10)}),
+  mrow=(()=>{let o="",i=0;while(i<days.length){const m=days[i].slice(0,7);let j=i;while(j<days.length&&days[j].slice(0,7)===m)j++;o+=`<th colspan="${j-i}" style="text-align:left;padding-left:8px">${new Date(m+"-01T00:00:00Z").toLocaleDateString("en-GB",{month:"short",year:"numeric",timeZone:"UTC"})}</th>`;i=j}return o})();
+  body=`<div class="ov2"><div><h4>Item information</h4><dl class="kv">${kv("SKU",it.sku)}${kv("Unit",it.unit)}${kv("Category",it.category)}${kv("Rate",it.price?money(it.price):"")}${kv("Reorder level",it.reorder?String(it.reorder):"")}${kv("Description",it.description)}${kv("Created",first?new Date(first).toLocaleDateString("en-GB",{dateStyle:"medium"}):"")}</dl></div><div class="phbox">${it.photo&&photoSrc(it.photo)?`<img src="${photoSrc(it.photo)}" alt="">`:`<div class="ph0">${esc((it.name||"?").trim().charAt(0).toUpperCase())}<small>No image</small></div>`}</div></div>
+  <h4>Stock</h4><div class="tiles"><div><b>${it.total}</b><span class="mu">Stock on hand</span></div><div><b>${site}</b><span class="mu">Out on site</span></div><div><b>${inW}</b><span class="mu">In warehouse</span></div><div><b class="${rq?"warn":""}">${rq}</b><span class="mu">In repair</span></div><div><b>${committed}</b><span class="mu">Committed (upcoming)</span></div><div><b class="${avail<0?"bad":"ok"}">${avail}</b><span class="mu">Available for sale</span></div></div>${low?`<p class="warn" style="margin:10px 0 0">\u25B2 Warehouse stock is at or below the reorder level.</p>`:""}
+  <h4>Availability</h4><div class="row" style="margin-bottom:8px"><label style="flex-direction:row;align-items:center;gap:8px">Show<select id="avn">${[[14,"2 weeks"],[30,"1 month"],[60,"2 months"],[90,"3 months"],[180,"6 months"],[365,"12 months"]].map(([n,l])=>`<option value="${n}"${avN===n?" selected":""}>${l}</option>`).join("")}</select></label><label style="flex-direction:row;align-items:center;gap:8px">from<input id="avf" type="date" value="${st0}"></label><button class="g" data-avt="1">Today</button></div><div class="sc"><table class="avt" style="text-align:center"><thead><tr>${mrow}</tr><tr>${days.map(d=>`<th style="text-align:center">${+d.slice(8)}</th>`).join("")}</tr></thead><tbody><tr>${days.map(d=>{const a=it.total-rq-resOn(d);return`<td class="${a<0?"bad":a===0?"warn":"ok"}"><b>${a}</b></td>`}).join("")}</tr></tbody></table></div><p class="mu" style="font-size:12px;margin:6px 0 0">Pieces free to book each day: owned, minus items in repair, minus reserved. Scroll sideways for longer ranges.</p>
+  <div class="chk"><label>Check availability from<input id="af" type="date" value="${chk.f}"></label><label>to<input id="at" type="date" value="${chk.t}"></label><span id="ar">${availHtml()}</span></div>`}
+ else if(itab==="tx"){
+  const tx=[...evs.map(e=>({d:e.start,type:"Reserved",ev:e.id,q:e.reservations[cur],st:["Active","Upcoming","Past"][rank(e)],k:"res"})),...moves().filter(m=>m.itemId===cur).map(m=>({d:m.date,type:m.type==="out"?"Dispatched":"Returned",ev:m.eventId,q:m.qty,st:m.note||"",k:m.type})),...Object.values(S.repairs).filter(r=>r.itemId===cur).map(r=>({d:r.reportedDate,type:"Repair \u2014 "+RS[r.status],ev:"",q:r.qty,st:r.issue||"",k:"rep"}))].filter(x=>txf==="all"||x.k===txf).sort((a,b)=>(b.d||"").localeCompare(a.d||""));
+  body=`<div class="row" style="margin-bottom:10px"><select id="txf">${[["all","All transactions"],["res","Reservations"],["out","Dispatched"],["in","Returned"],["rep","Repairs"]].map(([k,l])=>`<option value="${k}"${txf===k?" selected":""}>${l}</option>`).join("")}</select></div><div class="sc"><table><thead><tr><th>Date</th><th>Transaction</th><th>Event</th><th class="n">Qty</th><th>Details</th></tr></thead><tbody>${tx.map(x=>`<tr><td>${esc(x.d)}</td><td class="${x.k==="out"?"warn":x.k==="in"?"ok":""}">${x.type}</td><td>${!x.ev?"\u2014":S.events[x.ev]?`<button class="lk" data-go="${x.ev}">${esc(S.events[x.ev].name)}</button>`:'<span class="mu">(deleted event)</span>'}</td><td class="n">${x.q}</td><td class="mu">${esc(x.st)}</td></tr>`).join("")||`<tr><td colspan="5" class="mu" style="padding:18px">No transactions yet.</td></tr>`}</tbody></table></div>`}
+ else{
+  needNames(lg.map(x=>x.by));
+  body=`<div class="sc"><table><thead><tr><th>Date</th><th>Action</th><th>Details</th><th>By</th></tr></thead><tbody>${lg.map(x=>`<tr><td>${new Date(x.ts).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})}</td><td><b>${esc(x.action)}</b></td><td class="mu" style="white-space:normal">${esc(x.detail)}</td><td>${esc(x.by||"")}</td></tr>`).join("")||`<tr><td colspan="4" class="mu" style="padding:18px">No history recorded yet. Changes from now on will appear here.</td></tr>`}</tbody></table></div>`}
+ $("ir").innerHTML=`<div class="card flush"><div class="dh"><div class="hdr">${ph(it,"md")}<div><b class="ttl">${esc(it.name)}</b> <span class="pill${act?"":" off"}">${act?"Active":"Inactive"}</span><div class="mu">${it.sku?"SKU: "+esc(it.sku):""}${it.sku&&it.category?" \u00b7 ":""}${esc(it.category)}</div></div></div><div class="acts"><button class="g" data-ed="1">Edit</button><button class="g" data-ad="1">Adjust stock</button><button class="g" data-nr="1">Report repair</button><button class="g" data-cl="1">Clone</button><button class="g" data-ia="1">${act?"Mark as inactive":"Mark as active"}</button><button class="g dng" data-dl="1">${armed==="i"+cur?"Confirm delete":"Delete"}</button></div></div><div class="tabs">${[["overview","Overview"],["tx","Transactions"],["hist","History"]].map(([k,l])=>`<button data-it="${k}" class="${itab===k?"on":""}">${l}</button>`).join("")}</div><div class="tbd">${body}</div></div>`}
+document.addEventListener("input",e=>{const i=e.target.id;if(i==="af"||i==="at"){chk[i==="af"?"f":"t"]=e.target.value;const r=$("ar");if(r)r.innerHTML=availHtml()}});
+document.addEventListener("change",e=>{if(e.target.id==="txf"){txf=e.target.value;renderItem()}});
+
+function zUrl(v){const b=((S.settings.main||{}).zlink||"").trim();if(b&&v.zid)return b.replace(/\/+$/,"")+"/"+encodeURIComponent(v.zid);return v.url&&/^https?:\/\//i.test(v.url)?v.url:""}
+const zA=(v,html,cls)=>{const u=zUrl(v);return u?`<a class="${cls||"zl"}" href="${esc(u)}" target="_blank" rel="noopener" title="Open in Zoho Books">${html}</a>`:""};
+const invs=()=>Object.entries(S.invoices).map(([id,v])=>({id,...v}));
+const open=v=>(+v.balance||0)>0&&!/^(void|draft)$/i.test(v.status||"");
+function invState(v){const st=(v.status||"").toLowerCase();if(st==="void")return"Void";if(st==="draft")return"Draft";if(!(+v.balance>0))return"Paid";if(v.due&&v.due<today())return"Overdue";return/partial/.test(st)?"Partially paid":"Unpaid"}
+const fm=(v,c)=>((c||(S.settings.main||{}).cur||"")+" "+(+v||0).toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2})).trim();
+function isoDate(v){v=String(v||"").trim();if(!v)return"";let m;if(m=v.match(/^(\d{4})-(\d{2})-(\d{2})/))return`${m[1]}-${m[2]}-${m[3]}`;
+ if(m=v.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/)){let d=+m[1],mo=+m[2];if(mo>12)[d,mo]=[mo,d];return`${m[3]}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
+ const x=new Date(v);return isNaN(x)?"":`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`}
+const invMatch=(v,q,dk)=>!q||(dk?((v.due||"").startsWith(dk)||(v.date||"").startsWith(dk)):(v.number+" "+v.customer+" "+(v.bill||"")+" "+(v.due||"")+" "+(v.date||"")).toLowerCase().includes(q.toLowerCase()));
+const calInv=()=>$("cinv").checked?invs().filter(v=>v.due&&!/^(void|draft)$/i.test(v.status||"")&&invMatch(v,cal.q,cal.dk)).map(v=>({...v,cls:invState(v)==="Overdue"?"ov":invState(v)==="Paid"?"pd":"up"})):[];
+function renderCri(){const box=$("cri");if(!cal.q){box.innerHTML="";return}const mi=invs().filter(v=>invMatch(v,cal.q,cal.dk));
+ box.innerHTML=mi.length?`<div style="margin-bottom:12px"><div class="mu" style="margin-bottom:6px">${mi.length} matching invoice${mi.length===1?"":"s"}</div>${mi.slice(0,20).map(v=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--bd)"><button class="lk" data-iv="${esc(v.number)}">${esc(v.number)}</button>${zA(v," Zoho \u2197")}<span class="mu">${esc(v.customer)}</span><span class="mu">Due ${esc(v.due)}</span><span class="pill">${invState(v)}</span><span style="flex:1"></span><button class="g" data-cj="${esc((v.due||"").slice(0,7))}">Show</button></div>`).join("")}</div>`:""}
+$("cinv").onchange=renderCal;
+
+function renderInv(){
+ const f=$("invf").value,q=$("invq").value.trim().toLowerCase(),so=$("invs").value,t=today(),w=new Date(Date.parse(t)+7*864e5).toISOString().slice(0,10),all=invs();
+ const op=all.filter(open),ov=op.filter(v=>v.due&&v.due<t),sn=op.filter(v=>v.due>=t&&v.due<=w),sum=a=>a.reduce((x,v)=>x+(+v.balance||0),0),cu=(all[0]||{}).currency;
+ $("isum").innerHTML=`<div><b>${fm(sum(op),cu)}</b><span class="mu">Outstanding \u00b7 ${op.length} invoice${op.length===1?"":"s"}</span></div><div><b class="${ov.length?"bad":""}">${fm(sum(ov),cu)}</b><span class="mu">Overdue \u00b7 ${ov.length}</span></div><div><b>${fm(sum(sn),cu)}</b><span class="mu">Due in 7 days \u00b7 ${sn.length}</span></div>`;
+ const last=Math.max(0,...all.map(v=>v.imported||0));$("invlast").textContent=last?"Last import: "+new Date(last).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"}):"";
+ const L=all.filter(v=>{if(!fpass("inv",v))return false;const st=invState(v);if(f==="unpaid"&&!open(v))return false;if(f==="overdue"&&st!=="Overdue")return false;if(f==="soon"&&!(open(v)&&v.due>=t&&v.due<=w))return false;if(f==="paid"&&st!=="Paid")return false;return invMatch(v,q,dateKey(q))});
+ L.sort(so==="dued"?(a,b)=>(b.due||"").localeCompare(a.due||""):so==="amt"?(a,b)=>b.balance-a.balance:so==="cust"?(a,b)=>a.customer.localeCompare(b.customer):(a,b)=>(a.due||"9999").localeCompare(b.due||"9999"));
+ $("invt").innerHTML=L.map(v=>{const st=invState(v),d=Math.round((Date.parse(v.due)-Date.parse(t))/864e5),dt=!open(v)||isNaN(d)?"":d<0?`${-d} day${d===-1?"":"s"} overdue`:d===0?"Due today":`in ${d} day${d===1?"":"s"}`;
+  return`<tr><td>${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`}</td><td>${esc(v.customer)}</td><td class="mu" style="white-space:normal;min-width:150px">${esc(v.bill)}</td><td class="mu">${esc(v.date)}</td><td>${esc(v.due)}</td><td class="${st==="Overdue"?"bad":"mu"}">${dt}</td><td class="n">${fm(v.total,v.currency)}</td><td class="n">${fm(v.balance,v.currency)}</td><td><span class="pill ${st==="Paid"||st==="Void"||st==="Draft"?"off":""}" ${st==="Overdue"?'style="background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)"':""}>${st}</span></td><td>${plLinks(v)}</td></tr>`}).join("")||`<tr><td colspan="10" class="mu" style="padding:22px">${all.length?"No invoices match this filter.":"No invoices yet. Click <b>Import from Zoho Books</b> to bring them in."}</td></tr>`}
+function billAddr(o){const parts=[],ba=o.billing_address;if(ba&&typeof ba==="object")["address","street","attention","city","state","zip","code","country"].forEach(k=>ba[k]&&parts.push(ba[k]));else if(ba)parts.push(ba);
+ ["billing_street","billing_city","billing_state","billing_zip","billing_code","billing_country","billing_location"].forEach(k=>o[k]&&parts.push(o[k]));return[...new Set(parts.map(x=>String(x).trim()).filter(Boolean))].join(", ")}
+function parseInvoices(text){const t=text.trim(),num=v=>parseFloat(String(v??"").replace(/[^\d.\-]/g,""))||0;let rows=[];
+ if(t[0]==="{"||t[0]==="["){const j=JSON.parse(t),a=Array.isArray(j)?j:(j.invoices||j.data||[]);rows=a.map(o=>({bill:billAddr(o),url:o.invoice_url||o.url||"",id:o.invoice_id||o.id||"",number:o.invoice_number||o.number||"",customer:o.customer_name||o.customer||"",date:o.date||o.invoice_date||"",due:o.due_date||o.due||"",total:o.total,balance:o.balance,status:o.status||o.invoice_status||"",currency:o.currency_code||o.currency||""}))}
+ else{const R=parseCSV(t);if(R.length<2)return[];const H=R[0].map(h=>h.trim().toLowerCase()),col=(...n)=>H.findIndex(h=>n.includes(h));
+  const c={url:col("invoice url","invoice_url","url","link","zoho link"),id:col("invoice id","invoice_id"),number:col("invoice number","invoice no","invoice#","number"),customer:col("customer name","customer"),date:col("invoice date","date"),due:col("due date","due"),total:col("total","invoice total","amount"),balance:col("balance","balance due","balance amount"),status:col("invoice status","status"),currency:col("currency code","currency")};
+  rows=R.slice(1).map(r=>{const g=k=>c[k]>=0?(r[c[k]]||""):"";const ob={};H.forEach((h,i)=>ob[h.replace(/\s+/g,"_")]=r[i]);return{bill:billAddr(ob),url:g("url"),id:g("id"),number:g("number"),customer:g("customer"),date:g("date"),due:g("due"),total:g("total"),balance:g("balance"),status:g("status"),currency:g("currency")}})}
+ const out=new Map();
+ rows.forEach(o=>{const number=String(o.number||o.id).trim();if(!number)return;const key=String(o.id||number).replace(/[^\w.\-]/g,"_"),status=String(o.status||"").trim(),total=num(o.total);
+  if(out.has(key))return;
+  const bal=(o.balance===undefined||o.balance==="")?(/^paid$/i.test(status)?0:total):num(o.balance);
+  out.set(key,{key,bill:String(o.bill||"").trim(),zid:String(o.id||"").trim(),url:String(o.url||"").trim(),number,customer:String(o.customer||"").trim(),date:isoDate(o.date),due:isoDate(o.due),total,balance:bal,status,currency:String(o.currency||"").trim()})});
+ return[...out.values()]}
+async function doInv(text){const out=$("invm");let L;
+ try{L=parseInvoices(text)}catch(e){out.innerHTML='<span class="bad">Could not read that data ('+esc(e.message)+').</span>';return}
+ if(!L.length){out.innerHTML='<span class="bad">No invoices found. Check the header row, or that the JSON has an invoices list.</span>';return}
+ if(L.length>2000){out.innerHTML='<span class="bad">Please import at most 2,000 invoices at a time.</span>';return}
+ const keep=new Set(),jobs=[];let rm=0;
+ L.forEach(v=>{keep.add(v.key);const d={...v};delete d.key;jobs.push(put("invoices",v.key,{...d,src:"zoho",imported:Date.now()}))});
+ if($("invr").checked)Object.keys(S.invoices).forEach(k=>{if(!keep.has(k)){rm++;jobs.push(del("invoices",k))}});
+ await Promise.all(jobs);out.innerHTML=`<span class="ok">Imported ${L.length} invoice${L.length===1?"":"s"}${rm?`, removed ${rm} that were not in the file`:""}.</span>`}
+$("invf").onchange=$("invs").onchange=render;$("invq").oninput=render;
+$("invi").onclick=()=>$("invc").classList.toggle("hide");
+$("invb").onclick=()=>doInv($("invtxt").value);
+$("invfile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{doInv(String(rd.result));e.target.value=""};rd.readAsText(f)};
+
+// ================= Picklists, repairs =================
+const RS={reported:"Reported",in_repair:"In repair",repaired:"Repaired",written_off:"Written off"};
+const repQty=id=>Object.values(S.repairs).reduce((a,r)=>a+(r.itemId===id&&(r.status==="reported"||r.status==="in_repair")?r.qty:0),0);
+const whOf=id=>{const it=S.items[id];return it?it.total-net(id)-repQty(id):0};
+const nextNo=(c,pre)=>{let m=0;Object.values(S[c]).forEach(x=>{const n=parseInt(String(x.number||"").replace(/\D/g,""))||0;if(n>m)m=n});return pre+"-"+String(m+1).padStart(4,"0")};
+const mergeLines=L=>{const m={};L.forEach(l=>{if(l.itemId&&S.items[l.itemId]&&l.qty>0)m[l.itemId]=(m[l.itemId]||0)+l.qty});return Object.entries(m).map(([itemId,qty])=>({itemId,qty}))};
+function plQty(id,itemId,type){let n=0;for(const m of Object.values(S.movements))if(m.picklistId===id&&m.type===type&&(!itemId||m.itemId===itemId))n+=m.qty;return n}
+function plState(id,p){if(p.status==="draft")return"Draft";if(p.status==="cancelled")return"Cancelled";const o=plQty(id,null,"out"),r=plQty(id,null,"in");return r>=o?"Returned":r>0?"Partly returned":"Out on site"}
+function plLinks(v){return Object.entries(S.picklists).filter(([,x])=>x.invoice===v.number).map(([id,x])=>`<button class="lk" data-plo="${id}">${esc(x.number)}</button>`).join(" ")+` <button class="g" data-npl="${esc(v.number)}">+ Picklist</button>`}
+let plMode="",pld=null,plId=null,rpEdit=null,rpRes=null,plWarn=false;
+const ldn=x=>(x.lines||[]).reduce((a,l)=>a+Math.min(l.qty,(x.loaded||{})[l.itemId]||0),0);
+function renderPL(){
+ const f=$("plf").value,q=$("plq").value.trim().toLowerCase();
+ const L=Object.entries(S.picklists).map(([id,x])=>({id,...x,st:plState(id,x)})).filter(x=>{if(!fpass("pl",x))return false;const op=x.st==="Draft"||x.st==="Out on site"||x.st==="Partly returned";
+  if(f==="open"&&!op)return false;if(f==="draft"&&x.st!=="Draft")return false;if(f==="out"&&!(x.st==="Out on site"||x.st==="Partly returned"))return false;if(f==="done"&&x.st!=="Returned")return false;
+  return !q||(x.number+" "+evName(x.eventId)+" "+(x.invoice||"")+" "+(x.customer||"")+" "+(x.lines||[]).map(l=>itName(l.itemId)).join(" ")).toLowerCase().includes(q)}).sort((a,b)=>(b.created||0)-(a.created||0));
+ $("plt").innerHTML=L.map(x=>`<tr class="rw" data-plid="${x.id}"><td><b>${esc(x.number)}</b></td><td>${esc(evName(x.eventId))}</td><td>${esc(x.invoice)}</td><td class="n">${(x.lines||[]).reduce((a,l)=>a+l.qty,0)}</td><td class="mu">${new Date(x.created||0).toLocaleDateString("en-GB",{dateStyle:"medium"})}</td><td><span class="pill ${x.st==="Draft"||x.st==="Returned"||x.st==="Cancelled"?"off":""}">${x.st}</span></td><td style="text-align:right"><button class="g" data-plcl="${x.id}">Clone</button></td></tr>`).join("")||`<tr><td colspan="7" class="mu" style="padding:22px">No picklists here. Click <b>+ New picklist</b>.</td></tr>`;
+ $("plL").classList.toggle("hide",!!plMode);$("plE").classList.toggle("hide",!plMode);
+ if(plMode==="view"&&pld&&!$("plE").contains(document.activeElement))renderPLE()}
+$("plt").onclick=e=>{if(e.target.closest("button"))return;const tr=e.target.closest("tr[data-plid]");if(tr)openPL(tr.dataset.plid)};
+$("plf").onchange=$("plq").oninput=render;
+function openPL(id,inv){
+ if(id&&!S.picklists[id])return;
+ showTab("pl");plWarn=false;
+ if(id){plId=id;pld=JSON.parse(JSON.stringify(S.picklists[id]));plMode=pld.status==="draft"?"edit":"view"}
+ else{plId=null;const v=inv?invs().find(x=>x.number===inv):null;let ev="";
+  if(v){const m=events().filter(e=>(e.client||"").trim().toLowerCase()===v.customer.trim().toLowerCase()&&e.end>=today());if(m.length===1)ev=m[0].id}
+  pld={number:nextNo("picklists","PL"),eventId:ev,invoice:inv||"",customer:v?v.customer:"",notes:"",lines:[],status:"draft",outDate:today(),created:Date.now()};plMode="edit"}
+ renderPL();renderPLE();window.scrollTo(0,0)}
+function renderPLE(){
+ const x=pld,id=plId,draft=plMode==="edit",st=id?plState(id,x):"New draft",E=$("plE"),lines=x.lines||[];
+ const head=`<div class="card"><div class="top"><div><b class="ttl">${esc(x.number)}</b> <span class="pill ${draft||st==="Returned"?"off":""}">${st}</span><div class="mu">${x.invoice?"Invoice "+esc(x.invoice)+(x.customer?" \u00b7 "+esc(x.customer):""):"No invoice linked"}${x.eventId?" \u00b7 "+esc(evName(x.eventId)):""}${x.notes&&!draft?" \u00b7 "+esc(x.notes):""}</div></div><div class="acts">${id?`<button class="g" data-plcl="">Clone</button>`:""}<button class="g" data-plprint="1">Print</button><button class="g" data-plback="1">\u2039 Back to list</button></div></div></div>`;
+ if(draft){
+  const evO=`<option value="">\u2014 none \u2014</option>`+events().map(e=>`<option value="${e.id}"${x.eventId===e.id?" selected":""}>${esc(e.name)} (${esc(e.start)})</option>`).join("");
+  const inO=`<option value="">\u2014 none \u2014</option>`+invs().filter(v=>!/^void$/i.test(v.status||"")).sort((a,b)=>(a.due||"").localeCompare(b.due||"")).map(v=>`<option value="${esc(v.number)}"${x.invoice===v.number?" selected":""}>${esc(v.number)} \u00b7 ${esc(v.customer)}${v.due?" \u00b7 due "+esc(v.due):""}</option>`).join("");
+  const need={};lines.forEach(l=>need[l.itemId]=(need[l.itemId]||0)+l.qty);
+  const rows=lines.map((l,i)=>{const wh=whOf(l.itemId),bad=need[l.itemId]>wh;return`<tr><td>${esc(itName(l.itemId))}</td><td class="n"><input type="number" min="1" value="${l.qty}" data-plq="${i}"></td><td class="n ${bad?"bad":"mu"}">${wh}${bad?" \u25B2 short":""}</td><td><button class="g" data-plrm="${i}">\u00d7</button></td></tr>`}).join("")||`<tr><td colspan="4" class="mu" style="padding:16px">No items yet. Add lines below, or fill from the event reservations.</td></tr>`;
+  E.innerHTML=head+`<div class="card"><div class="row" style="align-items:end;gap:12px"><label>Event<select data-pf="eventId">${evO}</select></label><label>Invoice<select data-pf="invoice">${inO}</select></label><label>Dispatch date<input type="date" data-pf="outDate" value="${esc(x.outDate||today())}"></label><label style="flex:1;min-width:200px">Notes<input data-pf="notes" value="${esc(x.notes)}"></label></div></div>
+  <div class="card"><div class="top" style="margin-bottom:8px"><b>Items to pick</b><button class="g" data-plfill="1" type="button">Fill from event reservations</button></div><div class="sc"><table><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">In warehouse</th><th></th></tr></thead><tbody>${rows}</tbody></table></div><div class="row" style="margin-top:10px"><select id="pli">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("")}</select><input id="plqn" type="number" min="1" value="1" style="width:80px"><button class="g" data-pladd="1" type="button">Add line</button></div></div>${ldHtml(false)}
+  <div class="card"><div class="row"><button class="g" data-plsave="1">Save draft</button><button class="b" data-pldisp="1">Dispatch \u2192 create Out movements</button>${id?`<button class="g dng" data-pldel="1">${armed==="p"+id?"Confirm delete":"Delete draft"}</button>`:""}<span id="plm" class="msg"></span></div></div>`;
+  return}
+ const op=st==="Out on site"||st==="Partly returned";
+ const rows=lines.map((l,i)=>{const out=plQty(id,l.itemId,"out"),ret=plQty(id,l.itemId,"in"),os=Math.max(0,out-ret);
+  return`<tr><td>${esc(itName(l.itemId))}</td><td class="n">${out}</td><td class="n">${ret}</td><td class="n ${os?"warn":"ok"}">${os}</td>${op?(os?`<td class="n"><input id="rg${i}" type="number" min="0" value="${os}" style="width:70px"></td><td class="n"><input id="rd${i}" type="number" min="0" value="0" style="width:70px"></td><td class="n"><input id="rl${i}" type="number" min="0" value="0" style="width:70px"></td>`:"<td></td><td></td><td></td>"):""}</tr>`}).join("");
+ E.innerHTML=head+`<div class="card"><div class="sc"><table><thead><tr><th>Item</th><th class="n">Picked out</th><th class="n">Returned</th><th class="n">Outstanding</th>${op?'<th class="n">Back in good condition</th><th class="n">Damaged</th><th class="n">Lost</th>':""}</tr></thead><tbody>${rows}</tbody></table></div><p class="mu" style="font-size:13px;margin:10px 0 0">Dispatched ${esc(x.outDate||"")}${x.retDate?" \u00b7 fully returned "+esc(x.retDate):""}</p></div>${ldHtml(true)}`+(op?`<div class="card"><div class="row"><label>Return date<input id="prd" type="date" value="${today()}"></label><button class="b" data-plret="1" style="align-self:end">Record return</button><span id="plm" class="msg" style="align-self:end"></span></div><p class="mu" style="font-size:13px;margin:10px 0 0">Good and damaged pieces come back into the warehouse as In movements. Damaged pieces also create a repair record and stay out of availability until repaired. Lost pieces are removed from your stock total.</p></div>`:"")}
+document.addEventListener("input",e=>{const f=e.target.dataset&&e.target.dataset.pf;if(f&&pld){pld[f]=e.target.value;if(f==="invoice"){const v=invs().find(y=>y.number===e.target.value);pld.customer=v?v.customer:""}}});
+document.addEventListener("change",e=>{const i=e.target.dataset&&e.target.dataset.plq;if(i!==undefined&&pld){pld.lines[+i].qty=Math.max(1,parseInt(e.target.value)||1);renderPLE()}});
+const plMsg=h=>{const m=$("plm");if(m)m.innerHTML=h;else{say(h.replace(/<[^>]+>/g,""));setTimeout(()=>say(""),6000)}};
+function ldHtml(ro){const L=pld.lines||[];if(!L.length)return"";const ld=pld.loaded||{};let tot=0,done=0;
+ const rows=L.map(l=>{const n=Math.min(l.qty,ld[l.itemId]||0),full=n>=l.qty,it=S.items[l.itemId]||{name:"?"};tot+=l.qty;done+=n;
+  const box=ro?`<span class="ldbox${full?" on":""}">${full?"\u2713":""}</span>`:`<button type="button" class="ldbox${full?" on":""}" data-ld="${l.itemId}" aria-label="Tick as loaded">${full?"\u2713":""}</button>`;
+  const right=ro?`<b>${n} / ${l.qty}</b>`:l.qty>1?`<span class="row" style="gap:6px"><button type="button" class="g" data-ldm="${l.itemId}">\u2212</button><b>${n} / ${l.qty}</b><button type="button" class="g" data-ldp="${l.itemId}">+</button></span>`:`<b>\u00d7 1</b>`;
+  return`<div class="ldr${full?" done":""}"${ro?"":` data-ldr="${l.itemId}"`}>${box}<div class="nm">${ph(it,"sm")}<b>${esc(it.name)}</b></div><span style="flex:1"></span>${right}</div>`}).join("");
+ return`<div class="card"><div class="top"><b>Loading checklist</b><span class="pill${done>=tot?"":" off"}">${done} of ${tot} loaded</span></div><div class="bar"><i style="width:${tot?Math.round(done/tot*100):0}%"></i></div>${rows}${ro?"":`<div class="row" style="margin-top:10px"><button type="button" class="g" data-ldall="1">Tick all</button><button type="button" class="g" data-ldnone="1">Clear ticks</button><span class="mu" style="font-size:12px">Tap an item as it goes onto the truck.</span></div>`}</div>`}
+function ldSave(){plWarn=false;if(plId&&S.picklists[plId])put("picklists",plId,{...S.picklists[plId],loaded:{...(pld.loaded||{})}});else savePL();renderPLE()}
+function ldSet(iid,n){const l=(pld.lines||[]).find(x=>x.itemId===iid);if(!l)return;pld.loaded=pld.loaded||{};pld.loaded[iid]=Math.max(0,Math.min(l.qty,n));ldSave()}
+function clonePL(){const x=pld;if(!x)return;plId=null;plWarn=false;
+ pld={number:nextNo("picklists","PL"),eventId:"",invoice:"",customer:"",notes:x.notes||"",lines:JSON.parse(JSON.stringify(x.lines||[])),status:"draft",outDate:today(),created:Date.now(),loaded:{}};plMode="edit";
+ renderPL();renderPLE();window.scrollTo(0,0);hint("Cloned the items. Choose the event or invoice, then Save draft.")}
+document.addEventListener("click",e=>{const r=e.target.closest&&e.target.closest(".ldr[data-ldr]");if(r&&!e.target.closest("button")&&pld){const l=(pld.lines||[]).find(x=>x.itemId===r.dataset.ldr);if(l)ldSet(l.itemId,((pld.loaded||{})[l.itemId]||0)>=l.qty?0:l.qty)}});
+function plFill(){const e=S.events[pld.eventId];if(!e){plMsg('<span class="bad">Choose an event first.</span>');return}
+ const r=Object.entries(e.reservations||{});if(!r.length){plMsg('<span class="bad">That event has no reserved items.</span>');return}
+ const cur2=Object.fromEntries(pld.lines.map(l=>[l.itemId,l.qty]));r.forEach(([i,q])=>cur2[i]=q);
+ pld.lines=mergeLines(Object.entries(cur2).map(([itemId,qty])=>({itemId,qty})));renderPLE()}
+function savePL(){const id=plId||rid(),d={...pld,lines:mergeLines(pld.lines),status:"draft"};put("picklists",id,d);plId=id;pld=JSON.parse(JSON.stringify(d));renderPLE();plMsg('<span class="ok">Draft saved.</span>')}
+function doDispatch(){const lines=mergeLines(pld.lines);
+ if(!lines.length){plMsg('<span class="bad">Add at least one item first.</span>');return}
+ const bad=lines.filter(l=>l.qty>whOf(l.itemId));if(bad.length){plMsg('<span class="bad">Not enough in the warehouse: '+esc(bad.map(l=>itName(l.itemId)+" (need "+l.qty+", have "+whOf(l.itemId)+")").join(", "))+".</span>");return}
+ const ldm=pld.loaded||{},tot=lines.reduce((a,l)=>a+l.qty,0),dn=lines.reduce((a,l)=>a+Math.min(l.qty,ldm[l.itemId]||0),0);
+ if(dn>0&&dn<tot&&!plWarn){plWarn=true;plMsg(`<span class="warn">Only ${dn} of ${tot} pieces are ticked as loaded. Press Dispatch again to continue anyway.</span>`);return}
+ const id=plId||rid(),date=pld.outDate||today();
+ lines.forEach(l=>put("movements",rid(),{eventId:pld.eventId||"",itemId:l.itemId,type:"out",qty:l.qty,date,note:"Picklist "+pld.number,picklistId:id,ts:Date.now()}));
+ const d={...pld,lines,status:"out",outDate:date};put("picklists",id,d);plId=id;pld=JSON.parse(JSON.stringify(d));plMode="view";renderPL();renderPLE()}
+function doReturn(){const x=pld,id=plId,date=$("prd").value||today(),ops=[],errs=[];
+ (x.lines||[]).forEach((l,i)=>{const os=plQty(id,l.itemId,"out")-plQty(id,l.itemId,"in");if(os<=0)return;
+  const g=parseInt($("rg"+i).value)||0,d=parseInt($("rd"+i).value)||0,lo=parseInt($("rl"+i).value)||0;
+  if(g+d+lo>os)errs.push(itName(l.itemId)+": "+(g+d+lo)+" entered but only "+os+" outstanding");ops.push({l,g,d,lo})});
+ if(errs.length){plMsg('<span class="bad">'+esc(errs.join(". "))+".</span>");return}
+ if(!ops.some(o=>o.g+o.d+o.lo>0)){plMsg('<span class="bad">Enter a quantity to record.</span>');return}
+ const ref="Picklist "+x.number;
+ ops.forEach(({l,g,d,lo})=>{
+  if(g+d>0)put("movements",rid(),{eventId:x.eventId||"",itemId:l.itemId,type:"in",qty:g+d,date,note:ref+(d?" ("+d+" damaged)":""),picklistId:id,ts:Date.now()});
+  if(d>0)createRepair({itemId:l.itemId,qty:d,issue:"Damaged on return",source:ref+(x.eventId?" \u00b7 "+evName(x.eventId):""),reportedDate:date});
+  if(lo>0){put("movements",rid(),{eventId:x.eventId||"",itemId:l.itemId,type:"in",qty:lo,date,note:ref+" (lost, removed from stock)",picklistId:id,ts:Date.now()});
+   const it=S.items[l.itemId],nt=Math.max(0,it.total-lo);put("items",l.itemId,{...it,total:nt});logIt(l.itemId,"Stock adjusted",`-${lo} (Lost on site, ${ref}): ${it.total} \u2192 ${nt}`)}});
+ const left=(x.lines||[]).reduce((a,l)=>a+plQty(id,l.itemId,"out")-plQty(id,l.itemId,"in"),0);
+ const d2={...x,status:left<=0?"returned":"out"};if(left<=0)d2.retDate=date;put("picklists",id,d2);pld=JSON.parse(JSON.stringify(d2));renderPLE()}
+
+function renderRP(){
+ const f=$("rpf").value,q=$("rpsq").value.trim().toLowerCase(),all=Object.entries(S.repairs).map(([id,r])=>({id,...r})),open=r=>r.status==="reported"||r.status==="in_repair";
+ $("rsum").innerHTML=`<div><b>${all.filter(open).length}</b><span class="mu">Open repair records</span></div><div><b class="${all.filter(open).length?"warn":""}">${all.filter(open).reduce((a,r)=>a+r.qty,0)}</b><span class="mu">Pieces out of stock</span></div><div><b>${all.filter(r=>r.status==="repaired").reduce((a,r)=>a+r.qty,0)}</b><span class="mu">Pieces repaired</span></div><div><b>${money(all.reduce((a,r)=>a+(+r.cost||0),0).toLocaleString("en-GB"))}</b><span class="mu">Total repair cost</span></div>`;
+ const L=all.filter(r=>{if(!fpass("rp",r))return false;if(f==="open"&&!open(r))return false;if(RS[f]&&r.status!==f)return false;return !q||(r.number+" "+itName(r.itemId)+" "+(r.issue||"")+" "+(r.assignedTo||"")+" "+(r.source||"")).toLowerCase().includes(q)}).sort((a,b)=>(b.reportedDate||"").localeCompare(a.reportedDate||"")||String(b.number).localeCompare(String(a.number)));
+ $("rpt").innerHTML=L.map(r=>{const it=S.items[r.itemId]||{name:"?"},op=open(r);
+  return`<tr><td><b>${esc(r.number)}</b>${r.source&&r.source!=="Manual"?`<br><span class="mu" style="font-size:12px">${esc(r.source)}</span>`:""}</td><td><div class="nm">${ph(it,"sm")}<span>${esc(itName(r.itemId))}</span></div></td><td class="n">${r.qty}</td><td style="white-space:normal;min-width:160px">${esc(r.issue)}${r.notes?`<br><span class="mu" style="font-size:12px">${esc(r.notes)}</span>`:""}${thumbs(r.photos)}</td><td><span class="pill ${op?"":"off"}">${RS[r.status]||r.status}</span></td><td class="mu">${esc(r.reportedDate)}</td><td>${esc(r.assignedTo)}</td><td class="n">${r.cost?money(r.cost):""}</td><td style="text-align:right">${r.status==="reported"?`<button class="g" data-rps="${r.id}">Start repair</button> `:""}${op?`<button class="g" data-rpr="${r.id}">Resolve</button> `:""}<button class="g" data-rpe="${r.id}">Edit</button> <button class="g dng" data-rpd="${r.id}">${armed==="r"+r.id?"Sure?":"\u00d7"}</button></td></tr>`}).join("")||`<tr><td colspan="9" class="mu" style="padding:22px">No repair records here.</td></tr>`}
+$("rpf").onchange=$("rpsq").oninput=render;
+let rpPh=[],rpNew=[];
+const dropPh=id=>{delete PH[id];if(idb)tx("photos","readwrite").delete(id)};
+function rpStrip(){$("rpph").innerHTML=rpPh.map((id,i)=>`<span class="pth"><img class="rth" data-pv="${id}" src="${photoSrc(id)}" alt=""><button type="button" class="pdel" data-rpx="${i}" title="Remove photo">\u00d7</button></span>`).join("")||'<span class="mu" style="font-size:12px">No photos yet.</span>'}
+async function addRpPhotos(files){const m=$("rpm");for(const f of files){try{m.textContent="Adding photo\u2026";const id=await uploadPhoto(f);rpPh.push(id);rpNew.push(id);rpStrip()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||"Could not add that photo")}</span>`;return}}m.textContent=""}
+$("rpcam").onchange=$("rppick").onchange=e=>{const fs=[...e.target.files];e.target.value="";addRpPhotos(fs)};
+function cancelRepair(){rpNew.forEach(dropPh);rpNew=[];closeRepair()}
+const thumbs=ids=>ids&&ids.length?`<div class="ths">${ids.map(id=>photoSrc(id)?`<img class="rth" data-pv="${id}" src="${photoSrc(id)}" alt="">`:'<span class="rth"></span>').join("")}</div>`:"";
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-pv]");if(t&&t.tagName==="IMG"&&t.getAttribute("src")){$("lbi").src=t.getAttribute("src");$("lb").classList.remove("hide");return}if(e.target.closest&&e.target.closest("#lb"))$("lb").classList.add("hide")});
+function createRepair(o){const id=rid(),number=nextNo("repairs","RP"),d={number,itemId:o.itemId,qty:o.qty,issue:o.issue||"",status:"reported",reportedDate:o.reportedDate||today(),assignedTo:o.assignedTo||"",cost:o.cost||0,notes:o.notes||"",photos:o.photos||[],source:o.source||"Manual",created:Date.now()};
+ put("repairs",id,d);logIt(o.itemId,"Repair reported",`${number}: ${o.qty} pcs \u2014 ${d.issue}`);return id}
+function openRepair(id,itemId){rpEdit=id;const r=id?S.repairs[id]:{};if(id&&!r)return;
+ $("rph").textContent=id?"Edit repair "+r.number:"Report repair";
+ $("rpi").innerHTML=items().filter(i=>i.active!==false||i.id===r.itemId).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("");
+ $("rpi").value=id?r.itemId:(itemId||$("rpi").value);$("rpn").value=id?r.qty:1;$("rpd").value=id?r.reportedDate:today();$("rpis").value=id?r.issue:"";$("rpa").value=id?r.assignedTo||"":"";$("rpc").value=id&&r.cost?r.cost:"";$("rpno").value=id?r.notes||"":"";$("rpm").textContent="";rpPh=id?[...(r.photos||[])]:[];rpNew=[];rpStrip();
+ $("frs").classList.add("hide");$("frp").classList.remove("hide");$("ovr").classList.remove("hide")}
+function closeRepair(){$("ovr").classList.add("hide")}
+$("frp").onsubmit=e=>{e.preventDefault();const iid=$("rpi").value,q=parseInt($("rpn").value)||0,old=rpEdit?S.repairs[rpEdit]:null;
+ const room=whOf(iid)+(old&&old.itemId===iid&&(old.status==="reported"||old.status==="in_repair")?old.qty:0);
+ if(!iid||q<1){$("rpm").innerHTML='<span class="bad">Choose an item and a quantity.</span>';return}
+ if(q>room){$("rpm").innerHTML=`<span class="bad">Only ${room} of this item are in the warehouse right now.</span>`;return}
+ const f={itemId:iid,qty:q,issue:$("rpis").value.trim(),reportedDate:$("rpd").value,assignedTo:$("rpa").value.trim(),cost:parseFloat($("rpc").value)||0,notes:$("rpno").value.trim(),photos:rpPh.slice()};
+ if(old){put("repairs",rpEdit,{...old,...f});logIt(iid,"Repair updated",old.number)}else createRepair(f);
+ rpNew=[];closeRepair()};
+function openResolve(id){const r=S.repairs[id];if(!r)return;rpRes=id;$("rsh").textContent="Resolve "+r.number+" \u00b7 "+r.qty+" \u00d7 "+itName(r.itemId);$("rso").value="repaired";$("rsc").value=r.cost||"";$("rsd").value=today();$("rsn").value="";$("rsm").textContent="";
+ $("frp").classList.add("hide");$("frs").classList.remove("hide");$("ovr").classList.remove("hide")}
+$("frs").onsubmit=e=>{e.preventDefault();const r=S.repairs[rpRes],it=S.items[r.itemId],out=$("rso").value,note=$("rsn").value.trim();
+ if(out==="written_off"&&it.total-r.qty<net(r.itemId)){$("rsm").innerHTML='<span class="bad">Stock cannot go below the pieces currently out on site.</span>';return}
+ put("repairs",rpRes,{...r,status:out,cost:parseFloat($("rsc").value)||0,resolvedDate:$("rsd").value,notes:[r.notes,note].filter(Boolean).join(" \u00b7 ")});
+ if(out==="written_off"){const nt=it.total-r.qty;put("items",r.itemId,{...it,total:nt});logIt(r.itemId,"Stock adjusted",`-${r.qty} (Written off after repair ${r.number}): ${it.total} \u2192 ${nt}`);logIt(r.itemId,"Repair closed",`${r.number}: written off`)}
+ else logIt(r.itemId,"Repair completed",`${r.number}: ${r.qty} pcs back in stock`);
+ closeRepair()};
+
+let avN=30,avFrom="";
+document.addEventListener("change",e=>{if(e.target.id==="avn"){avN=+e.target.value;renderItem()}if(e.target.id==="avf"){avFrom=e.target.value;renderItem()}});
+// ================= Filters (all modules, list and board) =================
+const OPS={text:[["contains","contains"],["ncontains","does not contain"],["is","is"],["isnot","is not"],["empty","is empty"],["nempty","is not empty"]],
+ number:[["is","="],["isnot","\u2260"],["gt",">"],["ge","\u2265"],["lt","<"],["le","\u2264"],["empty","is empty"]],
+ date:[["is","is"],["isnot","is not"],["before","is before"],["after","is after"],["between","is between"],["lastn","is in the last"],["nextn","is in the next"],["empty","is empty"]],
+ select:[["is","is"],["isnot","is not"]]};
+const whF=r=>r.total-net(r.id)-repQty(r.id);
+const evStatus=e=>(e.end||"")<today()?"Completed":(e.start||"")>today()?"Upcoming":"In progress";
+const tsDate=t=>t?new Date(t).toISOString().slice(0,10):"";
+const FDEF={
+ stock:[{k:"name",l:"Name",t:"text",g:r=>r.name},{k:"sku",l:"SKU",t:"text",g:r=>r.sku},{k:"category",l:"Category",t:"text",g:r=>r.category},{k:"unit",l:"Unit",t:"text",g:r=>r.unit},{k:"price",l:"Rate",t:"number",g:r=>r.price||0},{k:"total",l:"Stock on hand",t:"number",g:r=>r.total},{k:"wh",l:"In warehouse",t:"number",g:whF},{k:"site",l:"Out on site",t:"number",g:r=>net(r.id)},{k:"rep",l:"In repair",t:"number",g:r=>repQty(r.id)},{k:"reorder",l:"Reorder level",t:"number",g:r=>r.reorder||0},
+  {k:"status",l:"Status",t:"select",opts:["Active","Inactive"],g:r=>r.active===false?"Inactive":"Active"},{k:"level",l:"Stock level",t:"select",opts:["In stock","Low stock","None in warehouse"],g:r=>{const w=whF(r);return w<=0?"None in warehouse":isLow(r,w)?"Low stock":"In stock"}}],
+ events:[{k:"name",l:"Event name",t:"text",g:e=>e.name},{k:"client",l:"Client",t:"text",g:e=>e.client},{k:"start",l:"Start date",t:"date",g:e=>e.start},{k:"end",l:"End date",t:"date",g:e=>e.end},{k:"status",l:"Status",t:"select",opts:["Upcoming","In progress","Completed"],g:evStatus},{k:"types",l:"Item types reserved",t:"number",g:e=>Object.keys(e.reservations||{}).length},{k:"items",l:"Reserved item",t:"text",g:e=>Object.keys(e.reservations||{}).map(itName).join(", ")}],
+ inv:[{k:"number",l:"Invoice number",t:"text",g:v=>v.number},{k:"customer",l:"Customer",t:"text",g:v=>v.customer},{k:"bill",l:"Billing location",t:"text",g:v=>v.bill},{k:"date",l:"Invoice date",t:"date",g:v=>v.date},{k:"due",l:"Due date",t:"date",g:v=>v.due},{k:"total",l:"Total",t:"number",g:v=>v.total},{k:"balance",l:"Balance",t:"number",g:v=>v.balance},
+  {k:"state",l:"Status",t:"select",opts:["Overdue","Unpaid","Partially paid","Paid","Draft","Void"],g:invState},{k:"days",l:"Days until due",t:"number",g:v=>open(v)&&v.due?Math.round((Date.parse(v.due)-Date.parse(today()))/864e5):""},{k:"pl",l:"Has a picklist",t:"select",opts:["Yes","No"],g:v=>Object.values(S.picklists).some(p=>p.invoice===v.number)?"Yes":"No"},{k:"cur",l:"Currency",t:"text",g:v=>v.currency}],
+ pl:[{k:"number",l:"Picklist number",t:"text",g:x=>x.number},{k:"event",l:"Event",t:"text",g:x=>x.eventId?evName(x.eventId):""},{k:"invoice",l:"Invoice",t:"text",g:x=>x.invoice},{k:"customer",l:"Customer",t:"text",g:x=>x.customer},{k:"status",l:"Status",t:"select",opts:["Draft","Out on site","Partly returned","Returned"],g:x=>plState(x.id,x)},{k:"pcs",l:"Pieces",t:"number",g:x=>(x.lines||[]).reduce((a,l)=>a+l.qty,0)},{k:"created",l:"Created on",t:"date",g:x=>tsDate(x.created)},{k:"out",l:"Dispatch date",t:"date",g:x=>x.outDate},{k:"items",l:"Item",t:"text",g:x=>(x.lines||[]).map(l=>itName(l.itemId)).join(", ")}],
+ rp:[{k:"number",l:"Repair ref",t:"text",g:r=>r.number},{k:"item",l:"Item",t:"text",g:r=>itName(r.itemId)},{k:"status",l:"Status",t:"select",opts:["Reported","In repair","Repaired","Written off"],g:r=>RS[r.status]},{k:"qty",l:"Quantity",t:"number",g:r=>r.qty},{k:"issue",l:"Issue",t:"text",g:r=>r.issue},{k:"who",l:"Assigned to",t:"text",g:r=>r.assignedTo},{k:"date",l:"Reported on",t:"date",g:r=>r.reportedDate},{k:"cost",l:"Cost",t:"number",g:r=>r.cost||0},{k:"source",l:"Source",t:"text",g:r=>r.source}],
+ moves:[{k:"date",l:"Date",t:"date",g:m=>m.date},{k:"item",l:"Item",t:"text",g:m=>itName(m.itemId)},{k:"event",l:"Event",t:"text",g:m=>m.eventId?evName(m.eventId):""},{k:"type",l:"Type",t:"select",opts:["Out","Returned"],g:m=>m.type==="out"?"Out":"Returned"},{k:"qty",l:"Quantity",t:"number",g:m=>m.qty},{k:"note",l:"Note",t:"text",g:m=>m.note}]};
+let AF=(()=>{try{return JSON.parse(localStorage.getItem("ev_af")||"{}")}catch(e){return{}}})();const FB={};
+const saveAF=()=>{try{localStorage.setItem("ev_af",JSON.stringify(AF))}catch(e){}};
+const addDays=(d,n)=>new Date(Date.parse(d)+n*864e5).toISOString().slice(0,10);
+function fdef(m){const a=AF[m];if(!a)return null;const f=a.id?S.filters[a.id]:a;return f&&f.conds&&f.conds.length?f:null}
+function ctest(c,v,t){
+ const has=!(v==null||v==="");if(c.op==="empty")return!has;if(c.op==="nempty")return has;
+ const x=c.value,s=String(v==null?"":v).toLowerCase(),xs=String(x==null?"":x).toLowerCase();
+ if(t==="number"){const a=parseFloat(v),b=parseFloat(x);if(isNaN(b))return true;if(isNaN(a))return c.op==="isnot";return c.op==="is"?a===b:c.op==="isnot"?a!==b:c.op==="gt"?a>b:c.op==="ge"?a>=b:c.op==="lt"?a<b:c.op==="le"?a<=b:true}
+ if(t==="date"){const d=String(v||"").slice(0,10),tt=today();
+  if(c.op==="lastn")return has&&d<=tt&&d>=addDays(tt,-(+x||0));if(c.op==="nextn")return has&&d>=tt&&d<=addDays(tt,+x||0);
+  if(!x)return true;return c.op==="is"?d===x:c.op==="isnot"?d!==x:c.op==="before"?has&&d<x:c.op==="after"?has&&d>x:c.op==="between"?has&&d>=x&&(!c.value2||d<=c.value2):true}
+ return c.op==="contains"?s.includes(xs):c.op==="ncontains"?!s.includes(xs):c.op==="is"?s===xs:c.op==="isnot"?s!==xs:true}
+function fpass(m,r){const f=fdef(m);if(!f)return true;const res=f.conds.map(c=>{const fd=FDEF[m].find(x=>x.k===c.field);return fd?ctest(c,fd.g(r),fd.t):true});return f.mode==="any"?res.some(Boolean):res.every(Boolean)}
+const blankC=m=>{const f=FDEF[m][0];return{field:f.k,op:OPS[f.t][0][0],value:f.t==="select"?f.opts[0]:"",value2:""}};
+function loadFB(m){const f=fdef(m);FB[m]=f?{mode:f.mode||"all",conds:JSON.parse(JSON.stringify(f.conds)),name:AF[m].id?(S.filters[AF[m].id]||{}).name||"":""}:{mode:"all",conds:[blankC(m)],name:""}}
+const validC=c=>c.op==="empty"||c.op==="nempty"||(c.value!==""&&c.value!=null);
+function condRow(m,i,c){const f=FDEF[m].find(x=>x.k===c.field)||FDEF[m][0],noVal=c.op==="empty"||c.op==="nempty";let val="";
+ if(!noVal){
+  if(f.t==="select")val=`<select data-fv="${m}|${i}|value">${f.opts.map(o=>`<option${c.value===o?" selected":""}>${esc(o)}</option>`).join("")}</select>`;
+  else if(f.t==="date"&&(c.op==="lastn"||c.op==="nextn"))val=`<input type="number" min="0" data-fv="${m}|${i}|value" value="${esc(c.value)}" style="width:90px"> <span class="mu">days</span>`;
+  else if(f.t==="date")val=`<input type="date" data-fv="${m}|${i}|value" value="${esc(c.value)}">`+(c.op==="between"?` <span class="mu">and</span> <input type="date" data-fv="${m}|${i}|value2" value="${esc(c.value2)}">`:"");
+  else val=`<input type="${f.t==="number"?"number":"text"}" step="any" data-fv="${m}|${i}|value" value="${esc(c.value)}" placeholder="value">`}
+ return`<div class="row fr"><select data-ff="${m}|${i}">${FDEF[m].map(x=>`<option value="${x.k}"${x.k===f.k?" selected":""}>${esc(x.l)}</option>`).join("")}</select><select data-fo="${m}|${i}">${OPS[f.t].map(([k,l])=>`<option value="${k}"${c.op===k?" selected":""}>${l}</option>`).join("")}</select>${val}<button class="g" data-frm="${m}|${i}">\u00d7</button></div>`}
+function renderFP(m){const p=$("fp_"+m);if(!p)return;if(!FB[m])loadFB(m);const B=FB[m],saved=Object.entries(S.filters).filter(([,f])=>f.module===m),act=AF[m]&&AF[m].id&&S.filters[AF[m].id];
+ p.innerHTML=`<div class="row" style="margin-bottom:10px"><b>Filters</b>${saved.map(([id,f])=>`<span class="fchip${AF[m]&&AF[m].id===id?" on":""}"><button class="lk" data-fa="${m}|${id}">${esc(f.name)}</button><button class="lk" data-fdel="${m}|${id}" title="Delete this saved filter">${armed==="f"+id?"Sure?":"\u00d7"}</button></span>`).join("")||'<span class="mu" style="font-size:13px">No saved filters yet.</span>'}</div>
+ <div class="row fr">Show records that match <select data-fm="${m}"><option value="all"${B.mode==="all"?" selected":""}>all</option><option value="any"${B.mode==="any"?" selected":""}>any</option></select> of these conditions:</div>${B.conds.map((c,i)=>condRow(m,i,c)).join("")}
+ <div class="row"><button class="g" data-fadd="${m}">+ Add condition</button></div>
+ <div class="row" style="margin-top:12px"><button class="b" data-fap="${m}">Apply</button><button class="g" data-fclr="${m}">Clear</button><span style="flex:1"></span><input id="fn_${m}" placeholder="Name this filter" value="${esc(B.name||"")}" style="width:170px"><button class="g" data-fsv="${m}">Save as new</button>${act?`<button class="g" data-fup="${m}">Update \u201c${esc(act.name)}\u201d</button>`:""}</div>`}
+function renderFilters(){for(const m in FDEF){const f=fdef(m),n=f?f.conds.length:0,b=document.querySelector(`[data-fl="${m}"]`);if(!b)continue;
+ b.textContent=n?(AF[m].id&&f.name?"Filter: "+f.name:"Filter \u00b7 "+n):"Filter";b.classList.toggle("on",!!n);
+ const x=document.querySelector(`[data-fclr="${m}"][data-fx]`);if(x)x.classList.toggle("hide",!n);
+ const p=$("fp_"+m);if(p&&!p.classList.contains("hide")&&!p.contains(document.activeElement))renderFP(m)}}
+const fvalid=m=>FB[m].conds.filter(validC).map(c=>({...c}));
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("button");if(!b)return;const d=b.dataset;
+ if(d.fl){const p=$("fp_"+d.fl),op=p.classList.contains("hide");p.classList.toggle("hide",!op);if(op){loadFB(d.fl);renderFP(d.fl)}}
+ else if(d.fadd){FB[d.fadd].conds.push(blankC(d.fadd));renderFP(d.fadd)}
+ else if(d.frm){const [m,i]=d.frm.split("|");FB[m].conds.splice(+i,1);if(!FB[m].conds.length)FB[m].conds.push(blankC(m));renderFP(m)}
+ else if(d.fap){const m=d.fap,v=fvalid(m);if(v.length)AF[m]={mode:FB[m].mode,conds:v};else delete AF[m];saveAF();render();renderFP(m)}
+ else if(d.fclr){const m=d.fclr;delete AF[m];saveAF();FB[m]={mode:"all",conds:[blankC(m)],name:""};render();if(!$("fp_"+m).classList.contains("hide"))renderFP(m)}
+ else if(d.fsv){const m=d.fsv,name=($("fn_"+m)||{}).value?$("fn_"+m).value.trim():"",v=fvalid(m);if(!name){hint("Give the filter a name first.");return}if(!v.length){hint("Add at least one condition first.");return}
+  const id=rid();put("filters",id,{module:m,name,mode:FB[m].mode,conds:v,created:Date.now()});AF[m]={id};saveAF();FB[m].name=name;render();renderFP(m)}
+ else if(d.fup){const m=d.fup,id=AF[m]&&AF[m].id,v=fvalid(m),name=($("fn_"+m).value||"").trim();if(!id||!S.filters[id]||!v.length)return;put("filters",id,{...S.filters[id],name:name||S.filters[id].name,mode:FB[m].mode,conds:v});render();renderFP(m)}
+ else if(d.fa){const [m,id]=d.fa.split("|");if(!S.filters[id])return;AF[m]={id};saveAF();loadFB(m);render();renderFP(m)}
+ else if(d.fdel){const [m,id]=d.fdel.split("|");confirmDel("f"+id,()=>{del("filters",id);if(AF[m]&&AF[m].id===id){delete AF[m];saveAF()}render()});renderFP(m)}});
+document.addEventListener("change",e=>{const t=e.target,d=t.dataset||{};
+ if(d.ff){const [m,i]=d.ff.split("|"),c=FB[m].conds[+i],f=FDEF[m].find(x=>x.k===t.value);c.field=t.value;c.op=OPS[f.t][0][0];c.value=f.t==="select"?f.opts[0]:"";c.value2="";renderFP(m)}
+ else if(d.fo){const [m,i]=d.fo.split("|");FB[m].conds[+i].op=t.value;renderFP(m)}
+ else if(d.fm)FB[d.fm].mode=t.value;
+ else if(d.fv){const [m,i,k]=d.fv.split("|");FB[m].conds[+i][k]=t.value}});
+document.addEventListener("input",e=>{const d=e.target.dataset||{};if(d.fv){const [m,i,k]=d.fv.split("|");FB[m].conds[+i][k]=e.target.value}});
+
+// ================= Kanban boards =================
+const VW=(()=>{try{return JSON.parse(localStorage.getItem("ev_vw")||"{}")}catch(e){return{}}})(),VT={};
+const kcard=(m,id,html,drag)=>`<div class="kcard" data-m="${m}" data-id="${id}"${drag?' draggable="true"':""}>${html}</div>`;
+function kb(m,cols,drop,max){max=max||50;return`<div class="kb">${cols.map(c=>`<div class="kc" data-col="${c.key}" data-m="${m}"${drop?' data-drop="1"':""} style="border-top:3px solid ${c.color}"><div class="kh"><span>${c.title}</span><span class="pill">${c.cards.length}</span></div>${c.cards.slice(0,max).join("")||'<p class="mu" style="font-size:12px;margin:8px 6px">Nothing here</p>'}${c.cards.length>max?`<p class="mu" style="font-size:12px;margin:6px">+${c.cards.length-max} more \u2014 use the list view</p>`:""}</div>`).join("")}</div>`}
+const sub=t=>`<div class="mu" style="font-size:12px">${t}</div>`;
+function bItems(){const q=$("q").value.trim().toLowerCase(),c={ok:[],low:[],out:[],off:[]};
+ items().filter(i=>fpass("stock",i)).filter(i=>!q||(i.name+" "+(i.sku||"")+" "+(i.category||"")).toLowerCase().includes(q)).forEach(i=>{const o=net(i.id),rq=repQty(i.id),w=i.total-o-rq,k=i.active===false?"off":w<=0?"out":isLow(i,w)?"low":"ok";
+  c[k].push(kcard("stock",i.id,`<div class="nm">${ph(i,"sm")}<div><b>${esc(i.name)}</b>${sub(esc([i.sku,i.category].filter(Boolean).join(" \u00b7 ")))}</div></div><div style="margin-top:8px"><b>${w}</b> in warehouse <span class="mu">of ${i.total}</span>${o?` \u00b7 <span class="warn">${o} out</span>`:""}${rq?` \u00b7 <span class="warn">${rq} in repair</span>`:""}</div>`))});
+ return kb("stock",[{key:"ok",title:"In stock",color:"var(--ok)",cards:c.ok},{key:"low",title:"Low stock",color:"var(--warn)",cards:c.low},{key:"out",title:"None in warehouse",color:"var(--bad)",cards:c.out},{key:"off",title:"Inactive",color:"var(--mu)",cards:c.off}],false)}
+function bEvents(){const t=today(),c={up:[],now:[],done:[]};
+ events().filter(e=>fpass("events",e)).forEach(e=>{const k=(e.end||"")<t?"done":(e.start||"")>t?"up":"now",n=Object.keys(e.reservations||{}).length,pl=Object.values(S.picklists).filter(x=>x.eventId===e.id).length;
+  c[k].push(kcard("events",e.id,`<b>${esc(e.name)}</b>${sub(esc(e.client))}<div style="margin-top:6px">${esc(e.start)} \u2192 ${esc(e.end)}</div>${sub(n+" item type"+(n===1?"":"s")+" reserved"+(pl?" \u00b7 "+pl+" picklist"+(pl===1?"":"s"):""))}`))});
+ c.done.reverse();
+ return kb("events",[{key:"up",title:"Upcoming",color:"var(--ac)",cards:c.up},{key:"now",title:"In progress",color:"var(--warn)",cards:c.now},{key:"done",title:"Completed",color:"var(--ok)",cards:c.done}],false)}
+function bInv(){const q=$("invq").value.trim().toLowerCase(),t=today(),w7=new Date(Date.parse(t)+7*864e5).toISOString().slice(0,10),c={ov:[],soon:[],later:[],paid:[]};
+ invs().filter(v=>fpass("inv",v)).filter(v=>!/^(void|draft)$/i.test(v.status||"")&&invMatch(v,q,dateKey(q))).sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999")).forEach(v=>{
+  const k=invState(v)==="Paid"?"paid":v.due&&v.due<t?"ov":v.due&&v.due<=w7?"soon":"later";
+  c[k].push(kcard("inv",v.id,`${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`} <span class="mu">${esc(v.customer)}</span>${v.bill?sub("\ud83d\udccd "+esc(v.bill)):""}<div style="margin-top:6px">Due ${esc(v.due)}</div><div><b>${fm(v.balance,v.currency)}</b> <span class="mu">of ${fm(v.total,v.currency)}</span></div><div class="row" style="margin-top:8px">${plLinks(v)}</div>`))});
+ c.paid.reverse();
+ return kb("inv",[{key:"ov",title:"Overdue",color:"var(--bad)",cards:c.ov},{key:"soon",title:"Due in 7 days",color:"var(--warn)",cards:c.soon},{key:"later",title:"Due later",color:"var(--ac)",cards:c.later},{key:"paid",title:"Paid",color:"var(--ok)",cards:c.paid}],false)}
+function bPL(){const q=$("plq").value.trim().toLowerCase(),c={draft:[],out:[],partly:[],returned:[]},K={Draft:"draft","Out on site":"out","Partly returned":"partly",Returned:"returned"};
+ Object.entries(S.picklists).map(([id,x])=>({id,...x,st:plState(id,x)})).filter(x=>x.st!=="Cancelled"&&fpass("pl",x)&&(!q||(x.number+" "+evName(x.eventId)+" "+(x.invoice||"")+" "+(x.customer||"")+" "+(x.lines||[]).map(l=>itName(l.itemId)).join(" ")).toLowerCase().includes(q))).sort((a,b)=>(b.created||0)-(a.created||0)).forEach(x=>{
+  const k=K[x.st],pcs=(x.lines||[]).reduce((a,l)=>a+l.qty,0),act=k==="draft"?`<button class="g" data-kmv="pl|${x.id}|draft|out">Dispatch</button>`:k==="out"||k==="partly"?`<button class="g" data-kmv="pl|${x.id}|${k}|returned">Record return</button>`:"";
+  c[k].push(kcard("pl",x.id,`<b>${esc(x.number)}</b>${sub(esc(evName(x.eventId))+(x.invoice?" \u00b7 "+esc(x.invoice):""))}<div style="margin-top:6px">${pcs} pieces${ldn(x)?" \u00b7 "+ldn(x)+" loaded":""} \u00b7 ${(x.lines||[]).length} item${(x.lines||[]).length===1?"":"s"}</div><div class="row" style="margin-top:8px">${act}<button class="g" data-plcl="${x.id}">Clone</button></div>`,k!=="returned"))});
+ return kb("pl",[{key:"draft",title:"Draft",color:"var(--mu)",cards:c.draft},{key:"out",title:"Out on site",color:"var(--warn)",cards:c.out},{key:"partly",title:"Partly returned",color:"var(--ac)",cards:c.partly},{key:"returned",title:"Returned",color:"var(--ok)",cards:c.returned}],true)}
+function bRP(){const q=$("rpsq").value.trim().toLowerCase(),c={reported:[],in_repair:[],repaired:[],written_off:[]};
+ Object.entries(S.repairs).map(([id,r])=>({id,...r})).filter(r=>fpass("rp",r)).filter(r=>!q||(r.number+" "+itName(r.itemId)+" "+(r.issue||"")+" "+(r.assignedTo||"")+" "+(r.source||"")).toLowerCase().includes(q)).sort((a,b)=>(b.reportedDate||"").localeCompare(a.reportedDate||"")).forEach(r=>{
+  const it=S.items[r.itemId]||{name:"?"},op=r.status==="reported"||r.status==="in_repair",act=r.status==="reported"?`<button class="g" data-kmv="rp|${r.id}|reported|in_repair">Start repair</button> <button class="g" data-kmv="rp|${r.id}|reported|repaired">Resolve</button>`:r.status==="in_repair"?`<button class="g" data-kmv="rp|${r.id}|in_repair|repaired">Resolve</button>`:"";
+  (c[r.status]||c.reported).push(kcard("rp",r.id,`<div class="nm">${ph(it,"sm")}<div><b>${esc(itName(r.itemId))}</b> \u00d7 ${r.qty}${sub(esc(r.number))}</div></div><div style="margin-top:6px">${esc(r.issue)}</div>${thumbs(r.photos)}${sub(esc([r.assignedTo,r.reportedDate,r.cost?money(r.cost):""].filter(Boolean).join(" \u00b7 ")))}${act?`<div class="row" style="margin-top:8px">${act}</div>`:""}`,op))});
+ return kb("rp",[{key:"reported",title:"Reported",color:"var(--bad)",cards:c.reported},{key:"in_repair",title:"In repair",color:"var(--warn)",cards:c.in_repair},{key:"repaired",title:"Repaired",color:"var(--ok)",cards:c.repaired},{key:"written_off",title:"Written off",color:"var(--mu)",cards:c.written_off}],true)}
+function bMoves(){const c={out:[],in:[]};
+ moves().filter(m=>fpass("moves",m)).slice(0,200).forEach(m=>c[m.type==="out"?"out":"in"].push(kcard("moves",m.id,`<b>${esc(itName(m.itemId))}</b> \u00d7 ${m.qty}${sub(esc(m.date)+" \u00b7 "+esc(evName(m.eventId)))}${m.note?`<div class="mu" style="font-size:12px;margin-top:4px">${esc(m.note)}</div>`:""}`)));
+ return kb("moves",[{key:"out",title:"Out of warehouse",color:"var(--warn)",cards:c.out},{key:"in",title:"Returned",color:"var(--ok)",cards:c.in}],false)}
+const BUILD={stock:bItems,events:bEvents,inv:bInv,pl:bPL,rp:bRP,moves:bMoves};
+function renderBoards(){for(const m in BUILD)if(VW[m]==="board"&&VT[m])VT[m].board.innerHTML=BUILD[m]()}
+function initViews(){
+ const D={stock:{hide:$("st").closest(".sc"),after:$("st").closest(".card"),seg:$("im").parentElement,sel:["lf"]},
+  pl:{hide:$("plt").closest(".sc"),after:$("plL"),seg:$("plL").querySelector(".la"),sel:["plf"]},
+  rp:{hide:$("rpt").closest(".sc"),after:$("rpt").closest(".card"),seg:$("rp").querySelector(".la"),sel:["rpf"]},
+  inv:{hide:$("invt").closest(".sc"),after:$("invt").closest(".card"),seg:$("invi").parentElement,sel:["invf","invs"]},
+  events:{hide:$("el"),after:$("el"),seg:null,sel:[]},
+  moves:{hide:$("ml").closest(".card"),after:$("ml").closest(".card"),seg:null,sel:[]}};
+ for(const m in D){const d=D[m],b=document.createElement("div");b.id="kb_"+m;b.className="hide";d.after.after(b);
+  const seg=`<button class="g" data-fl="${m}">Filter</button><button class="g hide" data-fclr="${m}" data-fx="1">Clear filter</button><div class="seg" data-vws="${m}"><button data-vw="${m}:list">List</button><button data-vw="${m}:board">Board</button></div>`;
+  const fp=document.createElement("div");fp.id="fp_"+m;fp.className="fpanel hide"+(d.seg?"":" card");
+  if(d.seg){d.seg.insertAdjacentHTML("afterbegin",seg);d.hide.before(fp)}else{const r=document.createElement("div");r.className="row";r.style.cssText="margin-bottom:10px;justify-content:flex-end";r.innerHTML=seg;d.hide.before(r);r.after(fp)}
+  VT[m]={...d,board:b}}
+ applyViews()}
+function applyViews(){for(const m in VT){const t=VT[m],bd=VW[m]==="board";t.hide.classList.toggle("hide",bd);t.board.classList.toggle("hide",!bd);t.sel.forEach(i=>$(i).classList.toggle("hide",bd));
+ document.querySelectorAll(`[data-vws="${m}"] button`).forEach(b=>b.classList.toggle("on",b.dataset.vw===m+":"+(bd?"board":"list")))}}
+function setView(m,v){VW[m]=v;try{localStorage.setItem("ev_vw",JSON.stringify(VW))}catch(e){}applyViews();render()}
+const hint=t=>{say(t);setTimeout(()=>say(""),5000)};
+function kanbanDrop(m,id,from,to){
+ if(m==="rp"){const r=S.repairs[id];if(!r)return;
+  if(from==="reported"&&to==="in_repair"){put("repairs",id,{...r,status:"in_repair",startedDate:today()});logIt(r.itemId,"Repair started",r.number);return}
+  if((to==="repaired"||to==="written_off")&&(from==="reported"||from==="in_repair")){openResolve(id);$("rso").value=to;return}
+  hint("A repair moves forward: Reported \u2192 In repair \u2192 Repaired or Written off.");return}
+ if(m==="pl"){const x=S.picklists[id];if(!x)return;
+  if(from==="draft"&&to==="out"){plId=id;pld=JSON.parse(JSON.stringify(x));plMode="edit";doDispatch();plMode="";renderPL();return}
+  if((from==="out"||from==="partly")&&to==="returned"){openPL(id);hint("Enter the quantities that came back, then press Record return.");return}
+  hint("A picklist moves forward: Draft \u2192 Out on site \u2192 Returned.")}}
+function openCard(m,id){
+ if(m==="stock")showItem(id);
+ else if(m==="events"){openEv[id]=true;setView("events","list")}
+ else if(m==="inv"){const v=S.invoices[id];if(v){$("invq").value=v.number;$("invf").value="all";setView("inv","list")}}
+ else if(m==="pl")openPL(id);
+ else if(m==="rp")openRepair(id)}
+document.addEventListener("click",e=>{const k=e.target.closest&&e.target.closest(".kcard");if(k&&!e.target.closest("button,a,[data-pv]"))openCard(k.dataset.m,k.dataset.id)});
+document.addEventListener("dragstart",e=>{const c=e.target.closest&&e.target.closest(".kcard[draggable]");if(!c)return;e.dataTransfer.setData("text/plain",c.dataset.m+"|"+c.dataset.id+"|"+c.closest(".kc").dataset.col);e.dataTransfer.effectAllowed="move"});
+document.addEventListener("dragover",e=>{const c=e.target.closest&&e.target.closest(".kc[data-drop]");if(c){e.preventDefault();c.classList.add("dz")}});
+document.addEventListener("dragleave",e=>{const c=e.target.closest&&e.target.closest(".kc");if(c&&!c.contains(e.relatedTarget))c.classList.remove("dz")});
+document.addEventListener("drop",e=>{const c=e.target.closest&&e.target.closest(".kc[data-drop]");if(!c)return;e.preventDefault();c.classList.remove("dz");
+ const [m,id,from]=(e.dataTransfer.getData("text/plain")||"").split("|");if(m&&m===c.dataset.m&&from!==c.dataset.col)kanbanDrop(m,id,from,c.dataset.col)});
+initViews();
+
+const cal={m:today().slice(0,7),mode:"month",q:"",dk:null};
+const TT={stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
+function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t)));["stock","item","events","cal","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+const dIso=(y,m,d)=>new Date(Date.UTC(y,m,d)).toISOString().slice(0,10);
+const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h};
+function dateKey(q){let m=q.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return q;m=q.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);if(m)return`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return/^\d{4}-\d{2}$/.test(q)?q:null}
+const mname=d=>d?new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{month:"long",year:"numeric",timeZone:"UTC"}):"";
+function evMatches(e,q,dk){if(dk)return dk.length===10?(e.start<=dk&&dk<=e.end):(e.start.slice(0,7)<=dk&&dk<=e.end.slice(0,7));
+ const names=Object.keys(e.reservations||{}).map(id=>(S.items[id]||{}).name||"").join(" ");
+ return(e.name+" "+(e.client||"")+" "+names+" "+e.start+" "+e.end+" "+mname(e.start)+" "+mname(e.end)).toLowerCase().includes(q.toLowerCase())}
+const itemHits=e=>cal.q&&!cal.dk?Object.keys(e.reservations||{}).map(id=>({it:S.items[id],q:e.reservations[id]})).filter(x=>x.it&&x.it.name.toLowerCase().includes(cal.q.toLowerCase())).map(x=>x.q+"\u00d7 "+x.it.name):[];
+$("cs").oninput=e=>{cal.q=e.target.value.trim();cal.dk=dateKey(cal.q);if(cal.dk)cal.m=cal.dk.slice(0,7);
+ else if(cal.q){const ms=events().filter(e=>evMatches(e,cal.q,null)),mk=cal.m,ov=ms.some(e=>e.start.slice(0,7)<=mk&&mk<=e.end.slice(0,7));if(ms.length&&!ov){const nx=ms.find(e=>e.end>=today())||ms[ms.length-1];cal.m=nx.start.slice(0,7)}}
+ renderCal()};
+function renderCal(){
+ const [y,mo]=cal.m.split("-").map(Number),m0=mo-1,dim=new Date(Date.UTC(y,mo,0)).getUTCDate(),evsAll=events(),evs=cal.q?evsAll.filter(e=>evMatches(e,cal.q,cal.dk)):evsAll,tdy=today(),ivs=calInv();
+ $("cl").textContent=new Date(Date.UTC(y,m0,1)).toLocaleDateString("en-GB",{month:"long",year:"numeric",timeZone:"UTC"});
+ document.querySelectorAll("[data-cm]").forEach(b=>b.classList.toggle("on",b.dataset.cm===cal.mode));
+ let h="";
+ if(cal.mode==="month"){
+  const lead=(new Date(Date.UTC(y,m0,1)).getUTCDay()+6)%7,n=Math.ceil((lead+dim)/7)*7;
+  h='<div class="mg">'+["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="hd">${d}</div>`).join("");
+  for(let i=0;i<n;i++){const day=i-lead+1,iso=dIso(y,m0,day),inM=day>=1&&day<=dim;
+   h+=`<div class="${inM?"":"out"} ${iso===tdy?"td":""} ${cal.dk===iso?"hl":""}">${new Date(iso+"T00:00:00Z").getUTCDate()}`+evs.filter(e=>e.start<=iso&&iso<=e.end).map(e=>`<button class="chip" data-go="${e.id}" title="${esc(e.name)}" style="background:hsl(${hue(e.id)} 45% 40%)">${esc(e.name)}</button>`).join("")+ivs.filter(v=>v.due===iso).map(v=>`<button class="chip inv ${v.cls}" data-iv="${esc(v.number)}"${zUrl(v)?' data-zo="1"':""} title="${esc(v.number+" \u00b7 "+v.customer+" \u00b7 balance "+v.balance)}">${esc(v.number)} \u00b7 ${esc(v.customer)}</button>`).join("")+"</div>"}
+  h+="</div>";
+ }else{
+  const its=items().filter(i=>i.active!==false&&(!cal.q||evs.some(e=>(e.reservations||{})[i.id])||i.name.toLowerCase().includes(cal.q.toLowerCase()))),days=Array.from({length:dim},(_,i)=>dIso(y,m0,i+1));
+  h='<table class="pl"><thead><tr><th>Item (owned)</th>'+days.map((d,i)=>`<th class="${d===tdy?"td":""}">${i+1}</th>`).join("")+"</tr></thead><tbody>"+(its.map(it=>`<tr><td>${esc(it.name)} <span class="mu">(${it.total})</span></td>`+days.map(d=>{let r=0;evsAll.forEach(e=>{if(e.start<=d&&d<=e.end)r+=(e.reservations||{})[it.id]||0});return r?`<td class="${r>it.total-repQty(it.id)?"bad":""}" title="${r} of ${it.total} reserved" style="background:color-mix(in srgb,${r>it.total-repQty(it.id)?"var(--bad)":"var(--ac)"} ${Math.min(60,15+r/Math.max(1,it.total)*45)}%,transparent)"><b>${r}</b></td>`:`<td class="${d===tdy?"td":""}"></td>`}).join("")+"</tr>").join("")||`<tr><td colspan="${dim+1}" class="mu">Add items to see the planning view.</td></tr>`)+"</tbody></table>";
+ }
+ $("cr").innerHTML=cal.q?`<div style="margin-bottom:12px"><div class="mu" style="margin-bottom:6px">${evs.length} matching event${evs.length===1?"":"s"}</div>${evs.slice(0,20).map(e=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--bd)"><button class="lk" data-go="${e.id}">${esc(e.name)}</button><span class="mu">${esc(e.client)}</span><span class="mu">${esc(e.start)} \u2192 ${esc(e.end)}</span>${itemHits(e).length?`<span class="pill">${esc(itemHits(e).join(", "))}</span>`:""}<span style="flex:1"></span><button class="g" data-cj="${e.start.slice(0,7)}">Show</button></div>`).join("")}</div>`:"";
+ $("cv").innerHTML=h;
+ renderCri();
+}
+function confirmDel(key,fn){if(armed===key){armed=null;fn()}else{armed=key;render();setTimeout(()=>{if(armed===key){armed=null;render()}},3000)}}
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;const d=t.dataset;
+ if(d.t){cur=null;imode="";showTab(d.t)}
+ if(d.oi)showItem(d.oi);
+ if(d.t==="pl"){plMode="";renderPL()}
+ if(d.npl!==undefined)openPL(null,d.npl);
+ if(d.plo)openPL(d.plo);
+ if(d.plback){plMode="";renderPL()}
+ if(d.plsave)savePL();
+ if(d.pldisp)doDispatch();
+ if(d.plprint)window.print();
+ if(d.pldel)confirmDel("p"+plId,()=>{del("picklists",plId);plMode="";renderPL()});
+ if(d.plfill)plFill();
+ if(d.plcl!==undefined){if(d.plcl)openPL(d.plcl);clonePL()}
+ if(d.ld){const l=(pld.lines||[]).find(x=>x.itemId===d.ld);if(l)ldSet(d.ld,((pld.loaded||{})[d.ld]||0)>=l.qty?0:l.qty)}
+ if(d.ldp)ldSet(d.ldp,((pld.loaded||{})[d.ldp]||0)+1);
+ if(d.ldm)ldSet(d.ldm,((pld.loaded||{})[d.ldm]||0)-1);
+ if(d.ldall){pld.loaded={};(pld.lines||[]).forEach(l=>pld.loaded[l.itemId]=l.qty);ldSave()}
+ if(d.ldnone){pld.loaded={};ldSave()}
+ if(d.pladd){const iid=$("pli").value,q=parseInt($("plqn").value)||0;if(iid&&q>0){pld.lines=mergeLines([...pld.lines,{itemId:iid,qty:q}]);renderPLE()}}
+ if(d.plrm){pld.lines.splice(+d.plrm,1);renderPLE()}
+ if(d.plret)doReturn();
+ if(d.nr!==undefined)openRepair(null,d.nr==="1"?cur:"");
+ if(d.rpe)openRepair(d.rpe);
+ if(d.rps){const r=S.repairs[d.rps];put("repairs",d.rps,{...r,status:"in_repair",startedDate:today()});logIt(r.itemId,"Repair started",r.number)}
+ if(d.rpr)openResolve(d.rpr);
+ if(d.rpd)confirmDel("r"+d.rpd,()=>{const r=S.repairs[d.rpd];del("repairs",d.rpd);if(r)logIt(r.itemId,"Repair record deleted",r.number)});
+ if(d.rcx)cancelRepair();
+ if(d.rpx!==undefined){const id=rpPh.splice(+d.rpx,1)[0];if(rpNew.includes(id)){rpNew=rpNew.filter(x=>x!==id);dropPh(id)}rpStrip()}
+ if(d.avt){avFrom="";renderItem()}
+ if(d.vw){const [vm,vv]=d.vw.split(":");setView(vm,vv)}
+ if(d.kmv){const [km,ki,kf,kt]=d.kmv.split("|");kanbanDrop(km,ki,kf,kt)}
+ if(d.iv&&d.zo){const v=invs().find(x=>x.number===d.iv),u=v&&zUrl(v);if(u){window.open(u,"_blank","noopener");return}}
+ if(d.iv){cur=null;imode="";$("invf").value="all";$("invq").value=d.iv;showTab("inv");render()}
+ if(d.bk){cur=null;imode="";showTab("stock")}
+ if(d.nw)openForm("new",{});
+ if(d.ed)openForm("edit");
+ if(d.cl){const it=S.items[cur];openForm("new",{...it,name:it.name+" (copy)",sku:"",total:0})}
+ if(d.ad)openAdj();
+ if(d.cx)closeAdj();
+ if(d.ia)toggleActive();
+ if(d.dl)delItem();
+ if(d.it){itab=d.it;renderItem()}
+ if(d.fc){if(cur&&S.items[cur]){imode="view";renderItem()}else{cur=null;imode="";showTab("stock")}}
+ if(d.go){openEv[d.go]=true;showTab("events");render()}
+ if(d.cm){cal.mode=d.cm;render()}
+ if(d.cn){const [y,m]=cal.m.split("-").map(Number);cal.m=new Date(Date.UTC(y,m-1+(+d.cn),1)).toISOString().slice(0,7);render()}
+ if(d.ct){cal.m=today().slice(0,7);render()}
+ if(d.cj){cal.m=d.cj;renderCal();$("cv").scrollIntoView({behavior:"smooth"})}
+ if(d.di)confirmDel("i"+d.di,()=>del("items",d.di));
+ if(d.de)confirmDel("e"+d.de,()=>del("events",d.de));
+ if(d.dm)confirmDel("m"+d.dm,()=>del("movements",d.dm));
+ if(d.tg){openEv[d.tg]=!openEv[d.tg];render()}
+ if(d.rr){const [eid,iid]=d.rr.split("|"),ev=S.events[eid],r={...(ev.reservations||{})};delete r[iid];put("events",eid,{...ev,reservations:r})}
+});
+document.addEventListener("change",e=>{const id=e.target.dataset.tot;if(id){const it=S.items[id];put("items",id,{...it,total:Math.max(0,parseInt(e.target.value)||0)})}});
+$("q").oninput=render;
+$("fe").onsubmit=e=>{e.preventDefault();if($("ee").value<$("es").value){say("End date must be on or after the start date.");return}say("");const id=rid();openEv[id]=true;put("events",id,{name:$("en").value.trim(),client:$("ec").value.trim(),start:$("es").value,end:$("ee").value,reservations:{}});$("fe").reset()};
+document.addEventListener("submit",e=>{const id=e.target.dataset.rf;if(!id)return;e.preventDefault();const ev=S.events[id],f=new FormData(e.target),iid=f.get("i"),q=parseInt(f.get("q"))||0;if(!iid||q<1)return;const r={...(ev.reservations||{})};r[iid]=(r[iid]||0)+q;put("events",id,{...ev,reservations:r})});
+$("fm").onsubmit=e=>{e.preventDefault();const iid=$("mi").value,q=parseInt($("mq").value)||0,t=$("mt").value,eid=$("me").value,it=S.items[iid];
+ if(t==="out"&&it&&q>whOf(iid)){$("mm").innerHTML=`<span class="bad">Only ${whOf(iid)} of this item are in the warehouse.</span>`;return}
+ if(t==="in"&&q>net(iid,eid)){$("mm").innerHTML=`<span class="bad">Only ${net(iid,eid)} of this item are out for that event.</span>`;return}
+ $("mm").textContent="";put("movements",rid(),{eventId:eid,itemId:iid,type:t,qty:q,date:$("md").value,note:$("mn").value.trim(),ts:Date.now()});$("mn").value=""};
+$("md").value=today();
+render();
+(async()=>{
+ try{await loadLocal()}catch(e){say("This browser blocked local storage, so data will not be kept on this device.")}
+ $("cfu").value=CFG.url;$("cfk").value=CFG.key;$("cfd").value=CFG.dev;
+ $("syn").onclick=()=>syncNow(true);
+ $("fcfg").onsubmit=e=>{e.preventDefault();try{localStorage.setItem("ev_url",$("cfu").value.trim());localStorage.setItem("ev_key",$("cfk").value.trim());localStorage.setItem("ev_dev",$("cfd").value.trim())}catch(x){}syncNow(true)};
+ addEventListener("online",()=>syncNow());addEventListener("offline",updSyn);
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)syncNow()});
+ setInterval(()=>syncNow(),300000);
+ $("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+ render();updSyn();syncNow();
+ if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script></body></html>

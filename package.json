@@ -1,0 +1,31 @@
+{
+  "name": "everafter-inventory",
+  "productName": "Everafter Inventory",
+  "version": "1.0.0",
+  "description": "Inventory, rentals, picklists and repairs for Everafter Events",
+  "main": "main.js",
+  "author": "Everafter Events",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --publish never",
+    "release": "electron-builder --win nsis --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "mu.everafter.inventory",
+    "productName": "Everafter Inventory",
+    "files": ["main.js", "app/**/*", "build/icon.png"],
+    "directories": { "buildResources": "build" },
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "build/icon.ico" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true, "perMachine": false },
+    "publish": [{ "provider": "github" }]
+  }
+}
