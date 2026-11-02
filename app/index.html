@@ -189,6 +189,11 @@ html{scroll-behavior:smooth}
 .ck{flex-direction:row!important;align-items:center;gap:8px!important;font-size:13px!important;color:var(--tx)!important}.ck input{height:auto}
 .pkr{display:flex;flex-wrap:wrap;gap:4px 14px;max-height:130px;overflow:auto}
 .rchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:99px;padding:3px 6px 3px 12px;margin:0 6px 6px 0;font-size:13px}.rchip button{border:0;background:none;color:var(--mu);cursor:pointer;font-size:15px;line-height:1}
+.erow:hover{border-color:var(--ac)}
+.ili .dotc{width:8px;height:8px;border-radius:50%;flex:none;display:inline-block}
+.evt{display:flex;gap:10px;flex-wrap:wrap}.evt>div{flex:1;min-width:120px}
+.warnb{background:color-mix(in srgb,var(--bad) 10%,transparent);border:1px solid color-mix(in srgb,var(--bad) 35%,transparent);color:var(--bad);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px}
+.pill.up{background:var(--acs);color:var(--ac)}.pill.now{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><div><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div style="display:flex;align-items:center;gap:10px"><span id="note" class="msg"></span><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -206,7 +211,7 @@ html{scroll-behavior:smooth}
 </section>
 
 <section id="events" class="hide">
- <div class="card"><form id="fe"><label>Event / project<input id="en" required></label><label>Client<input id="ec"></label><label>Start (out)<input id="es" type="date" required></label><label>End (back)<input id="ee" type="date" required></label><button class="b">Add event</button></form></div>
+ <div class="row" style="justify-content:space-between;margin-bottom:10px"><span class="mu" style="font-size:13px">Click an event to open its full page: items, picklists, movements, tasks and invoice.</span><button class="b" data-nev2="1" type="button">+ New event</button></div>
  <div id="el"></div>
 </section>
 
@@ -221,6 +226,11 @@ html{scroll-behavior:smooth}
  <p style="margin:0 0 10px"><button class="g" data-bk="1">‹ All items</button></p>
  <div class="split"><aside class="card flush il" id="il"></aside><div id="ir"></div></div>
  <datalist id="units"><option value="pcs"><option value="set"><option value="pair"><option value="m"><option value="kg"></datalist>
+</section>
+
+<section id="evd" class="hide">
+ <p style="margin:0 0 10px"><button class="g" data-evbk="1" type="button">\u2039 All events</button></p>
+ <div class="split"><aside class="card flush il" id="evl"></aside><div id="evr"></div></div>
 </section>
 
 <section id="cal" class="hide">
@@ -351,9 +361,8 @@ function render(){
  $("cats").innerHTML=[...new Set(its.map(i=>i.category).filter(Boolean))].map(c=>`<option value="${esc(c)}">`).join("");
  renderList();
  const evs=events();
- $("el").innerHTML=evs.filter(e=>fpass("events",e)).map(e=>{const res=e.reservations||{},ids=Object.keys(res),o=openEv[e.id];
-  const rows=ids.map(iid=>{const r=res[iid],out=net(iid,e.id),it=S.items[iid],av=it?it.total-repQty(iid)-reservedElsewhere(iid,{...e}):0,short=r>av;return`<tr><td>${esc(itName(iid))}</td><td class="n">${r}</td><td class="n">${out}</td><td class="n ${out>0?"warn":"ok"}">${r-out>0?r-out+" to send":out>0?out+" not back":"—"}</td><td class="n ${short?"bad":"mu"}">${short?"short "+(r-av):"ok"}</td><td><button class="g" data-rr="${e.id}|${iid}">×</button></td></tr>`}).join("");
-  return`<div class="card"><div class="top"><div><b>${esc(e.name)}</b> <span class="mu">${esc(e.client)}</span><br><span class="mu">${esc(e.start)} → ${esc(e.end)} · ${ids.length} item types reserved${e.invoice?` · Invoice ${esc(e.invoice)}`:""}</span></div><div><button class="g" data-tg="${e.id}">${o?"Hide":"Open"}</button> <button class="g" data-de="${e.id}">${armed==="e"+e.id?"Sure?":"Delete"}</button></div></div>${o?`<div class="sc" style="margin-top:8px"><table><thead><tr><th>Item</th><th class="n">Reserved</th><th class="n">Out</th><th class="n">Status</th><th class="n">Availability</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="mu">Nothing reserved yet.</td></tr>`}</tbody></table></div><form data-rf="${e.id}" style="margin-top:8px"><label>Reserve item<select name="i">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("")}</select></label><label>Qty<input name="q" type="number" min="1" value="1" style="width:80px"></label><button class="b">Reserve</button></form>`:""}</div>`}).join("")||`<p class="mu">No events yet. Add your first project above.</p>`;
+ $("el").innerHTML=evs.filter(e=>fpass("events",e)).slice().reverse().map(e=>{const ids=Object.keys(e.reservations||{}),st=evStatus(e),pc=evPieces(e);
+  return`<div class="card erow" data-eopen="${e.id}" style="cursor:pointer"><div class="top"><div><b>${esc(e.name)}</b> <span class="pill ${st==="Completed"?"off":""}">${st}</span><br><span class="mu">${e.client?esc(e.client)+" \u00b7 ":""}${esc(e.start)} \u2192 ${esc(e.end)} \u00b7 ${ids.length} item type${ids.length===1?"":"s"} \u00b7 ${pc} piece${pc===1?"":"s"}${e.invoice?` \u00b7 Invoice ${esc(e.invoice)}`:""}</span></div><div><button class="g" data-eopen="${e.id}">Open</button> <button class="g" data-de="${e.id}">Delete</button></div></div></div>`}).join("")||`<p class="mu">No events yet. Click <b>+ New event</b>, or create one from an invoice.</p>`;
  keepSel($("me"),evs.map(e=>`<option value="${e.id}">${esc(e.name)} (${esc(e.start)})</option>`).join(""));
  keepSel($("mi"),its.filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join(""));
  $("ml").innerHTML=moves().filter(m=>fpass("moves",m)).map(m=>`<tr><td>${esc(m.date)}</td><td>${esc(evName(m.eventId))}</td><td>${esc(itName(m.itemId))}</td><td class="${m.type==="out"?"warn":"ok"}">${m.type==="out"?"Out":"Returned"}</td><td class="n">${m.qty}</td><td class="mu">${esc(m.note)}</td><td><button class="g" data-dm="${m.id}">${armed==="m"+m.id?"Sure?":"×"}</button></td></tr>`).join("")||`<tr><td colspan="7" class="mu">No movements logged yet.</td></tr>`;
@@ -361,7 +370,7 @@ function render(){
  renderInv();
  renderPL();renderRP();renderBoards();renderFilters();
  if(imode)renderItem();
- if(typeof renderPlan==="function"&&!$("plan").classList.contains("hide"))renderPlan();applySettings();document.querySelectorAll(".pf").forEach(l=>l.classList.toggle("hide",!assets));
+ if(typeof renderPlan==="function"&&!$("plan").classList.contains("hide"))renderPlan();if(typeof renderEvD==="function"&&!$("evd").classList.contains("hide")&&emode==="view")renderEvD();applySettings();document.querySelectorAll(".pf").forEach(l=>l.classList.toggle("hide",!assets));
 }
 let cur=null;
 const ph=(it,z)=>it.photo&&photoSrc(it.photo)?`<img class="th ${z}" src="${photoSrc(it.photo)}" alt="">`:`<span class="th ph ${z}">${esc((it.name||"?").trim().charAt(0).toUpperCase())}</span>`;
@@ -796,7 +805,7 @@ function kanbanDrop(m,id,from,to){
   hint("A picklist moves forward: Draft \u2192 Out on site \u2192 Returned.")}}
 function openCard(m,id){
  if(m==="stock")showItem(id);
- else if(m==="events"){openEv[id]=true;setView("events","list")}
+ else if(m==="events"){showEvent(id)}
  else if(m==="inv"){const v=S.invoices[id];if(v){$("invq").value=v.number;$("invf").value="all";setView("inv","list")}}
  else if(m==="pl")openPL(id);
  else if(m==="rp")openRepair(id)}
@@ -809,8 +818,8 @@ document.addEventListener("drop",e=>{const c=e.target.closest&&e.target.closest(
 initViews();
 
 const cal={m:today().slice(0,7),mode:"month",q:"",dk:null};
-const TT={plan:"Planner",stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
-function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t)));["stock","item","events","cal","plan","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});if(t==="plan"&&typeof renderPlan==="function")renderPlan()}
+const TT={evd:"Event",plan:"Planner",stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
+function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t==="evd"?"events":t)));["stock","item","events","evd","cal","plan","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});if(t==="plan"&&typeof renderPlan==="function")renderPlan()}
 const dIso=(y,m,d)=>new Date(Date.UTC(y,m,d)).toISOString().slice(0,10);
 const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h};
 function dateKey(q){let m=q.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return q;m=q.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);if(m)return`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return/^\d{4}-\d{2}$/.test(q)?q:null}
@@ -848,7 +857,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  if(d.t==="pl"){plMode="";renderPL()}
  if(d.npl!==undefined)openPL(null,d.npl);
  if(d.nev!==undefined)openEvDlg(d.nev);
- if(d.eo&&S.events[d.eo]){cur=null;imode="";openEv[d.eo]=true;showTab("events");render();window.scrollTo(0,0)}
+ if(d.eo&&S.events[d.eo]){cur=null;imode="";showEvent(d.eo)}
  if(d.plo)openPL(d.plo);
  if(d.plback){plMode="";renderPL()}
  if(d.plsave)savePL();
@@ -887,7 +896,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  if(d.dl)delItem();
  if(d.it){itab=d.it;renderItem()}
  if(d.fc){if(cur&&S.items[cur]){imode="view";renderItem()}else{cur=null;imode="";showTab("stock")}}
- if(d.go){openEv[d.go]=true;showTab("events");render()}
+ if(d.go)showEvent(d.go);
  if(d.cm){cal.mode=d.cm;render()}
  if(d.cn){const [y,m]=cal.m.split("-").map(Number);cal.m=new Date(Date.UTC(y,m-1+(+d.cn),1)).toISOString().slice(0,7);render()}
  if(d.ct){cal.m=today().slice(0,7);render()}
@@ -900,7 +909,6 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
 });
 document.addEventListener("change",e=>{const id=e.target.dataset.tot;if(id){const it=S.items[id];put("items",id,{...it,total:Math.max(0,parseInt(e.target.value)||0)})}});
 $("q").oninput=render;
-$("fe").onsubmit=e=>{e.preventDefault();if($("ee").value<$("es").value){say("End date must be on or after the start date.");return}say("");const id=rid();openEv[id]=true;put("events",id,{name:$("en").value.trim(),client:$("ec").value.trim(),start:$("es").value,end:$("ee").value,reservations:{}});$("fe").reset()};
 document.addEventListener("submit",e=>{const id=e.target.dataset.rf;if(!id)return;e.preventDefault();const ev=S.events[id],f=new FormData(e.target),iid=f.get("i"),q=parseInt(f.get("q"))||0;if(!iid||q<1)return;const r={...(ev.reservations||{})};r[iid]=(r[iid]||0)+q;put("events",id,{...ev,reservations:r})});
 $("fm").onsubmit=e=>{e.preventDefault();const iid=$("mi").value,q=parseInt($("mq").value)||0,t=$("mt").value,eid=$("me").value,it=S.items[iid];
  if(t==="out"&&it&&q>whOf(iid)){$("mm").innerHTML=`<span class="bad">Only ${whOf(iid)} of this item are in the warehouse.</span>`;return}
@@ -930,10 +938,11 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  if($("eve").value<$("evs").value){$("evm").innerHTML='<span class="bad">End date must be on or after the start date.</span>';return}
  const id=rid();openEv[id]=true;
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
- $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
+ $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.6.8";
+const APP_VERSION="1.7.0";
 const CHANGES=[
+ ["1.7.0","3 Nov 2026",["Events now have a full profile page like items: Overview, Items, Picklists, Movements, Tasks and Invoice tabs","Event details: client, contact, venue, notes and a linked invoice","Edit reserved quantities directly, see stock shortages and open tasks at a glance"]],
  ["1.6.8","3 Nov 2026",["Settings > Sync now tells you why the item list did not import (wrong tab name, no permission, or old Code.gs)"]],
  ["1.6.7","3 Nov 2026",["Item list import keeps items that share a name but have different SKUs as separate items"]],
  ["1.6.6","3 Nov 2026",["Filter the item list by category and sub-category (with counts)","Sub-category field on items and in saved filters"]],
@@ -971,7 +980,7 @@ async function delEvent(id){const e=S.events[id];if(!e)return;const mv=Object.en
  if(mv.length)msg+="\n\n"+mv.length+" stock movement"+(mv.length===1?"":"s")+" for this event will be deleted too, so the stock counts change back.";
  if(pls.length)msg+="\n\n"+pls.length+" picklist"+(pls.length===1?" is":"s are")+" linked to it. They are kept, but unlinked from the event.";
  msg+="\n\nThis cannot be undone.";if(!confirm(msg))return;
- for(const [mid] of mv)await del("movements",mid);for(const [pid,x] of pls)await put("picklists",pid,{...x,eventId:""});delete openEv[id];await del("events",id);say("Event deleted.");setTimeout(()=>say(""),4000)}
+ for(const [mid] of mv)await del("movements",mid);for(const [pid,x] of pls)await put("picklists",pid,{...x,eventId:""});delete openEv[id];await del("events",id);if(!$("evd").classList.contains("hide")){ecur=null;showTab("events")}say("Event deleted.");setTimeout(()=>say(""),4000)}
 
 /* ===== Planner (timeline like Toggl Plan) ===== */
 let DW=46;const P={g:"person",n:28,from:""},PR=[];let pdrag=null,ptkId=null;
@@ -1077,4 +1086,70 @@ function applyItemList(rows){
   if(q!=null)d.sq=q;d.sh=snap;
   const nid=id||rid();S.items[nid]=d;saveRec("items",nid,d,0);byKey["n:"+name.toLowerCase()]=nid;if(sku)byKey["s:"+sku.toLowerCase()]=nid}
  if(add||upd){render();schedSync();say("Item list sheet: "+add+" added, "+upd+" updated.");setTimeout(()=>say(""),6000)}}
+
+/* ===== Event profile page ===== */
+let ecur=null,emode="",etab="overview",eform={};
+const evPieces=e=>Object.values(e.reservations||{}).reduce((a,b)=>a+(+b||0),0);
+const stCls=st=>st==="Completed"?"off":st==="In progress"?"now":"up";
+function showEvent(id,tab){if(!S.events[id])return;ecur=id;emode="view";etab=tab||"overview";showTab("evd");renderEvD();window.scrollTo(0,0)}
+function newEvent(pre){ecur=null;emode="new";eform={start:today(),end:today(),...(pre||{})};showTab("evd");renderEvForm();renderEvL();window.scrollTo(0,0)}
+function renderEvD(){renderEvL();if(emode==="view")renderEvDetail()}
+function renderEvL(){const L=events().slice().reverse();
+ $("evl").innerHTML=`<div class="ilh"><b>Events</b><button class="b" data-nev2="1" style="height:30px;padding:0 12px">+ New</button></div>`+(L.map(e=>{const st=evStatus(e);return`<button class="ili${e.id===ecur&&emode!=="new"?" on":""}" data-eo="${e.id}"><span class="dotc" style="background:hsl(${hue(e.id)} 45% 40%)"></span><span><b>${esc(e.name)}</b><small>${e.client?esc(e.client)+" · ":""}${esc(e.start)}${e.end!==e.start?" → "+esc(e.end):""} · ${st}</small></span></button>`}).join("")||'<p class="mu" style="padding:12px">No events.</p>')}
+const evAvail=(e,iid)=>{const it=S.items[iid];return it?it.total-repQty(iid)-reservedElsewhere(iid,{id:ecur,...e}):0};
+function renderEvDetail(){const e=S.events[ecur];if(!e){showTab("events");return}
+ const st=evStatus(e),res=e.reservations||{},ids=Object.keys(res),t0=today();
+ const pls=Object.entries(S.picklists).filter(([,x])=>x.eventId===ecur).map(([id,x])=>({id,...x,st:plState(id,x)})).sort((a,b)=>(b.created||0)-(a.created||0));
+ const mv=moves().filter(m=>m.eventId===ecur);
+ const tks=Object.entries(S.tasks).filter(([,t])=>t.eventId===ecur).map(([id,t])=>({id,...t})).sort((a,b)=>(a.start||"").localeCompare(b.start||""));
+ const inv=e.invoice?invs().find(v=>v.number===e.invoice):null;
+ const out=ids.reduce((a,i)=>a+Math.max(0,net(i,ecur)),0),shortL=ids.filter(i=>res[i]>evAvail(e,i)),tdone=tks.filter(t=>t.status==="done").length;
+ const days=Math.max(1,dd(e.start,e.end)+1),tabs=[["overview","Overview"],["items","Items ("+ids.length+")"],["picklists","Picklists ("+pls.length+")"],["moves","Movements ("+mv.length+")"],["tasks","Tasks ("+tks.length+")"],["invoice","Invoice"]];
+ let body="";
+ if(etab==="overview"){
+  const open=tks.filter(t=>t.status!=="done").slice(0,5);
+  body=`${shortL.length?`<div class="warnb"><b>Not enough stock</b> for ${shortL.length} item${shortL.length===1?"":"s"}: ${shortL.map(i=>esc(itName(i))+" (need "+res[i]+", "+Math.max(0,evAvail(e,i))+" free)").join(", ")}.</div>`:""}
+  <div class="tiles" style="margin-bottom:18px"><div><b>${ids.length}</b><span class="mu">Item types</span></div><div><b>${evPieces(e)}</b><span class="mu">Pieces reserved</span></div><div><b class="${out?"warn":""}">${out}</b><span class="mu">Out on site</span></div><div><b>${pls.length}</b><span class="mu">Picklists</span></div><div><b>${tdone}/${tks.length}</b><span class="mu">Tasks done</span></div></div>
+  <div class="ov2"><div><h4>Details</h4><dl class="kv"><dt>Client</dt><dd>${esc(e.client)||"—"}</dd><dt>Contact</dt><dd>${esc(e.contact)||"—"}</dd><dt>Venue</dt><dd>${esc(e.venue)||"—"}</dd><dt>Dates</dt><dd>${esc(e.start)} → ${esc(e.end)} · ${days} day${days===1?"":"s"}</dd><dt>Status</dt><dd><span class="pill ${stCls(st)}">${st}</span></dd><dt>Invoice</dt><dd>${e.invoice?`<button class="lk" data-evt="invoice">${esc(e.invoice)}</button>${inv?" · balance "+fm(inv.balance,inv.currency):""}`:"—"}</dd><dt>Notes</dt><dd style="white-space:pre-wrap">${esc(e.note)||"—"}</dd></dl></div>
+  <div><h4>Next tasks</h4>${open.length?open.map(t=>`<div style="padding:6px 0;border-bottom:1px solid var(--bd)"><button class="lk" data-tko="${t.id}">${t.ms?"◆ ":""}${esc(t.title)}</button><div class="mu" style="font-size:12px">${esc(t.start)}${t.end!==t.start?" → "+esc(t.end):""}${(t.res||[]).length?" · "+esc(t.res.map(rName).filter(Boolean).join(", ")):""}</div></div>`).join(""):'<p class="mu" style="margin:0;font-size:13px">No open tasks. Use the Tasks tab to plan the work.</p>'}</div></div>`}
+ else if(etab==="items"){
+  const rows=ids.map(iid=>{const r=res[iid],o=net(iid,ecur),it=S.items[iid],av=evAvail(e,iid),sh=r>av;return`<tr><td><div class="nm">${it?ph(it,"sm"):""}<button class="lk" data-oi="${iid}">${esc(itName(iid))}</button></div></td><td class="n"><input type="number" min="1" value="${r}" data-rq="${ecur}|${iid}" style="width:80px"></td><td class="n">${o}</td><td class="n ${o>0?"warn":"ok"}">${r-o>0?r-o+" to send":o>0?o+" not back":"—"}</td><td class="n ${sh?"bad":"mu"}">${sh?"short "+(r-av):"ok"}</td><td><button class="g" data-rr="${ecur}|${iid}">×</button></td></tr>`}).join("");
+  body=`<div class="sc"><table><thead><tr><th>Item</th><th class="n">Reserved</th><th class="n">Out</th><th class="n">Status</th><th class="n">Availability</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="mu">Nothing reserved yet.</td></tr>`}</tbody></table></div>
+  <form data-rf="${ecur}" style="margin-top:12px"><label>Reserve item<select name="i">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}${i.category?" · "+esc(i.category):""}</option>`).join("")}</select></label><label>Qty<input name="q" type="number" min="1" value="1" style="width:80px"></label><button class="b">Reserve</button></form>`}
+ else if(etab==="picklists"){
+  body=`<div class="row" style="margin-bottom:10px"><button class="b" data-npe="${ecur}" type="button">+ New picklist</button></div><div class="sc"><table><thead><tr><th>Picklist</th><th>Invoice</th><th class="n">Pieces</th><th>Created</th><th>Status</th></tr></thead><tbody>${pls.map(x=>`<tr><td><button class="lk" data-plo="${x.id}">${esc(x.number)}</button></td><td>${esc(x.invoice)}</td><td class="n">${(x.lines||[]).reduce((a,l)=>a+l.qty,0)}</td><td class="mu">${new Date(x.created||0).toLocaleDateString("en-GB",{dateStyle:"medium"})}</td><td><span class="pill ${x.st==="Draft"||x.st==="Returned"||x.st==="Cancelled"?"off":""}">${x.st}</span></td></tr>`).join("")||`<tr><td colspan="5" class="mu" style="padding:18px">No picklists for this event yet.</td></tr>`}</tbody></table></div>`}
+ else if(etab==="moves"){
+  body=`<div class="sc"><table><thead><tr><th>Date</th><th>Item</th><th>Type</th><th class="n">Qty</th><th>Note</th></tr></thead><tbody>${mv.map(m=>`<tr><td>${esc(m.date)}</td><td>${esc(itName(m.itemId))}</td><td class="${m.type==="out"?"warn":"ok"}">${m.type==="out"?"Out":"Returned"}</td><td class="n">${m.qty}</td><td class="mu">${esc(m.note)}</td></tr>`).join("")||`<tr><td colspan="5" class="mu" style="padding:18px">No stock movements yet. They are created when a picklist is dispatched or from the Movements page.</td></tr>`}</tbody></table></div>`}
+ else if(etab==="tasks"){
+  body=`<div class="row" style="margin-bottom:10px"><button class="b" data-tkn="${ecur}" type="button">+ Task</button><button class="g" data-tkp="${ecur}" type="button">Plan from event</button><button class="g" data-tkg="1" type="button">Open in Planner</button></div><div class="sc"><table><thead><tr><th>Task</th><th>Dates</th><th>Assigned to</th><th>Status</th></tr></thead><tbody>${tks.map(t=>`<tr><td><button class="lk" data-tko="${t.id}">${t.ms?"◆ ":""}${esc(t.title)}</button></td><td class="mu">${esc(t.start)}${t.end!==t.start?" → "+esc(t.end):""}</td><td class="mu">${esc((t.res||[]).map(rName).filter(Boolean).join(", "))||"—"}</td><td><span class="pill ${t.status==="done"?"off":t.status==="doing"?"now":"up"}">${t.status==="done"?"Done":t.status==="doing"?"In progress":"To do"}</span></td></tr>`).join("")||`<tr><td colspan="4" class="mu" style="padding:18px">No tasks yet.</td></tr>`}</tbody></table></div>`}
+ else{
+  if(inv){const stt=invState(inv);body=`<dl class="kv"><dt>Invoice</dt><dd>${zA(inv,`<b>${esc(inv.number)}</b> ↗`)||`<b>${esc(inv.number)}</b>`}</dd><dt>Customer</dt><dd>${esc(inv.customer)}</dd><dt>Billing location</dt><dd>${esc(inv.bill)||"—"}</dd><dt>Invoice date</dt><dd>${esc(inv.date)||"—"}</dd><dt>Due date</dt><dd>${esc(inv.due)||"—"}</dd><dt>Status</dt><dd><span class="pill ${stt==="Paid"||stt==="Draft"||stt==="Void"?"off":""}">${stt}</span></dd><dt>Total</dt><dd>${fm(inv.total,inv.currency)}</dd><dt>Balance</dt><dd>${fm(inv.balance,inv.currency)}</dd></dl><div class="row" style="margin-top:14px"><button class="g" data-evul="1" type="button">Unlink invoice</button></div>`}
+  else body=`<p class="mu" style="margin-top:0">${e.invoice?"Invoice "+esc(e.invoice)+" is not in the synced invoice list.":"No invoice linked to this event."}</p><div class="row"><select id="evli" style="max-width:380px"><option value="">Choose an invoice…</option>${invs().filter(v=>!/^void$/i.test(v.status||"")).sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(v=>`<option value="${esc(v.number)}">${esc(v.number)} · ${esc(v.customer)}${v.due?" · due "+esc(v.due):""}</option>`).join("")}</select><button class="b" data-evlink="1" type="button">Link invoice</button></div>`}
+ $("evr").innerHTML=`<div class="card flush"><div class="dh"><div class="hdr"><span class="th ph md" style="background:hsl(${hue(ecur)} 45% 40%);color:#fff">${esc((e.name||"?").trim().charAt(0).toUpperCase())}</span><div><b class="ttl">${esc(e.name)}</b> <span class="pill ${stCls(st)}">${st}</span><div class="mu">${e.client?esc(e.client)+" · ":""}${esc(e.start)}${e.end!==e.start?" → "+esc(e.end):""}${e.venue?" · "+esc(e.venue):""}</div></div></div><div class="acts"><button class="g" data-eed="1">Edit</button><button class="g" data-npe="${ecur}">+ Picklist</button><button class="g dng" data-evdel="1">Delete</button></div></div><div class="tabs">${tabs.map(([k,l])=>`<button data-evt="${k}" class="${etab===k?"on":""}">${l}</button>`).join("")}</div><div class="tbd">${body}</div></div>`}
+function renderEvForm(){const e=eform||{},isNew=emode==="new";
+ const invO='<option value="">No invoice</option>'+invs().filter(v=>!/^void$/i.test(v.status||"")).sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(v=>`<option value="${esc(v.number)}"${e.invoice===v.number?" selected":""}>${esc(v.number)} · ${esc(v.customer)}${v.due?" · due "+esc(v.due):""}</option>`).join("");
+ $("evr").innerHTML=`<div class="card"><h3>${isNew?"New event":"Edit event"}</h3><form id="fevf" class="fg"><label class="w2">Event / project*<input name="name" required value="${esc(e.name)}"></label><label>Client<input name="client" value="${esc(e.client)}"></label><label>Contact (phone or email)<input name="contact" value="${esc(e.contact)}"></label><label class="w2">Venue / location<input name="venue" value="${esc(e.venue)}"></label><label>Start (out)*<input name="start" type="date" required value="${esc(e.start)}"></label><label>End (back)*<input name="end" type="date" required value="${esc(e.end)}"></label><label class="w2">Invoice<select name="invoice">${invO}</select></label><label class="w2">Notes<textarea name="note" style="min-height:80px">${esc(e.note)}</textarea></label><div class="w2 row"><button class="b">Save</button><button class="g" type="button" data-evcx="1">Cancel</button><span id="evfm" class="msg"></span></div></form></div>`;
+ $("fevf").onsubmit=async ev=>{ev.preventDefault();const f=new FormData(ev.target),st=f.get("start"),en=f.get("end");
+  if(en<st){$("evfm").innerHTML='<span class="bad">End date must be on or after the start date.</span>';return}
+  const old=emode==="edit"?S.events[ecur]:{reservations:{}},num=f.get("invoice"),iv=num?invs().find(v=>v.number===num):null,id=emode==="edit"?ecur:rid();
+  const d={...old,name:f.get("name").trim(),client:f.get("client").trim()||(iv?iv.customer:""),contact:f.get("contact").trim(),venue:f.get("venue").trim(),start:st,end:en,note:f.get("note").trim(),reservations:old.reservations||{}};
+  if(num){d.invoice=num;d.invoiceKey=iv?iv.id:old.invoiceKey}else{delete d.invoice;delete d.invoiceKey}
+  await put("events",id,d);showEvent(id)}}
+document.addEventListener("click",e=>{
+ const c=e.target.closest&&e.target.closest("[data-eopen]");if(c&&!e.target.closest("[data-de]"))return showEvent(c.dataset.eopen);
+ const b=e.target.closest&&e.target.closest("button");if(!b)return;const d=b.dataset;
+ if(d.nev2)newEvent();
+ if(d.evbk){ecur=null;emode="";showTab("events")}
+ if(d.evt){etab=d.evt;renderEvDetail()}
+ if(d.eed){emode="edit";eform=S.events[ecur];renderEvForm()}
+ if(d.evcx){if(ecur&&S.events[ecur])showEvent(ecur);else{emode="";showTab("events")}}
+ if(d.evdel&&ecur)delEvent(ecur);
+ if(d.npe){const ev=S.events[d.npe];openPL(null,ev&&ev.invoice||"");if(pld){pld.eventId=d.npe;renderPLE()}}
+ if(d.tkn){const ev=S.events[d.tkn];openTask(null,{eventId:d.tkn,start:ev.start,end:ev.start})}
+ if(d.tkp){$("pgen").click();$("pgsel").value=d.tkp}
+ if(d.tkg){P.g="event";P.from=addD(S.events[ecur].start,-8);savePl();showTab("plan")}
+ if(d.tko)openTask(d.tko);
+ if(d.evlink){const v=$("evli").value;if(!v)return;const iv=invs().find(x=>x.number===v),ev=S.events[ecur];put("events",ecur,{...ev,invoice:v,invoiceKey:iv?iv.id:"",client:ev.client||(iv?iv.customer:"")})}
+ if(d.evul){const ev={...S.events[ecur]};delete ev.invoice;delete ev.invoiceKey;put("events",ecur,ev)}});
+document.addEventListener("change",e=>{const q=e.target.dataset&&e.target.dataset.rq;if(!q)return;const [eid,iid]=q.split("|"),ev=S.events[eid],n=parseInt(e.target.value)||0;if(!ev||n<1){renderEvD();return}put("events",eid,{...ev,reservations:{...(ev.reservations||{}),[iid]:n}})});
 </script></body></html>
