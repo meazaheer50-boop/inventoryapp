@@ -207,6 +207,7 @@ tbody tr:hover td{background:#fbf4e6}
 </div></main>
 <div id="ovr" class="ov hide"><form id="frp" class="dlg"><h3 id="rph">Report repair</h3><label>Item<select id="rpi" required></select></label><div class="row"><label style="flex:1">Quantity<input id="rpn" type="number" min="1" value="1" required></label><label style="flex:1">Reported on<input id="rpd" type="date" required></label></div><label>What is wrong?<input id="rpis" required placeholder="e.g. cracked leg, torn fabric"></label><label>Assigned to / repairer<input id="rpa"></label><label>Estimated cost<input id="rpc" type="number" min="0" step="any"></label><label>Notes<input id="rpno"></label><div>Photos<div id="rpph" class="phs" style="margin:6px 0"></div><div class="row"><label class="pbtn"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Take photo<input id="rpcam" type="file" accept="image/*" capture="environment" hidden></label><label class="pbtn">Choose from gallery<input id="rppick" type="file" accept="image/*" multiple hidden></label></div></div><div id="rpm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form>
 <form id="frs" class="dlg hide"><h3 id="rsh">Resolve repair</h3><label>Outcome<select id="rso"><option value="repaired">Repaired \u2014 back in stock</option><option value="written_off">Cannot be repaired \u2014 write off</option></select></label><div class="row"><label style="flex:1">Final cost<input id="rsc" type="number" min="0" step="any"></label><label style="flex:1">Date<input id="rsd" type="date" required></label></div><label>Notes<input id="rsn"></label><div id="rsm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form></div>
+<div id="evo" class="ov hide"><form id="fev" class="dlg"><h3>Create event from invoice</h3><div id="evi" class="mu"></div><label>Event name<input id="evn" required></label><label>Client<input id="evc"></label><div class="row"><label style="flex:1">Start (out)<input id="evs" type="date" required></label><label style="flex:1">End (back)<input id="eve" type="date" required></label></div><div id="evm" class="msg"></div><div class="row"><button class="b">Create event</button><button class="g" type="button" id="evx">Cancel</button></div></form></div>
 <div id="lb" class="ov hide" style="z-index:60"><img id="lbi" alt="" style="max-width:100%;max-height:92vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"></div>
 <div id="ov" class="ov hide"><form id="fadj" class="dlg"><h3>Adjust stock</h3><div id="adjn" class="mu"></div><label>Change in quantity (+ to add, − to remove)<input id="adq" type="number" step="1" required></label><label>Reason<select id="adr"><option>New purchase</option><option>Damaged</option><option>Lost</option><option>Recount</option><option>Other</option></select></label><label>Notes<input id="adn"></label><div id="adm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-cx="1">Cancel</button></div></form></div></div>
 <script>
@@ -281,7 +282,7 @@ function render(){
  const evs=events();
  $("el").innerHTML=evs.filter(e=>fpass("events",e)).map(e=>{const res=e.reservations||{},ids=Object.keys(res),o=openEv[e.id];
   const rows=ids.map(iid=>{const r=res[iid],out=net(iid,e.id),it=S.items[iid],av=it?it.total-repQty(iid)-reservedElsewhere(iid,{...e}):0,short=r>av;return`<tr><td>${esc(itName(iid))}</td><td class="n">${r}</td><td class="n">${out}</td><td class="n ${out>0?"warn":"ok"}">${r-out>0?r-out+" to send":out>0?out+" not back":"—"}</td><td class="n ${short?"bad":"mu"}">${short?"short "+(r-av):"ok"}</td><td><button class="g" data-rr="${e.id}|${iid}">×</button></td></tr>`}).join("");
-  return`<div class="card"><div class="top"><div><b>${esc(e.name)}</b> <span class="mu">${esc(e.client)}</span><br><span class="mu">${esc(e.start)} → ${esc(e.end)} · ${ids.length} item types reserved</span></div><div><button class="g" data-tg="${e.id}">${o?"Hide":"Open"}</button> <button class="g" data-de="${e.id}">${armed==="e"+e.id?"Sure?":"Delete"}</button></div></div>${o?`<div class="sc" style="margin-top:8px"><table><thead><tr><th>Item</th><th class="n">Reserved</th><th class="n">Out</th><th class="n">Status</th><th class="n">Availability</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="mu">Nothing reserved yet.</td></tr>`}</tbody></table></div><form data-rf="${e.id}" style="margin-top:8px"><label>Reserve item<select name="i">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("")}</select></label><label>Qty<input name="q" type="number" min="1" value="1" style="width:80px"></label><button class="b">Reserve</button></form>`:""}</div>`}).join("")||`<p class="mu">No events yet. Add your first project above.</p>`;
+  return`<div class="card"><div class="top"><div><b>${esc(e.name)}</b> <span class="mu">${esc(e.client)}</span><br><span class="mu">${esc(e.start)} → ${esc(e.end)} · ${ids.length} item types reserved${e.invoice?` · Invoice ${esc(e.invoice)}`:""}</span></div><div><button class="g" data-tg="${e.id}">${o?"Hide":"Open"}</button> <button class="g" data-de="${e.id}">${armed==="e"+e.id?"Sure?":"Delete"}</button></div></div>${o?`<div class="sc" style="margin-top:8px"><table><thead><tr><th>Item</th><th class="n">Reserved</th><th class="n">Out</th><th class="n">Status</th><th class="n">Availability</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="mu">Nothing reserved yet.</td></tr>`}</tbody></table></div><form data-rf="${e.id}" style="margin-top:8px"><label>Reserve item<select name="i">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("")}</select></label><label>Qty<input name="q" type="number" min="1" value="1" style="width:80px"></label><button class="b">Reserve</button></form>`:""}</div>`}).join("")||`<p class="mu">No events yet. Add your first project above.</p>`;
  keepSel($("me"),evs.map(e=>`<option value="${e.id}">${esc(e.name)} (${esc(e.start)})</option>`).join(""));
  keepSel($("mi"),its.filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join(""));
  $("ml").innerHTML=moves().filter(m=>fpass("moves",m)).map(m=>`<tr><td>${esc(m.date)}</td><td>${esc(evName(m.eventId))}</td><td>${esc(itName(m.itemId))}</td><td class="${m.type==="out"?"warn":"ok"}">${m.type==="out"?"Out":"Returned"}</td><td class="n">${m.qty}</td><td class="mu">${esc(m.note)}</td><td><button class="g" data-dm="${m.id}">${armed==="m"+m.id?"Sure?":"×"}</button></td></tr>`).join("")||`<tr><td colspan="7" class="mu">No movements logged yet.</td></tr>`;
@@ -467,7 +468,7 @@ const nextNo=(c,pre)=>{let m=0;Object.values(S[c]).forEach(x=>{const n=parseInt(
 const mergeLines=L=>{const m={};L.forEach(l=>{if(l.itemId&&S.items[l.itemId]&&l.qty>0)m[l.itemId]=(m[l.itemId]||0)+l.qty});return Object.entries(m).map(([itemId,qty])=>({itemId,qty}))};
 function plQty(id,itemId,type){let n=0;for(const m of Object.values(S.movements))if(m.picklistId===id&&m.type===type&&(!itemId||m.itemId===itemId))n+=m.qty;return n}
 function plState(id,p){if(p.status==="draft")return"Draft";if(p.status==="cancelled")return"Cancelled";const o=plQty(id,null,"out"),r=plQty(id,null,"in");return r>=o?"Returned":r>0?"Partly returned":"Out on site"}
-function plLinks(v){return Object.entries(S.picklists).filter(([,x])=>x.invoice===v.number).map(([id,x])=>`<button class="lk" data-plo="${id}">${esc(x.number)}</button>`).join(" ")+` <button class="g" data-npl="${esc(v.number)}">+ Picklist</button>`}
+function plLinks(v){return Object.entries(S.picklists).filter(([,x])=>x.invoice===v.number).map(([id,x])=>`<button class="lk" data-plo="${id}">${esc(x.number)}</button>`).join(" ")+` <button class="g" data-npl="${esc(v.number)}">+ Picklist</button> `+(()=>{const ev=Object.entries(S.events).find(([,x])=>x.invoice===v.number);return ev?`<button class="lk" data-eo="${ev[0]}">Event: ${esc(ev[1].name)}</button>`:`<button class="g" data-nev="${esc(v.number)}">+ Event</button>`})()}
 let plMode="",pld=null,plId=null,rpEdit=null,rpRes=null,plWarn=false;
 const ldn=x=>(x.lines||[]).reduce((a,l)=>a+Math.min(l.qty,(x.loaded||{})[l.itemId]||0),0);
 function renderPL(){
@@ -770,6 +771,8 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  if(d.oi)showItem(d.oi);
  if(d.t==="pl"){plMode="";renderPL()}
  if(d.npl!==undefined)openPL(null,d.npl);
+ if(d.nev!==undefined)openEvDlg(d.nev);
+ if(d.eo&&S.events[d.eo]){cur=null;imode="";openEv[d.eo]=true;showTab("events");render();window.scrollTo(0,0)}
  if(d.plo)openPL(d.plo);
  if(d.plback){plMode="";renderPL()}
  if(d.plsave)savePL();
@@ -841,4 +844,15 @@ render();
  render();updSyn();syncNow();
  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 })();
+
+let evInv=null;
+function openEvDlg(num){const v=invs().find(x=>x.number===num);if(!v)return;evInv=v;
+ $("evi").textContent="Invoice "+v.number+" \u00b7 "+v.customer+(v.due?" \u00b7 due "+v.due:"");
+ $("evn").value=(v.customer?v.customer+" \u2013 ":"")+v.number;$("evc").value=v.customer||"";$("evs").value=$("eve").value=v.due||today();$("evm").textContent="";$("evo").classList.remove("hide");$("evn").focus()}
+$("evx").onclick=()=>$("evo").classList.add("hide");
+$("fev").onsubmit=async e=>{e.preventDefault();
+ if($("eve").value<$("evs").value){$("evm").innerHTML='<span class="bad">End date must be on or after the start date.</span>';return}
+ const id=rid();openEv[id]=true;
+ await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
+ $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 </script></body></html>
