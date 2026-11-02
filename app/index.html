@@ -134,6 +134,34 @@ tbody tr:hover td{background:#fbf4e6}
 .pdel{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:0;background:var(--bad);color:#fff;cursor:pointer;font-size:13px;line-height:1;padding:0}
 .pbtn{display:inline-flex;flex-direction:row;align-items:center;gap:6px;cursor:pointer;color:var(--tx);font-size:13px;font-weight:500;padding:7px 12px;border:1px solid var(--bd);border-radius:10px;background:#fff}
 .pbtn:hover{border-color:var(--ac)}.pbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+/* motion */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.mn>.bd2>section:not(.hide){animation:fadeUp .28s cubic-bezier(.2,.7,.2,1)}
+.tb h2{animation:slideIn .3s ease}
+.ov:not(.hide){animation:fadeIn .18s ease}.ov:not(.hide) .dlg{animation:popIn .24s cubic-bezier(.2,.8,.2,1)}
+button,.kcard,.kc,.chip,.card,.pill,input,select,textarea,.th,nav button,.ili,tbody tr td{transition:background-color .18s,color .18s,border-color .18s,box-shadow .2s,transform .18s,opacity .2s,filter .18s}
+button.b:active,button.g:active,nav button:active{transform:scale(.96)}
+button.b:hover{box-shadow:0 4px 12px color-mix(in srgb,var(--ac) 35%,transparent);transform:translateY(-1px)}
+button.g:hover{transform:translateY(-1px)}
+.sum>div:hover,.tiles>div:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,40,10,.1)}
+.sum>div,.tiles>div{transition:transform .2s,box-shadow .2s}
+.kcard:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(60,40,10,.12)}
+.kcard.dragging,.kcard[style*="opacity"]{transform:rotate(1.5deg)}
+.kb .kcard{animation:fadeUp .3s ease both}
+.chip:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.mg>div{transition:background-color .15s}.mg>div:hover{background:color-mix(in srgb,var(--ac) 5%,transparent)}
+tbody tr{transition:background-color .15s}
+nav button{position:relative}nav button.on::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:2px;background:var(--ac);animation:fadeIn .25s}
+.th.ph,.th{transition:transform .2s}.rw:hover .th,.ili:hover .th{transform:scale(1.06)}
+details>summary{transition:color .15s}
+#note:not(:empty){animation:fadeUp .25s}
+.msg:not(:empty){animation:fadeIn .25s}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><div><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div style="display:flex;align-items:center;gap:10px"><span id="note" class="msg"></span><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -857,8 +885,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.4.1";
+const APP_VERSION="1.5.0";
 const CHANGES=[
+ ["1.5.0","2 Nov 2026",["Animations and smooth transitions (switch off automatically if your device is set to reduce motion)"]],
  ["1.4.1","2 Nov 2026",["Pages now use the full width of the screen"]],
  ["1.4.0","2 Nov 2026",["Create an event from an invoice (+ Event on the Invoices page)","Version history and update check in Settings"]],
  ["1.3.1","2 Nov 2026",["Draft invoices now show on the calendar and in the invoice list","Fixed overdue invoices covering the whole calendar"]],
