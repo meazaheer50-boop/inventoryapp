@@ -79,7 +79,7 @@ details summary{cursor:pointer;font-weight:600}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:50;padding:16px}
 .dlg{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;width:min(420px,100%);flex-direction:column;align-items:stretch;gap:12px}.dlg input,.dlg select{width:100%}.dlg h3{margin:0}
-.chip.inv{background:var(--card);color:var(--tx);border:1px dashed var(--ac)}.chip.inv.ov{border-color:var(--bad);color:var(--bad)}.chip.inv.pd{border-color:var(--ok);color:var(--ok);opacity:.7}
+.chip.inv{background:var(--card);color:var(--tx);border:1px dashed var(--ac)}.chip.inv.ov{border-color:var(--bad);color:var(--bad)}.chip.inv.dr{border-style:dotted;border-color:var(--mu);color:var(--mu);opacity:.85;font-style:italic}.chip.inv.pd{border-color:var(--ok);color:var(--ok);opacity:.7}
 .fpanel{padding:14px 16px;border-bottom:1px solid var(--bd);background:var(--bg)}.fpanel.card{border:1px solid var(--bd)}
 .fr{margin-bottom:8px}.fr select,.fr input{max-width:210px}
 .fchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:99px;padding:2px 4px 2px 12px;background:var(--card)}.fchip.on{border-color:var(--ac);background:var(--acs)}
@@ -419,7 +419,7 @@ function isoDate(v){v=String(v||"").trim();if(!v)return"";let m;if(m=v.match(/^(
  if(m=v.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/)){let d=+m[1],mo=+m[2];if(mo>12)[d,mo]=[mo,d];return`${m[3]}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
  const x=new Date(v);return isNaN(x)?"":`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`}
 const invMatch=(v,q,dk)=>!q||(dk?((v.due||"").startsWith(dk)||(v.date||"").startsWith(dk)):(v.number+" "+v.customer+" "+(v.bill||"")+" "+(v.due||"")+" "+(v.date||"")).toLowerCase().includes(q.toLowerCase()));
-const calInv=()=>$("cinv").checked?invs().filter(v=>v.due&&!/^(void|draft)$/i.test(v.status||"")&&invMatch(v,cal.q,cal.dk)).map(v=>({...v,cls:invState(v)==="Overdue"?"ov":invState(v)==="Paid"?"pd":"up"})):[];
+const calInv=()=>$("cinv").checked?invs().filter(v=>v.due&&!/^void$/i.test(v.status||"")&&invMatch(v,cal.q,cal.dk)).map(v=>({...v,cls:/^draft$/i.test(v.status||"")?"dr":invState(v)==="Overdue"?"ov":invState(v)==="Paid"?"pd":"up"})):[];
 function renderCri(){const box=$("cri");if(!cal.q){box.innerHTML="";return}const mi=invs().filter(v=>invMatch(v,cal.q,cal.dk));
  box.innerHTML=mi.length?`<div style="margin-bottom:12px"><div class="mu" style="margin-bottom:6px">${mi.length} matching invoice${mi.length===1?"":"s"}</div>${mi.slice(0,20).map(v=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--bd)"><button class="lk" data-iv="${esc(v.number)}">${esc(v.number)}</button>${zA(v," Zoho \u2197")}<span class="mu">${esc(v.customer)}</span><span class="mu">Due ${esc(v.due)}</span><span class="pill">${invState(v)}</span><span style="flex:1"></span><button class="g" data-cj="${esc((v.due||"").slice(0,7))}">Show</button></div>`).join("")}</div>`:""}
 $("cinv").onchange=renderCal;
@@ -671,7 +671,7 @@ function bEvents(){const t=today(),c={up:[],now:[],done:[]};
  c.done.reverse();
  return kb("events",[{key:"up",title:"Upcoming",color:"var(--ac)",cards:c.up},{key:"now",title:"In progress",color:"var(--warn)",cards:c.now},{key:"done",title:"Completed",color:"var(--ok)",cards:c.done}],false)}
 function bInv(){const q=$("invq").value.trim().toLowerCase(),t=today(),w7=new Date(Date.parse(t)+7*864e5).toISOString().slice(0,10),c={ov:[],soon:[],later:[],paid:[]};
- invs().filter(v=>fpass("inv",v)).filter(v=>!/^(void|draft)$/i.test(v.status||"")&&invMatch(v,q,dateKey(q))).sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999")).forEach(v=>{
+ invs().filter(v=>fpass("inv",v)).filter(v=>!/^void$/i.test(v.status||"")&&invMatch(v,q,dateKey(q))).sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999")).forEach(v=>{
   const k=invState(v)==="Paid"?"paid":v.due&&v.due<t?"ov":v.due&&v.due<=w7?"soon":"later";
   c[k].push(kcard("inv",v.id,`${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`} <span class="mu">${esc(v.customer)}</span>${v.bill?sub("\ud83d\udccd "+esc(v.bill)):""}<div style="margin-top:6px">Due ${esc(v.due)}</div><div><b>${fm(v.balance,v.currency)}</b> <span class="mu">of ${fm(v.total,v.currency)}</span></div><div class="row" style="margin-top:8px">${plLinks(v)}</div>`))});
  c.paid.reverse();
