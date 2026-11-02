@@ -18,7 +18,7 @@ nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;st
 .mn{flex:1;min-width:0}
 .tb{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 32px 4px;flex-wrap:wrap}
 .tb h2{margin:0;font-size:22px;font-weight:650;letter-spacing:-.01em}
-.bd2{padding:14px 32px 48px;max-width:1120px}
+.bd2{padding:14px 32px 48px;max-width:none}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
 .card h3{margin:0 0 10px;font-size:15px}
 form{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
@@ -857,8 +857,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.4.0";
+const APP_VERSION="1.4.1";
 const CHANGES=[
+ ["1.4.1","2 Nov 2026",["Pages now use the full width of the screen"]],
  ["1.4.0","2 Nov 2026",["Create an event from an invoice (+ Event on the Invoices page)","Version history and update check in Settings"]],
  ["1.3.1","2 Nov 2026",["Draft invoices now show on the calendar and in the invoice list","Fixed overdue invoices covering the whole calendar"]],
  ["1.3.0","1 Nov 2026",["Open the invoice in Zoho Books from the invoice list","Billing location on invoices","Clone a picklist and tick items off a loading checklist","Camera photos in Repairs; light theme only"]],
