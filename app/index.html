@@ -418,7 +418,7 @@ function filtered(){const f=$("lf").value,q=$("q").value.toLowerCase();return it
  if((f==="active"&&!act)||(f==="inactive"&&act)||(f==="low"&&!isLow(i,w)))return false;
  return !q||(i.name+" "+(i.sku||"")+" "+(i.category||"")).toLowerCase().includes(q)})}
 function renderList(){const st=filtered();
- $("st").innerHTML=st.map(i=>{const w=i.total-net(i.id)-repQty(i.id),low=isLow(i,w);return`<tr data-id="${i.id}" class="rw${i.active===false?" off":""}"><td><div class="nm">${ph(i,"sm")}<div><button class="lk" data-oi="${i.id}">${esc(i.name)}</button>${i.active===false?` <span class="pill off">Inactive</span>`:""}${i.description?`<br><span class="mu">${esc(i.description.slice(0,60))}</span>`:""}</div></div></td><td class="mu">${esc(i.sku)}</td><td class="mu">${esc(i.category)}</td><td class="n">${i.price?money(i.price):""}</td><td class="n">${i.total} <span class="mu">${esc(i.unit)}</span></td><td class="n ${w<0?"bad":low?"warn":""}">${w}${low?" \u25B2":""}</td><td class="n mu">${i.reorder||""}</td></tr>`}).join("")||`<tr><td colspan="7" class="mu" style="padding:22px">No items found. Click <b>+ New</b> or import a CSV to get started.</td></tr>`}
+ $("st").innerHTML=st.map(i=>{const w=i.total-net(i.id)-repQty(i.id),low=isLow(i,w);return`<tr data-id="${i.id}" class="rw${i.active===false?" off":""}"><td><div class="nm">${ph(i,"sm")}<div><button class="lk" data-oi="${i.id}">${esc(i.name)}</button>${i.active===false?` <span class="pill off">Inactive</span>`:""}${i.description?`<br><span class="mu">${esc(i.description.slice(0,60))}</span>`:""}</div></div></td><td class="mu">${esc(i.sku)}</td><td class="mu">${esc(i.category)}${i.subcategory?" \u00b7 "+esc(i.subcategory):""}</td><td class="n">${i.price?money(i.price):""}</td><td class="n">${i.total} <span class="mu">${esc(i.unit)}</span></td><td class="n ${w<0?"bad":low?"warn":""}">${w}${low?" \u25B2":""}</td><td class="n mu">${i.reorder||""}</td></tr>`}).join("")||`<tr><td colspan="7" class="mu" style="padding:22px">No items found. Click <b>+ New</b> or import a CSV to get started.</td></tr>`}
 $("st").onclick=e=>{if(e.target.closest("button"))return;const tr=e.target.closest("tr[data-id]");if(tr)showItem(tr.dataset.id)};
 $("lf").onchange=render;
 $("im").onclick=()=>$("imc").classList.toggle("hide");
@@ -926,8 +926,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.6.3";
+const APP_VERSION="1.6.4";
 const CHANGES=[
+ ["1.6.4","3 Nov 2026",["Item list import understands Opening Stock, Item Name (or Ref on whatsapp when the name is empty), Sub-Category, Notes and Rate columns","Item list can come from any tab or any Google Sheet file (set in Code.gs)"]],
  ["1.6.3","3 Nov 2026",["Planner days now stretch to fill the screen, so a shorter range gives wider days"]],
  ["1.6.2","3 Nov 2026",["Fixed the Add button alignment in Team & resources"]],
  ["1.6.1","3 Nov 2026",["Items import automatically from the item_list tab of your Google Sheet on every sync","Requires the updated Code.gs"]],
@@ -1054,12 +1055,12 @@ function applyItemList(rows){
  const g=(o,...k)=>{for(const x of k)if(o[x]!==undefined&&String(o[x]).trim()!=="")return String(o[x]).trim();return""};
  const byKey={};Object.entries(S.items).forEach(([id,v])=>{if(v.sku)byKey["s:"+v.sku.toLowerCase()]=id;byKey["n:"+v.name.toLowerCase()]=id});
  let add=0,upd=0;
- for(const o of rows){const name=g(o,"name","item","item_name","product");if(!name)continue;
-  const sku=g(o,"sku","code","item_code"),cat=g(o,"category","type","group"),qs=g(o,"quantity","qty","total","stock","stock_on_hand"),ps=g(o,"price","rate","rental_price","unit_price"),unit=g(o,"unit","uom"),desc=g(o,"description","desc"),rs=g(o,"reorder_level","reorder","reorder_point");
-  const snap=JSON.stringify([name,sku,cat,qs,ps,unit,desc,rs]),id=(sku&&byKey["s:"+sku.toLowerCase()])||byKey["n:"+name.toLowerCase()],ex=id?S.items[id]:null;
+ for(const o of rows){const name=g(o,"name","item","item_name","product","ref_on_whatapp","ref_on_whatsapp","ref");if(!name)continue;
+  const sku=g(o,"sku","code","item_code"),cat=g(o,"category","type","group"),qs=g(o,"quantity","qty","total","stock","stock_on_hand","opening_stock"),ps=g(o,"price","rate","rental_price","unit_price"),unit=g(o,"unit","uom"),desc=g(o,"description","desc","notes"),rs=g(o,"reorder_level","reorder","reorder_point"),sub=g(o,"sub_category","subcategory","sub_type");
+  const snap=JSON.stringify([name,sku,cat,qs,ps,unit,desc,rs,sub]),id=(sku&&byKey["s:"+sku.toLowerCase()])||byKey["n:"+name.toLowerCase()],ex=id?S.items[id]:null;
   if(ex&&ex.sh===snap)continue;
   const q=qs!==""?Math.max(0,Math.round(parseFloat(qs.replace(/[^\d.\-]/g,""))||0)):null,d={...(ex||{}),name};
-  if(sku)d.sku=sku;if(cat)d.category=cat;if(unit)d.unit=unit;if(desc)d.description=desc;
+  if(sku)d.sku=sku;if(cat)d.category=cat;if(sub)d.subcategory=sub;if(unit)d.unit=unit;if(desc)d.description=desc;
   if(ps!=="")d.price=parseFloat(ps.replace(/[^\d.]/g,""))||0;if(rs!=="")d.reorder=parseInt(rs)||0;
   if(!ex){d.total=q==null?0:q;d.category=d.category||"";d.active=true;d.created=Date.now();add++}
   else{if(q!=null&&q!==ex.sq)d.total=q;upd++}
