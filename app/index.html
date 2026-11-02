@@ -206,6 +206,8 @@ body[data-ro~="settings"] #fs{display:none!important}
 .pgm,.pgt{}
 .ucell{display:flex;gap:6px;flex-wrap:wrap}
 .pmx{display:grid;grid-template-columns:1fr 140px;gap:6px 12px;align-items:center;max-width:460px}
+.rpl{max-height:380px;overflow:auto;border-top:1px solid var(--bd)}
+.rpr{display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--bd)}.rpr .nm{flex:1;min-width:0}.rpr:hover{background:color-mix(in srgb,var(--ac) 5%,transparent)}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><div><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div style="display:flex;align-items:center;gap:10px"><span id="note" class="msg"></span><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -960,8 +962,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.8.0";
+const APP_VERSION="1.8.1";
 const CHANGES=[
+ ["1.8.1","3 Nov 2026",["Reserving items for an event: search box, category and sub-category filters, availability for the event dates, quantity per row"]],
  ["1.8.0","3 Nov 2026",["User sign-in with name and PIN (works offline after the first sign-in on a device)","Roles with per-area permissions (none, view, view and edit), including custom roles","Settings > Users and roles for administrators; permissions are also enforced by the Google Sheet script","Requires the updated Code.gs"]],
  ["1.7.0","3 Nov 2026",["Events now have a full profile page like items: Overview, Items, Picklists, Movements, Tasks and Invoice tabs","Event details: client, contact, venue, notes and a linked invoice","Edit reserved quantities directly, see stock shortages and open tasks at a glance"]],
  ["1.6.8","3 Nov 2026",["Settings > Sync now tells you why the item list did not import (wrong tab name, no permission, or old Code.gs)"]],
@@ -1136,7 +1139,7 @@ function renderEvDetail(){const e=S.events[ecur];if(!e){showTab("events");return
  else if(etab==="items"){
   const rows=ids.map(iid=>{const r=res[iid],o=net(iid,ecur),it=S.items[iid],av=evAvail(e,iid),sh=r>av;return`<tr><td><div class="nm">${it?ph(it,"sm"):""}<button class="lk" data-oi="${iid}">${esc(itName(iid))}</button></div></td><td class="n"><input type="number" min="1" value="${r}" data-rq="${ecur}|${iid}" style="width:80px"></td><td class="n">${o}</td><td class="n ${o>0?"warn":"ok"}">${r-o>0?r-o+" to send":o>0?o+" not back":"—"}</td><td class="n ${sh?"bad":"mu"}">${sh?"short "+(r-av):"ok"}</td><td><button class="g" data-rr="${ecur}|${iid}">×</button></td></tr>`}).join("");
   body=`<div class="sc"><table><thead><tr><th>Item</th><th class="n">Reserved</th><th class="n">Out</th><th class="n">Status</th><th class="n">Availability</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="mu">Nothing reserved yet.</td></tr>`}</tbody></table></div>
-  <form data-rf="${ecur}" style="margin-top:12px"><label>Reserve item<select name="i">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}${i.category?" · "+esc(i.category):""}</option>`).join("")}</select></label><label>Qty<input name="q" type="number" min="1" value="1" style="width:80px"></label><button class="b">Reserve</button></form>`}
+  <div class="card" style="margin:16px 0 0;padding:14px"><h4 style="margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mu)">Add items to this event</h4><div class="row" style="margin-bottom:10px"><input id="rps" type="search" placeholder="Search name, SKU or category" value="${esc(RPK.q)}" style="flex:1;min-width:200px"><select id="rpc"></select><select id="rpu"></select></div><div id="rpl" class="rpl"></div></div>`}
  else if(etab==="picklists"){
   body=`<div class="row" style="margin-bottom:10px"><button class="b" data-npe="${ecur}" type="button">+ New picklist</button></div><div class="sc"><table><thead><tr><th>Picklist</th><th>Invoice</th><th class="n">Pieces</th><th>Created</th><th>Status</th></tr></thead><tbody>${pls.map(x=>`<tr><td><button class="lk" data-plo="${x.id}">${esc(x.number)}</button></td><td>${esc(x.invoice)}</td><td class="n">${(x.lines||[]).reduce((a,l)=>a+l.qty,0)}</td><td class="mu">${new Date(x.created||0).toLocaleDateString("en-GB",{dateStyle:"medium"})}</td><td><span class="pill ${x.st==="Draft"||x.st==="Returned"||x.st==="Cancelled"?"off":""}">${x.st}</span></td></tr>`).join("")||`<tr><td colspan="5" class="mu" style="padding:18px">No picklists for this event yet.</td></tr>`}</tbody></table></div>`}
  else if(etab==="moves"){
@@ -1249,4 +1252,26 @@ document.addEventListener("click",async e=>{const bt=e.target.closest&&e.target.
 {const _st=showTab;showTab=function(t){const m=TABMOD[t];if(m&&!can(m,"view")){const f=[...document.querySelectorAll("nav button")].find(b=>{const mm=TABMOD[b.dataset.t];return !mm||can(mm,"view")});t=f?f.dataset.t:"settings"}_st(t);if(t==="settings"){loadUsers().then(renderUsers);renderUsers()}}}
 {const _rd=render;render=function(){_rd.apply(this,arguments);applyAccess();if(!roleEd&&!userEd&&!$("settings").classList.contains("hide")&&!document.activeElement.closest("#usrb"))renderUsers()}}
 gate();applyAccess();renderUsers();
+
+/* ===== Item picker for event reservations ===== */
+const RPK={q:"",c:"",s:"",lim:40};
+function fillPicker(){const e=S.events[ecur],L=$("rpl");if(!e||!L)return;
+ const all=items().filter(i=>i.active!==false),cats=[...new Set(all.map(i=>i.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ const c=$("rpc"),u=$("rpu");
+ c.innerHTML='<option value="">All categories</option>'+cats.map(x=>`<option value="${esc(x)}"${RPK.c===x?" selected":""}>${esc(x)} (${all.filter(i=>i.category===x).length})</option>`).join("");
+ const base=RPK.c?all.filter(i=>i.category===RPK.c):all,subs=[...new Set(base.map(i=>i.subcategory).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ if(RPK.s&&!subs.includes(RPK.s))RPK.s="";
+ u.innerHTML='<option value="">All sub-categories</option>'+subs.map(x=>`<option value="${esc(x)}"${RPK.s===x?" selected":""}>${esc(x)} (${base.filter(i=>i.subcategory===x).length})</option>`).join("");u.classList.toggle("hide",!subs.length);
+ const q=RPK.q.trim().toLowerCase(),res=e.reservations||{};
+ const m=all.filter(i=>(!RPK.c||i.category===RPK.c)&&(!RPK.s||i.subcategory===RPK.s)&&(!q||(i.name+" "+(i.sku||"")+" "+(i.category||"")+" "+(i.subcategory||"")).toLowerCase().includes(q)));
+ const rows=m.slice(0,RPK.lim).map(i=>{const free=i.total-repQty(i.id)-reservedElsewhere(i.id,{id:ecur,...e}),r=res[i.id]||0;
+  return`<div class="rpr"><div class="nm">${ph(i,"sm")}<div><b>${esc(i.name)}</b>${r?` <span class="pill">Reserved ${r}</span>`:""}<div class="mu" style="font-size:12px">${i.sku?esc(i.sku)+" · ":""}${esc(i.category)}${i.subcategory?" · "+esc(i.subcategory):""}</div></div></div><div class="${free-r<=0?"bad":"mu"}" style="font-size:12px;white-space:nowrap;text-align:right">${free} free<br>of ${i.total}</div><input type="number" min="1" value="1" data-rqi="${i.id}" style="width:76px"><button class="b" data-radd="${i.id}" type="button" style="height:32px;padding:0 14px">Add</button></div>`}).join("");
+ L.innerHTML=`<div class="mu" style="font-size:12px;margin-bottom:6px">${m.length} item${m.length===1?"":"s"}${m.length>RPK.lim?" · showing "+RPK.lim:""}</div>`+(rows||'<p class="mu" style="margin:6px 0">No items match.</p>')+(m.length>RPK.lim?`<div style="text-align:center;margin-top:8px"><button class="g" data-rmore="1" type="button">Show more</button></div>`:"")}
+function pickAdd(iid){const e=S.events[ecur],inp=document.querySelector(`[data-rqi="${iid}"]`),n=Math.max(1,parseInt(inp&&inp.value)||1);if(!e)return;
+ const r={...(e.reservations||{})};r[iid]=(r[iid]||0)+n;put("events",ecur,{...e,reservations:r});setTimeout(()=>{const x=$("rps");if(x){x.focus();x.select()}},0)}
+document.addEventListener("input",e=>{if(e.target.id==="rps"){RPK.q=e.target.value;RPK.lim=40;fillPicker()}});
+document.addEventListener("change",e=>{if(e.target.id==="rpc"){RPK.c=e.target.value;RPK.s="";RPK.lim=40;fillPicker()}if(e.target.id==="rpu"){RPK.s=e.target.value;RPK.lim=40;fillPicker()}});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("button");if(!b)return;if(b.dataset.radd)pickAdd(b.dataset.radd);if(b.dataset.rmore){RPK.lim+=40;fillPicker()}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.rqi){e.preventDefault();pickAdd(e.target.dataset.rqi)}});
+{const _ed=renderEvDetail;renderEvDetail=function(){_ed.apply(this,arguments);if(etab==="items")fillPicker()}}
 </script></body></html>
