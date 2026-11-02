@@ -520,7 +520,7 @@ function openPL(id,inv){
  renderPL();renderPLE();window.scrollTo(0,0)}
 function renderPLE(){
  const x=pld,id=plId,draft=plMode==="edit",st=id?plState(id,x):"New draft",E=$("plE"),lines=x.lines||[];
- const head=`<div class="card"><div class="top"><div><b class="ttl">${esc(x.number)}</b> <span class="pill ${draft||st==="Returned"?"off":""}">${st}</span><div class="mu">${x.invoice?"Invoice "+esc(x.invoice)+(x.customer?" \u00b7 "+esc(x.customer):""):"No invoice linked"}${x.eventId?" \u00b7 "+esc(evName(x.eventId)):""}${x.notes&&!draft?" \u00b7 "+esc(x.notes):""}</div></div><div class="acts">${id?`<button class="g" data-plcl="">Clone</button>`:""}<button class="g" data-plprint="1">Print</button><button class="g" data-plback="1">\u2039 Back to list</button></div></div></div>`;
+ const head=`<div class="card"><div class="top"><div><b class="ttl">${esc(x.number)}</b> <span class="pill ${draft||st==="Returned"?"off":""}">${st}</span><div class="mu">${x.invoice?"Invoice "+esc(x.invoice)+(x.customer?" \u00b7 "+esc(x.customer):""):"No invoice linked"}${x.eventId?" \u00b7 "+esc(evName(x.eventId)):""}${x.notes&&!draft?" \u00b7 "+esc(x.notes):""}</div></div><div class="acts">${id?`<button class="g" data-plcl="">Clone</button>`:""}<button class="g" data-plprint="1">Print</button>${id&&!draft?`<button class="g dng" data-pldel="1">Delete</button>`:""}<button class="g" data-plback="1">\u2039 Back to list</button></div></div></div>`;
  if(draft){
   const evO=`<option value="">\u2014 none \u2014</option>`+events().map(e=>`<option value="${e.id}"${x.eventId===e.id?" selected":""}>${esc(e.name)} (${esc(e.start)})</option>`).join("");
   const inO=`<option value="">\u2014 none \u2014</option>`+invs().filter(v=>!/^void$/i.test(v.status||"")).sort((a,b)=>(a.due||"").localeCompare(b.due||"")).map(v=>`<option value="${esc(v.number)}"${x.invoice===v.number?" selected":""}>${esc(v.number)} \u00b7 ${esc(v.customer)}${v.due?" \u00b7 due "+esc(v.due):""}</option>`).join("");
@@ -528,7 +528,7 @@ function renderPLE(){
   const rows=lines.map((l,i)=>{const wh=whOf(l.itemId),bad=need[l.itemId]>wh;return`<tr><td>${esc(itName(l.itemId))}</td><td class="n"><input type="number" min="1" value="${l.qty}" data-plq="${i}"></td><td class="n ${bad?"bad":"mu"}">${wh}${bad?" \u25B2 short":""}</td><td><button class="g" data-plrm="${i}">\u00d7</button></td></tr>`}).join("")||`<tr><td colspan="4" class="mu" style="padding:16px">No items yet. Add lines below, or fill from the event reservations.</td></tr>`;
   E.innerHTML=head+`<div class="card"><div class="row" style="align-items:end;gap:12px"><label>Event<select data-pf="eventId">${evO}</select></label><label>Invoice<select data-pf="invoice">${inO}</select></label><label>Dispatch date<input type="date" data-pf="outDate" value="${esc(x.outDate||today())}"></label><label style="flex:1;min-width:200px">Notes<input data-pf="notes" value="${esc(x.notes)}"></label></div></div>
   <div class="card"><div class="top" style="margin-bottom:8px"><b>Items to pick</b><button class="g" data-plfill="1" type="button">Fill from event reservations</button></div><div class="sc"><table><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">In warehouse</th><th></th></tr></thead><tbody>${rows}</tbody></table></div><div class="row" style="margin-top:10px"><select id="pli">${items().filter(i=>i.active!==false).map(i=>`<option value="${i.id}">${esc(i.name)}</option>`).join("")}</select><input id="plqn" type="number" min="1" value="1" style="width:80px"><button class="g" data-pladd="1" type="button">Add line</button></div></div>${ldHtml(false)}
-  <div class="card"><div class="row"><button class="g" data-plsave="1">Save draft</button><button class="b" data-pldisp="1">Dispatch \u2192 create Out movements</button>${id?`<button class="g dng" data-pldel="1">${armed==="p"+id?"Confirm delete":"Delete draft"}</button>`:""}<span id="plm" class="msg"></span></div></div>`;
+  <div class="card"><div class="row"><button class="g" data-plsave="1">Save draft</button><button class="b" data-pldisp="1">Dispatch \u2192 create Out movements</button>${id?`<button class="g dng" data-pldel="1">Delete draft</button>`:""}<span id="plm" class="msg"></span></div></div>`;
   return}
  const op=st==="Out on site"||st==="Partly returned";
  const rows=lines.map((l,i)=>{const out=plQty(id,l.itemId,"out"),ret=plQty(id,l.itemId,"in"),os=Math.max(0,out-ret);
@@ -807,7 +807,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  if(d.plsave)savePL();
  if(d.pldisp)doDispatch();
  if(d.plprint)window.print();
- if(d.pldel)confirmDel("p"+plId,()=>{del("picklists",plId);plMode="";renderPL()});
+ if(d.pldel&&plId)delPicklist(plId);
  if(d.plfill)plFill();
  if(d.plcl!==undefined){if(d.plcl)openPL(d.plcl);clonePL()}
  if(d.ld){const l=(pld.lines||[]).find(x=>x.itemId===d.ld);if(l)ldSet(d.ld,((pld.loaded||{})[d.ld]||0)>=l.qty?0:l.qty)}
@@ -846,7 +846,7 @@ document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)r
  if(d.ct){cal.m=today().slice(0,7);render()}
  if(d.cj){cal.m=d.cj;renderCal();$("cv").scrollIntoView({behavior:"smooth"})}
  if(d.di)confirmDel("i"+d.di,()=>del("items",d.di));
- if(d.de)confirmDel("e"+d.de,()=>del("events",d.de));
+ if(d.de)delEvent(d.de);
  if(d.dm)confirmDel("m"+d.dm,()=>del("movements",d.dm));
  if(d.tg){openEv[d.tg]=!openEv[d.tg];render()}
  if(d.rr){const [eid,iid]=d.rr.split("|"),ev=S.events[eid],r={...(ev.reservations||{})};delete r[iid];put("events",eid,{...ev,reservations:r})}
@@ -885,8 +885,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.5.0";
+const APP_VERSION="1.5.1";
 const CHANGES=[
+ ["1.5.1","2 Nov 2026",["Delete picklists at any stage (also removes their stock movements)","Deleting an event removes its movements and unlinks its picklists, after a confirmation"]],
  ["1.5.0","2 Nov 2026",["Animations and smooth transitions (switch off automatically if your device is set to reduce motion)"]],
  ["1.4.1","2 Nov 2026",["Pages now use the full width of the screen"]],
  ["1.4.0","2 Nov 2026",["Create an event from an invoice (+ Event on the Invoices page)","Version history and update check in Settings"]],
@@ -904,4 +905,15 @@ async function checkVer(manual){const st=$("vst");if(manual)st.textContent="Chec
 $("vchk").onclick=()=>checkVer(true);
 $("vrel").onclick=async()=>{try{for(const r of await navigator.serviceWorker.getRegistrations())await r.unregister();for(const k of await caches.keys())await caches.delete(k)}catch(e){}location.reload()};
 renderVer();setTimeout(()=>checkVer(false),4000);
+
+async function delPicklist(id){const x=S.picklists[id];if(!x)return;const mv=Object.entries(S.movements).filter(([,m])=>m.picklistId===id);
+ const msg="Delete picklist "+x.number+"?"+(mv.length?"\n\nIt has "+mv.length+" stock movement"+(mv.length===1?"":"s")+" (Out/In). They will be deleted too, so the stock counts change back.":"")+"\n\nThis cannot be undone.";
+ if(!confirm(msg))return;
+ for(const [mid] of mv)await del("movements",mid);await del("picklists",id);plMode="";plId=null;renderPL();say("Picklist deleted.");setTimeout(()=>say(""),4000)}
+async function delEvent(id){const e=S.events[id];if(!e)return;const mv=Object.entries(S.movements).filter(([,m])=>m.eventId===id),pls=Object.entries(S.picklists).filter(([,x])=>x.eventId===id);
+ let msg='Delete event "'+e.name+'"?';
+ if(mv.length)msg+="\n\n"+mv.length+" stock movement"+(mv.length===1?"":"s")+" for this event will be deleted too, so the stock counts change back.";
+ if(pls.length)msg+="\n\n"+pls.length+" picklist"+(pls.length===1?" is":"s are")+" linked to it. They are kept, but unlinked from the event.";
+ msg+="\n\nThis cannot be undone.";if(!confirm(msg))return;
+ for(const [mid] of mv)await del("movements",mid);for(const [pid,x] of pls)await put("picklists",pid,{...x,eventId:""});delete openEv[id];await del("events",id);say("Event deleted.");setTimeout(()=>say(""),4000)}
 </script></body></html>
