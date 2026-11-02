@@ -283,7 +283,7 @@ html{scroll-behavior:smooth}
 const S={items:{},events:{},movements:{},settings:{},itemlog:{},invoices:{},picklists:{},repairs:{},filters:{},tasks:{},resources:{}};let assets=true,db=null,openEv={},armed=null;
 // ---------- offline storage + Google Sheets sync ----------
 const CFG={get url(){try{return localStorage.getItem("ev_url")||""}catch(e){return""}},get key(){try{return localStorage.getItem("ev_key")||""}catch(e){return""}},get dev(){try{return localStorage.getItem("ev_dev")||""}catch(e){return""}}};
-let idb=null,syncing=false,syncTimer=null,lastErr="",lastSync=0;const PH={},phBusy=new Set();
+let lastWarn="",idb=null,syncing=false,syncTimer=null,lastErr="",lastSync=0;const PH={},phBusy=new Set();
 const idbp=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open("everafter",1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore("rec",{keyPath:["c","id"]});d.createObjectStore("meta",{keyPath:"k"});d.createObjectStore("photos",{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
 const tx=(st,mode)=>idb.transaction(st,mode||"readonly").objectStore(st);
@@ -303,7 +303,7 @@ async function updSyn(){const b=$("syn");if(!b||!idb)return;
  const n=(await idbp(tx("rec").getAll())).filter(r=>r.dirty).length+(await idbp(tx("photos").getAll())).filter(p=>p.pending).length;let t,bad=false;
  if(syncing)t="Syncing\u2026";else if(!CFG.url)t="Not connected";else if(!online())t="Offline"+(n?" \u00b7 "+n+" pending":"");else if(lastErr){t="Sync failed";bad=true}else t=n?"Sync \u00b7 "+n+" pending":(lastSync?"Synced "+new Date(lastSync).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):"Sync");
  b.textContent=t;b.style.color=bad?"var(--bad)":"";
- const s=$("cfs");if(s)s.innerHTML=lastErr?`<span class="bad">${esc(lastErr)}</span>`:CFG.url?`${online()?"Online":"Offline"}. ${n} change${n===1?"":"s"} waiting to sync.${lastSync?" Last sync "+new Date(lastSync).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})+".":""}`:"Not connected yet."}
+ const s=$("cfs");if(s)s.innerHTML=(lastWarn&&!lastErr?`<span class="warn">${esc(lastWarn)}</span><br>`:"")+(lastErr?`<span class="bad">${esc(lastErr)}</span>`:CFG.url?`${online()?"Online":"Offline"}. ${n} change${n===1?"":"s"} waiting to sync.${lastSync?" Last sync "+new Date(lastSync).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})+".":""}`:"Not connected yet.")}
 async function syncNow(manual){
  if(syncing)return;
  if(!CFG.url||!CFG.key){if(manual)say("Add the sync URL and access key in Settings first.");updSyn();return}
@@ -325,6 +325,7 @@ async function syncNow(manual){
    if(row.deleted)delete S[c][row.id];else S[c][row.id]=row.data}
   for(const r of dirty){const cu=await idbp(tx("rec").get([r.c,r.id]));if(cu&&cu.dirty&&cu.updated===r.updated)await idbp(tx("rec","readwrite").put({...cu,dirty:0}))}
   if(Array.isArray(res.invoices)){const m={};parseInvoices(JSON.stringify(res.invoices)).forEach(v=>{const d={...v};delete d.key;m[v.key]=d});S.invoices=m;saveMeta("invoices",m)}
+  lastWarn=res.item_list_error?"Item list: "+res.item_list_error:(res.item_list===undefined?"Item list: the Google Sheet script has not been updated yet (deploy the new Code.gs as a new version).":"");
   if(Array.isArray(res.item_list))applyItemList(res.item_list);
   saveMeta("since",res.now);lastSync=Date.now();saveMeta("lastSync",lastSync);
  }catch(e){lastErr=String(e&&e.message||e)}
@@ -931,8 +932,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.6.7";
+const APP_VERSION="1.6.8";
 const CHANGES=[
+ ["1.6.8","3 Nov 2026",["Settings > Sync now tells you why the item list did not import (wrong tab name, no permission, or old Code.gs)"]],
  ["1.6.7","3 Nov 2026",["Item list import keeps items that share a name but have different SKUs as separate items"]],
  ["1.6.6","3 Nov 2026",["Filter the item list by category and sub-category (with counts)","Sub-category field on items and in saved filters"]],
  ["1.6.5","3 Nov 2026",["Item names now come only from the Ref on whatapp column of the item sheet"]],
