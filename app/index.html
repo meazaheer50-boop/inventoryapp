@@ -162,8 +162,35 @@ details>summary{transition:color .15s}
 .msg:not(:empty){animation:fadeIn .25s}
 html{scroll-behavior:smooth}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* planner */
+.pg{overflow:auto;max-height:calc(100vh - 250px);position:relative}
+.pgi{position:relative}
+.pgh,.pgr{display:flex}
+.pgh{position:sticky;top:0;z-index:4;background:var(--card);border-bottom:1px solid var(--bd)}
+.pgl{flex:none;width:170px;position:sticky;left:0;z-index:3;background:var(--card);border-right:1px solid var(--bd);padding:8px 10px;font-size:13px;display:flex;flex-direction:column;justify-content:center;min-height:44px}
+.pgl small{color:var(--mu);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgh .pgl{z-index:5;justify-content:flex-end}
+.pgd{flex:none;text-align:center;font-size:11px;color:var(--mu);padding:3px 0;border-right:1px solid var(--bd);line-height:1.25}
+.pgd small{display:block;height:13px;font-weight:600;color:var(--ac);text-transform:uppercase}.pgd b{font-size:13px;color:var(--tx)}
+.pgd.we{background:var(--bg)}.pgd.td{background:var(--acs)}.pgd.td b{color:var(--ac)}
+.pgr{border-top:1px solid var(--bd)}
+.pgb{position:relative;flex:none}
+.pgc{position:absolute;top:0;bottom:0;border-right:1px solid color-mix(in srgb,var(--bd) 60%);cursor:cell}
+.pgc.we{background:color-mix(in srgb,var(--bd) 22%,transparent)}.pgc.td{background:color-mix(in srgb,var(--ac) 12%,transparent)}
+.pgc.l2{background:color-mix(in srgb,var(--warn) 22%,transparent)}.pgc.l3{background:color-mix(in srgb,var(--bad) 26%,transparent)}
+.pgc:hover{background:color-mix(in srgb,var(--ac) 14%,transparent)}
+.pgev{position:absolute;top:0;bottom:0;pointer-events:none}
+.pgt{position:absolute;height:24px;border-radius:6px;color:#fff;font-size:12px;padding:0 10px;line-height:24px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:grab;touch-action:none;user-select:none;box-shadow:0 1px 3px rgba(0,0,0,.18);z-index:1}
+.pgt em{font-style:normal;opacity:.8}.pgt.done{opacity:.5;text-decoration:line-through}.pgt.drag{cursor:grabbing;z-index:6;box-shadow:0 6px 16px rgba(0,0,0,.28)}
+.pgt .rs{position:absolute;top:0;bottom:0;width:9px;cursor:ew-resize}.pgt .rs.l{left:0}.pgt .rs.r{right:0}.pgt .rs:hover{background:rgba(255,255,255,.35)}
+.pgm{position:absolute;height:22px;display:flex;align-items:center;gap:6px;cursor:grab;touch-action:none;user-select:none;z-index:2;white-space:nowrap;font-size:12px;font-weight:600}
+.pgm i{width:16px;height:16px;transform:rotate(45deg);background:var(--c);border-radius:3px;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.25)}.pgm.done{opacity:.5}
+.ck{flex-direction:row!important;align-items:center;gap:8px!important;font-size:13px!important;color:var(--tx)!important}.ck input{height:auto}
+.pkr{display:flex;flex-wrap:wrap;gap:4px 14px;max-height:130px;overflow:auto}
+.rchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:99px;padding:3px 6px 3px 12px;margin:0 6px 6px 0;font-size:13px}.rchip button{border:0;background:none;color:var(--mu);cursor:pointer;font-size:15px;line-height:1}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
-<nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
+<nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><div><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div style="display:flex;align-items:center;gap:10px"><span id="note" class="msg"></span><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
 
 <section id="stock">
@@ -171,7 +198,7 @@ html{scroll-behavior:smooth}
   <div class="ltb"><div class="lt"><select id="lf"><option value="all">All Items</option><option value="active">Active Items</option><option value="inactive">Inactive Items</option><option value="low">Low stock</option></select><input id="q" placeholder="Search name, SKU or category" style="width:260px;max-width:100%"></div><div class="la"><button class="b" data-nw="1" type="button">+ New</button><button class="g" id="im" type="button">Import</button><button class="g" id="ex2" type="button">Export</button></div></div>
   <div class="sc"><table><thead><tr><th>Name</th><th>SKU</th><th>Category</th><th class="n">Rate</th><th class="n">Stock on hand</th><th class="n">In warehouse</th><th class="n">Reorder level</th></tr></thead><tbody id="st"></tbody></table></div>
  </div>
- <div class="card hide" id="imc"><h3>Import items from CSV</h3>
+ <div class="card hide" id="imc"><h3>Import items from CSV</h3><p class="mu" style="font-size:13px;margin-top:0">Items can also come from your Google Sheet automatically: put them in a tab called <b>item_list</b> and they are imported on every sync.</p>
   <p class="mu" style="font-size:13px;margin-top:0">First row must be a header. Only <b>name</b> is required. Other recognised columns: <b>category</b>, <b>quantity</b>, <b>sku</b>, <b>price</b>, <b>unit</b>, <b>description</b>, <b>reorder level</b>. Existing items (same SKU, otherwise same name) are updated, not duplicated.</p>
   <input type="file" id="cf" accept=".csv,text/csv,text/plain"><p class="mu" style="margin:8px 0 0;font-size:13px">or paste CSV text:</p>
   <textarea id="ct" placeholder="name,category,quantity,sku,price&#10;Gold chiavari chair,Seating,200,CH-001,150"></textarea><button class="b" id="cb" type="button">Import pasted CSV</button><div id="cm" class="msg"></div></div>
@@ -198,6 +225,17 @@ html{scroll-behavior:smooth}
 
 <section id="cal" class="hide">
  <div class="card"><div class="ct"><input id="cs" type="search" placeholder="Search item, client, invoice or date (e.g. Smith, chair, INV-0012, 15/12/2026)" style="flex:1;min-width:220px"></div><div class="ct"><button class="g" data-cn="-1">‹</button><b id="cl"></b><button class="g" data-cn="1">›</button><button class="g" data-ct="1">Today</button><span style="flex:1"></span><label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="cinv" checked> Show invoices</label><button class="g" data-cm="month">Month</button><button class="g" data-cm="plan">Planning</button></div><div id="cr"></div><div id="cri"></div><div class="sc" id="cv"></div><p class="mu" style="font-size:12px;margin:8px 0 0">Month: events across the month — tap one to open it. Planning: pieces reserved per item per day; red means more reserved than you own.</p></div>
+</section>
+
+<section id="plan" class="hide">
+ <div class="card flush">
+  <div class="ltb"><div class="lt"><div class="seg"><button data-pg="person" type="button">Team</button><button data-pg="event" type="button">Events</button><button data-pg="res" type="button">Vehicles &amp; equipment</button></div><select id="pr"><option value="14">2 weeks</option><option value="28">4 weeks</option><option value="56">8 weeks</option></select><span id="prl" class="mu" style="font-size:13px"></span></div>
+  <div class="la"><button class="g" id="ppv" type="button">‹</button><button class="g" id="ptd" type="button">Today</button><button class="g" id="pnx" type="button">›</button><button class="g" id="pgen" type="button">Plan from event</button><button class="g" id="pmg" type="button">Team &amp; resources</button><button class="g" id="pms" type="button">+ Milestone</button><button class="b" id="pnew" type="button">+ Task</button></div></div>
+  <div id="pmgr" class="hide" style="padding:14px 16px;border-bottom:1px solid var(--bd)"></div>
+  <div id="phint" class="mu" style="padding:10px 16px;font-size:13px"></div>
+  <div class="pg" id="pgrid"></div>
+ </div>
+ <p class="mu" style="font-size:12px;margin:0">Click an empty day to add a task. Drag a bar to move it, drag its edges to change the length. In Team and Vehicles views, a day turns amber with 2 tasks and red with 3 or more for the same person or vehicle.</p>
 </section>
 
 <section id="inv" class="hide">
@@ -237,10 +275,12 @@ html{scroll-behavior:smooth}
 <div id="ovr" class="ov hide"><form id="frp" class="dlg"><h3 id="rph">Report repair</h3><label>Item<select id="rpi" required></select></label><div class="row"><label style="flex:1">Quantity<input id="rpn" type="number" min="1" value="1" required></label><label style="flex:1">Reported on<input id="rpd" type="date" required></label></div><label>What is wrong?<input id="rpis" required placeholder="e.g. cracked leg, torn fabric"></label><label>Assigned to / repairer<input id="rpa"></label><label>Estimated cost<input id="rpc" type="number" min="0" step="any"></label><label>Notes<input id="rpno"></label><div>Photos<div id="rpph" class="phs" style="margin:6px 0"></div><div class="row"><label class="pbtn"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Take photo<input id="rpcam" type="file" accept="image/*" capture="environment" hidden></label><label class="pbtn">Choose from gallery<input id="rppick" type="file" accept="image/*" multiple hidden></label></div></div><div id="rpm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form>
 <form id="frs" class="dlg hide"><h3 id="rsh">Resolve repair</h3><label>Outcome<select id="rso"><option value="repaired">Repaired \u2014 back in stock</option><option value="written_off">Cannot be repaired \u2014 write off</option></select></label><div class="row"><label style="flex:1">Final cost<input id="rsc" type="number" min="0" step="any"></label><label style="flex:1">Date<input id="rsd" type="date" required></label></div><label>Notes<input id="rsn"></label><div id="rsm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form></div>
 <div id="evo" class="ov hide"><form id="fev" class="dlg"><h3>Create event from invoice</h3><div id="evi" class="mu"></div><label>Event name<input id="evn" required></label><label>Client<input id="evc"></label><div class="row"><label style="flex:1">Start (out)<input id="evs" type="date" required></label><label style="flex:1">End (back)<input id="eve" type="date" required></label></div><div id="evm" class="msg"></div><div class="row"><button class="b">Create event</button><button class="g" type="button" id="evx">Cancel</button></div></form></div>
+<div id="ptk" class="ov hide"><form id="fpk" class="dlg"><h3 id="pkh">New task</h3><label>Title<input id="pkt" required placeholder="e.g. Load the truck"></label><label class="ck"><input type="checkbox" id="pkm"> Milestone (a single key date)</label><label>Event<select id="pke"></select></label><div class="row"><label style="flex:1">Start<input id="pks" type="date" required></label><label style="flex:1" id="pkdw">End<input id="pkd" type="date"></label></div><label>Status<select id="pkx"><option value="todo">To do</option><option value="doing">In progress</option><option value="done">Done</option></select></label><div><div class="mu" style="font-size:12px;margin-bottom:4px">Assigned to</div><div id="pkr" class="pkr"></div></div><label>Notes<input id="pkn"></label><div id="pkmsg" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" id="pkcx">Cancel</button><button class="g dng hide" type="button" id="pkdel">Delete</button></div></form></div>
+<div id="pge" class="ov hide"><form id="fpg" class="dlg"><h3>Plan from event</h3><p class="mu" style="margin:0;font-size:13px">Creates a standard set of tasks around the event dates: prepare items, load the truck, set up, collect and return, check in. The invoice due date is added as a milestone when the event has an invoice. You can then assign people and move the dates.</p><label>Event<select id="pgsel"></select></label><div id="pgm" class="msg"></div><div class="row"><button class="b">Create tasks</button><button class="g" type="button" id="pgcx">Cancel</button></div></form></div>
 <div id="lb" class="ov hide" style="z-index:60"><img id="lbi" alt="" style="max-width:100%;max-height:92vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"></div>
 <div id="ov" class="ov hide"><form id="fadj" class="dlg"><h3>Adjust stock</h3><div id="adjn" class="mu"></div><label>Change in quantity (+ to add, − to remove)<input id="adq" type="number" step="1" required></label><label>Reason<select id="adr"><option>New purchase</option><option>Damaged</option><option>Lost</option><option>Recount</option><option>Other</option></select></label><label>Notes<input id="adn"></label><div id="adm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-cx="1">Cancel</button></div></form></div></div>
 <script>
-const S={items:{},events:{},movements:{},settings:{},itemlog:{},invoices:{},picklists:{},repairs:{},filters:{}};let assets=true,db=null,openEv={},armed=null;
+const S={items:{},events:{},movements:{},settings:{},itemlog:{},invoices:{},picklists:{},repairs:{},filters:{},tasks:{},resources:{}};let assets=true,db=null,openEv={},armed=null;
 // ---------- offline storage + Google Sheets sync ----------
 const CFG={get url(){try{return localStorage.getItem("ev_url")||""}catch(e){return""}},get key(){try{return localStorage.getItem("ev_key")||""}catch(e){return""}},get dev(){try{return localStorage.getItem("ev_dev")||""}catch(e){return""}}};
 let idb=null,syncing=false,syncTimer=null,lastErr="",lastSync=0;const PH={},phBusy=new Set();
@@ -279,12 +319,13 @@ async function syncNow(manual){
   const dirty=(await idbp(tx("rec").getAll())).filter(r=>r.dirty),changes={};
   dirty.forEach(r=>{(changes[r.c]=changes[r.c]||[]).push({id:r.id,updated:r.updated,deleted:!!r.deleted,data:r.data})});
   const res=await api({action:"sync",since:(await getMeta("since"))||0,changes});
-  for(const c of ["items","events","movements","itemlog","settings","picklists","repairs","filters"])for(const row of (res[c]||[])){
+  for(const c of ["items","events","movements","itemlog","settings","picklists","repairs","filters","tasks","resources"])for(const row of (res[c]||[])){
    const loc=await idbp(tx("rec").get([c,row.id]));if(loc&&loc.dirty&&loc.updated>row.updated)continue;
    await idbp(tx("rec","readwrite").put({c,id:row.id,updated:row.updated,deleted:row.deleted?1:0,data:row.data,dirty:0}));
    if(row.deleted)delete S[c][row.id];else S[c][row.id]=row.data}
   for(const r of dirty){const cu=await idbp(tx("rec").get([r.c,r.id]));if(cu&&cu.dirty&&cu.updated===r.updated)await idbp(tx("rec","readwrite").put({...cu,dirty:0}))}
   if(Array.isArray(res.invoices)){const m={};parseInvoices(JSON.stringify(res.invoices)).forEach(v=>{const d={...v};delete d.key;m[v.key]=d});S.invoices=m;saveMeta("invoices",m)}
+  if(Array.isArray(res.item_list))applyItemList(res.item_list);
   saveMeta("since",res.now);lastSync=Date.now();saveMeta("lastSync",lastSync);
  }catch(e){lastErr=String(e&&e.message||e)}
  syncing=false;render();updSyn()}
@@ -319,7 +360,7 @@ function render(){
  renderInv();
  renderPL();renderRP();renderBoards();renderFilters();
  if(imode)renderItem();
- applySettings();document.querySelectorAll(".pf").forEach(l=>l.classList.toggle("hide",!assets));
+ if(typeof renderPlan==="function"&&!$("plan").classList.contains("hide"))renderPlan();applySettings();document.querySelectorAll(".pf").forEach(l=>l.classList.toggle("hide",!assets));
 }
 let cur=null;
 const ph=(it,z)=>it.photo&&photoSrc(it.photo)?`<img class="th ${z}" src="${photoSrc(it.photo)}" alt="">`:`<span class="th ph ${z}">${esc((it.name||"?").trim().charAt(0).toUpperCase())}</span>`;
@@ -762,8 +803,8 @@ document.addEventListener("drop",e=>{const c=e.target.closest&&e.target.closest(
 initViews();
 
 const cal={m:today().slice(0,7),mode:"month",q:"",dk:null};
-const TT={stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
-function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t)));["stock","item","events","cal","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+const TT={plan:"Planner",stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
+function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t)));["stock","item","events","cal","plan","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});if(t==="plan"&&typeof renderPlan==="function")renderPlan()}
 const dIso=(y,m,d)=>new Date(Date.UTC(y,m,d)).toISOString().slice(0,10);
 const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h};
 function dateKey(q){let m=q.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return q;m=q.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);if(m)return`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return/^\d{4}-\d{2}$/.test(q)?q:null}
@@ -885,8 +926,10 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.5.1";
+const APP_VERSION="1.6.1";
 const CHANGES=[
+ ["1.6.1","3 Nov 2026",["Items import automatically from the item_list tab of your Google Sheet on every sync","Requires the updated Code.gs"]],
+ ["1.6.0","3 Nov 2026",["New Planner: a timeline like Toggl Plan with Team, Events and Vehicles views","Tasks and milestones you can drag to move or resize, assigned to people, vehicles and equipment","Workload colours when someone or a vehicle is double-booked","Plan from event: creates the usual prepare, load, set up, collect and check-in tasks","Requires the updated Code.gs (adds the tasks and resources tabs)"]],
  ["1.5.1","2 Nov 2026",["Delete picklists at any stage (also removes their stock movements)","Deleting an event removes its movements and unlinks its picklists, after a confirmation"]],
  ["1.5.0","2 Nov 2026",["Animations and smooth transitions (switch off automatically if your device is set to reduce motion)"]],
  ["1.4.1","2 Nov 2026",["Pages now use the full width of the screen"]],
@@ -916,4 +959,108 @@ async function delEvent(id){const e=S.events[id];if(!e)return;const mv=Object.en
  if(pls.length)msg+="\n\n"+pls.length+" picklist"+(pls.length===1?" is":"s are")+" linked to it. They are kept, but unlinked from the event.";
  msg+="\n\nThis cannot be undone.";if(!confirm(msg))return;
  for(const [mid] of mv)await del("movements",mid);for(const [pid,x] of pls)await put("picklists",pid,{...x,eventId:""});delete openEv[id];await del("events",id);say("Event deleted.");setTimeout(()=>say(""),4000)}
+
+/* ===== Planner (timeline like Toggl Plan) ===== */
+const DW=46,P={g:"person",n:28,from:""},PR=[];let pdrag=null,ptkId=null;
+try{const q=JSON.parse(localStorage.getItem("ev_pl")||"{}");if(q.g)P.g=q.g;if(q.n)P.n=q.n}catch(e){}
+const addD=(iso,n)=>new Date(Date.parse(iso)+n*864e5).toISOString().slice(0,10),dd=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
+P.from=addD(today(),-3);
+const savePl=()=>{try{localStorage.setItem("ev_pl",JSON.stringify({g:P.g,n:P.n}))}catch(e){}};
+const resList=k=>Object.entries(S.resources).map(([id,v])=>({id,...v})).filter(r=>!k||(k==="person"?r.type==="person":r.type!=="person")).sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+const rName=id=>(S.resources[id]||{}).name||"";
+function layoutLanes(list){const ends=[];list.sort((a,b)=>a.s-b.s||a.e-b.e).forEach(x=>{let l=ends.findIndex(e=>e<x.s);if(l<0){l=ends.length;ends.push(0)}ends[l]=x.e;x.lane=l});return Math.max(1,ends.length)}
+function renderPlan(){
+ const g=$("pgrid");if(!g||pdrag)return;
+ $("pr").value=String(P.n);document.querySelectorAll("[data-pg]").forEach(b=>b.classList.toggle("on",b.dataset.pg===P.g));
+ const from=P.from,n=P.n,last=addD(from,n-1),t0=today(),W=n*DW,fmt=d=>new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",timeZone:"UTC"});
+ $("prl").textContent=fmt(from)+" – "+fmt(last);
+ const tasks=Object.entries(S.tasks).map(([id,v])=>({id,...v})).filter(t=>t.start&&t.end&&t.end>=from&&t.start<=last);
+ const rows=[];let hint="";
+ if(P.g==="person"){const L=resList("person");L.forEach(r=>rows.push({name:r.name,sub:"Team member",load:true,f:t=>(t.res||[]).includes(r.id),preset:{res:[r.id]}}));rows.push({name:"Unassigned",sub:"No one yet",f:t=>!(t.res||[]).some(i=>S.resources[i]&&S.resources[i].type==="person"),preset:{}});if(!L.length)hint='No team members yet. Click <b>Team &amp; resources</b> to add your team.'}
+ else if(P.g==="res"){const L=resList("res");L.forEach(r=>rows.push({name:r.name,sub:r.type==="vehicle"?"Vehicle":"Equipment",load:true,f:t=>(t.res||[]).includes(r.id),preset:{res:[r.id]}}));if(!L.length)hint='No vehicles or equipment yet. Click <b>Team &amp; resources</b> to add your truck and other resources, then assign them to tasks.'}
+ else{events().filter(e=>e.end>=from&&e.start<=last).forEach(e=>rows.push({name:e.name,sub:(e.client?e.client+" · ":"")+e.start+(e.end!==e.start?" → "+e.end:""),band:e,f:t=>t.eventId===e.id,preset:{eventId:e.id}}));rows.push({name:"No event",sub:"General tasks",f:t=>!t.eventId||!S.events[t.eventId],preset:{}})}
+ $("phint").innerHTML=hint;$("phint").classList.toggle("hide",!hint);
+ const head=`<div class="pgh"><div class="pgl"><b>${P.g==="event"?"Event":P.g==="res"?"Vehicle / equipment":"Team member"}</b></div>`+Array.from({length:n},(_,i)=>{const d=addD(from,i),dt=new Date(d+"T00:00:00Z"),wd=dt.getUTCDay(),dn=dt.getUTCDate();return`<div class="pgd${wd===0||wd===6?" we":""}${d===t0?" td":""}" style="width:${DW}px"><small>${i===0||dn===1?dt.toLocaleDateString("en-GB",{month:"short",timeZone:"UTC"}):"&nbsp;"}</small>${"SMTWTFS"[wd]}<br><b>${dn}</b></div>`}).join("")+"</div>";
+ PR.length=0;
+ const body=rows.map((row,ri)=>{PR[ri]=row.preset||{};
+  const mine=tasks.filter(row.f).map(t=>{const ms=!!t.ms,s=Math.max(0,dd(from,t.start)),e=ms?s:Math.min(n-1,dd(from,t.end));return{t,s,e}});
+  const lanes=layoutLanes(mine),h=Math.max(46,lanes*30+14),load=new Array(n).fill(0);
+  if(row.load)mine.forEach(x=>{if(!x.t.ms&&x.t.status!=="done")for(let i=x.s;i<=x.e;i++)load[i]++});
+  const cells=Array.from({length:n},(_,i)=>{const d=addD(from,i),wd=new Date(d+"T00:00:00Z").getUTCDay(),c=load[i];return`<div class="pgc${wd===0||wd===6?" we":""}${d===t0?" td":""}${c===2?" l2":c>=3?" l3":""}" data-d="${d}" style="left:${i*DW}px;width:${DW}px"></div>`}).join("");
+  const band=row.band?(()=>{const e=row.band,a=Math.max(0,dd(from,e.start)),b=Math.min(n-1,dd(from,e.end));return`<div class="pgev" style="left:${a*DW}px;width:${(b-a+1)*DW}px;background:hsl(${hue(e.id)} 45% 50% / .15);border-left:3px solid hsl(${hue(e.id)} 45% 40%)"></div>`})():"";
+  const bars=mine.map(x=>{const t=x.t,hasEv=t.eventId&&S.events[t.eventId],col=hasEv?`hsl(${hue(t.eventId)} 45% 40%)`:"var(--ac)",top=7+x.lane*30,who=P.g==="event"?(t.res||[]).map(rName).filter(Boolean).join(", "):"",evn=P.g!=="event"&&hasEv?S.events[t.eventId].name:"",extra=who||evn,tip=esc(t.title+" · "+t.start+(t.end!==t.start?" → "+t.end:"")+(hasEv?" · "+S.events[t.eventId].name:"")+((t.res||[]).length?" · "+t.res.map(rName).join(", "):""));
+   if(t.ms)return`<div class="pgm${t.status==="done"?" done":""}" data-tk="${t.id}" style="left:${x.s*DW+DW/2-8}px;top:${top+1}px;--c:${col}" title="${tip}"><i></i><span>${esc(t.title)}</span></div>`;
+   const sl=t.start>=from,el=t.end<=last,pre=t.status==="done"?"✓ ":t.status==="doing"?"▶ ":"";
+   return`<div class="pgt${t.status==="done"?" done":""}" data-tk="${t.id}" style="left:${x.s*DW+2}px;width:${(x.e-x.s+1)*DW-4}px;top:${top}px;background:${col}" title="${tip}">${sl?'<span class="rs l"></span>':""}${pre}${esc(t.title)}${extra?` <em>· ${esc(extra)}</em>`:""}${el?'<span class="rs r"></span>':""}</div>`}).join("");
+  return`<div class="pgr"><div class="pgl"><b>${esc(row.name)}</b><small>${esc(row.sub||"")}</small></div><div class="pgb" data-ri="${ri}" style="width:${W}px;height:${h}px">${cells}${band}${bars}</div></div>`}).join("");
+ g.innerHTML=`<div class="pgi" style="min-width:${170+W}px">${head}${body}</div>`}
+$("pgrid").addEventListener("pointerdown",e=>{const el=e.target.closest("[data-tk]");if(!el||(e.button&&e.button>0))return;const t=S.tasks[el.dataset.tk];if(!t)return;
+ const mode=e.target.classList.contains("rs")?(e.target.classList.contains("l")?"l":"r"):"m";
+ pdrag={id:el.dataset.tk,el,mode,x:e.clientX,d:0,moved:false,left:el.offsetLeft,width:el.offsetWidth};try{el.setPointerCapture(e.pointerId)}catch(x){}e.preventDefault()});
+$("pgrid").addEventListener("pointermove",e=>{if(!pdrag)return;const dx=e.clientX-pdrag.x;if(Math.abs(dx)>4&&!pdrag.moved){pdrag.moved=true;pdrag.el.classList.add("drag")}if(!pdrag.moved)return;
+ let d=Math.round(dx/DW);const t=S.tasks[pdrag.id],len=dd(t.start,t.end);
+ if(pdrag.mode==="r")d=Math.max(d,-len);if(pdrag.mode==="l")d=Math.min(d,len);pdrag.d=d;const el=pdrag.el;
+ if(pdrag.mode==="m")el.style.left=pdrag.left+d*DW+"px";else if(pdrag.mode==="r")el.style.width=pdrag.width+d*DW+"px";else{el.style.left=pdrag.left+d*DW+"px";el.style.width=pdrag.width-d*DW+"px"}});
+function endDrag(e){if(!pdrag)return;const {id,mode,d,moved}=pdrag;pdrag=null;const t=S.tasks[id];if(!t)return;
+ if(!moved){openTask(id);return}
+ if(!d){renderPlan();return}
+ let s=t.start,en=t.end;if(mode==="m"){s=addD(s,d);en=addD(en,d)}else if(mode==="r")en=addD(en,d);else s=addD(s,d);
+ put("tasks",id,{...t,start:s,end:en})}
+$("pgrid").addEventListener("pointerup",endDrag);$("pgrid").addEventListener("pointercancel",()=>{pdrag=null;renderPlan()});
+$("pgrid").addEventListener("click",e=>{const c=e.target.closest(".pgc");if(!c)return;const b=c.closest(".pgb");openTask(null,{...(PR[+b.dataset.ri]||{}),start:c.dataset.d,end:c.dataset.d})});
+document.querySelectorAll("[data-pg]").forEach(b=>b.onclick=()=>{P.g=b.dataset.pg;savePl();renderPlan()});
+$("pr").onchange=()=>{P.n=+$("pr").value;savePl();renderPlan()};
+$("ppv").onclick=()=>{P.from=addD(P.from,-7);renderPlan()};$("pnx").onclick=()=>{P.from=addD(P.from,7);renderPlan()};$("ptd").onclick=()=>{P.from=addD(today(),-3);renderPlan()};
+$("pnew").onclick=()=>openTask(null,{});$("pms").onclick=()=>openTask(null,{ms:true});
+function openTask(id,pre){ptkId=id;const t=id?S.tasks[id]:{status:"todo",...(pre||{})};if(id&&!t)return;
+ $("pkh").textContent=id?(t.ms?"Edit milestone":"Edit task"):(t.ms?"New milestone":"New task");
+ $("pkt").value=t.title||"";$("pkm").checked=!!t.ms;$("pkdw").classList.toggle("hide",!!t.ms);
+ $("pke").innerHTML='<option value="">No event</option>'+events().map(e=>`<option value="${e.id}">${esc(e.name)} (${esc(e.start)})</option>`).join("");$("pke").value=t.eventId||"";
+ const s=t.start||today();$("pks").value=s;$("pkd").value=t.end||s;$("pkx").value=t.status||"todo";
+ $("pkr").innerHTML=Object.keys(S.resources).length?resList().map(r=>`<label class="ck"><input type="checkbox" value="${r.id}"${(t.res||[]).includes(r.id)?" checked":""}> ${esc(r.name)}${r.type==="person"?"":` <span class="mu">(${esc(r.type)})</span>`}</label>`).join(""):'<span class="mu" style="font-size:13px">Add team members or vehicles first, under Team &amp; resources.</span>';
+ $("pkn").value=t.note||"";$("pkdel").classList.toggle("hide",!id);$("pkmsg").textContent="";$("ptk").classList.remove("hide");$("pkt").focus()}
+$("pkm").onchange=()=>$("pkdw").classList.toggle("hide",$("pkm").checked);
+$("pkcx").onclick=()=>$("ptk").classList.add("hide");
+$("fpk").onsubmit=e=>{e.preventDefault();const ms=$("pkm").checked,s=$("pks").value,en=ms?s:($("pkd").value||s);
+ if(en<s){$("pkmsg").innerHTML='<span class="bad">End date must be on or after the start date.</span>';return}
+ const id=ptkId||rid(),old=ptkId?S.tasks[ptkId]:{};
+ put("tasks",id,{...old,title:$("pkt").value.trim(),ms,eventId:$("pke").value,start:s,end:en,status:$("pkx").value,res:[...$("pkr").querySelectorAll("input:checked")].map(i=>i.value),note:$("pkn").value.trim()});
+ $("ptk").classList.add("hide");if(ms||true){const d=s;if(d<P.from||d>addD(P.from,P.n-1)){P.from=addD(d,-3);renderPlan()}}};
+$("pkdel").onclick=()=>{if(!ptkId||!S.tasks[ptkId])return;if(!confirm('Delete "'+S.tasks[ptkId].title+'"?'))return;del("tasks",ptkId);$("ptk").classList.add("hide")};
+$("pgen").onclick=()=>{const ev=events();if(!ev.length){say("Create an event first, then plan it here.");setTimeout(()=>say(""),5000);return}
+ $("pgsel").innerHTML=ev.map(e=>`<option value="${e.id}">${esc(e.name)} (${esc(e.start)}${e.end!==e.start?" → "+esc(e.end):""})</option>`).join("");$("pgm").textContent="";$("pge").classList.remove("hide")};
+$("pgcx").onclick=()=>$("pge").classList.add("hide");
+$("fpg").onsubmit=async e=>{e.preventDefault();const id=$("pgsel").value,ev=S.events[id];if(!ev)return;
+ const L=[["Source and prepare items","s",-5,-2],["Load the truck","s",-1,-1],["Set up / install on site","s",0,0],["Collect and return to warehouse","e",1,1],["Check in items and log repairs","e",2,2]];
+ const have=new Set(Object.values(S.tasks).filter(t=>t.eventId===id).map(t=>t.title));let k=0;
+ for(const [title,base,a,b] of L){if(have.has(title))continue;const bs=base==="s"?ev.start:ev.end;await put("tasks",rid(),{title,eventId:id,start:addD(bs,a),end:addD(bs,b),status:"todo",res:[],ms:false});k++}
+ const inv=ev.invoice?invs().find(v=>v.number===ev.invoice):null;
+ if(inv&&inv.due&&!have.has("Invoice due")){await put("tasks",rid(),{title:"Invoice due",eventId:id,start:inv.due,end:inv.due,status:"todo",res:[],ms:true});k++}
+ $("pge").classList.add("hide");P.from=addD(ev.start,-8);if(P.g!=="event"&&P.g!=="person"&&P.g!=="res")P.g="event";P.g="event";savePl();renderPlan();say(k?k+" task"+(k===1?"":"s")+" created for "+ev.name+".":"This event already has those tasks.");setTimeout(()=>say(""),5000)};
+$("pmg").onclick=()=>{const m=$("pmgr");m.classList.toggle("hide");if(!m.classList.contains("hide"))renderMgr()};
+function renderMgr(){const L=resList();$("pmgr").innerHTML=`<b style="font-size:13px">Team members, vehicles and equipment</b><div style="margin:10px 0">${L.map(r=>`<span class="rchip">${esc(r.name)} <span class="mu">${r.type==="person"?"person":esc(r.type)}</span><button type="button" data-prd="${r.id}" title="Remove">×</button></span>`).join("")||'<span class="mu" style="font-size:13px">Nobody yet.</span>'}</div><form id="fpr" class="row"><label>Name<input id="prn" required placeholder="e.g. Anass, Truck 1"></label><label>Type<select id="prt"><option value="person">Team member</option><option value="vehicle">Vehicle</option><option value="equipment">Equipment</option></select></label><button class="b">Add</button></form>`;
+ $("fpr").onsubmit=ev=>{ev.preventDefault();put("resources",rid(),{name:$("prn").value.trim(),type:$("prt").value})}}
+$("pmgr").addEventListener("click",e=>{const b=e.target.closest("[data-prd]");if(!b)return;const id=b.dataset.prd,r=S.resources[id];if(!r)return;
+ const used=Object.values(S.tasks).filter(t=>(t.res||[]).includes(id)).length;
+ if(!confirm("Remove "+r.name+"?"+(used?"\n\nThey are assigned to "+used+" task"+(used===1?"":"s")+". Those tasks stay, but become unassigned.":"")))return;
+ Object.entries(S.tasks).forEach(([tid,t])=>{if((t.res||[]).includes(id))put("tasks",tid,{...t,res:t.res.filter(x=>x!==id)})});del("resources",id)});
+const _rp=render;render=function(){_rp.apply(this,arguments);if(!$("pmgr").classList.contains("hide")&&!document.activeElement.closest("#fpr"))renderMgr()};
+
+/* ===== Item list sheet (tab "item_list" in the Google Sheet) -> items ===== */
+function applyItemList(rows){
+ const g=(o,...k)=>{for(const x of k)if(o[x]!==undefined&&String(o[x]).trim()!=="")return String(o[x]).trim();return""};
+ const byKey={};Object.entries(S.items).forEach(([id,v])=>{if(v.sku)byKey["s:"+v.sku.toLowerCase()]=id;byKey["n:"+v.name.toLowerCase()]=id});
+ let add=0,upd=0;
+ for(const o of rows){const name=g(o,"name","item","item_name","product");if(!name)continue;
+  const sku=g(o,"sku","code","item_code"),cat=g(o,"category","type","group"),qs=g(o,"quantity","qty","total","stock","stock_on_hand"),ps=g(o,"price","rate","rental_price","unit_price"),unit=g(o,"unit","uom"),desc=g(o,"description","desc"),rs=g(o,"reorder_level","reorder","reorder_point");
+  const snap=JSON.stringify([name,sku,cat,qs,ps,unit,desc,rs]),id=(sku&&byKey["s:"+sku.toLowerCase()])||byKey["n:"+name.toLowerCase()],ex=id?S.items[id]:null;
+  if(ex&&ex.sh===snap)continue;
+  const q=qs!==""?Math.max(0,Math.round(parseFloat(qs.replace(/[^\d.\-]/g,""))||0)):null,d={...(ex||{}),name};
+  if(sku)d.sku=sku;if(cat)d.category=cat;if(unit)d.unit=unit;if(desc)d.description=desc;
+  if(ps!=="")d.price=parseFloat(ps.replace(/[^\d.]/g,""))||0;if(rs!=="")d.reorder=parseInt(rs)||0;
+  if(!ex){d.total=q==null?0:q;d.category=d.category||"";d.active=true;d.created=Date.now();add++}
+  else{if(q!=null&&q!==ex.sq)d.total=q;upd++}
+  if(q!=null)d.sq=q;d.sh=snap;
+  const nid=id||rid();S.items[nid]=d;saveRec("items",nid,d,0);byKey["n:"+name.toLowerCase()]=nid;if(sku)byKey["s:"+sku.toLowerCase()]=nid}
+ if(add||upd){render();schedSync();say("Item list sheet: "+add+" added, "+upd+" updated.");setTimeout(()=>say(""),6000)}}
 </script></body></html>
