@@ -926,8 +926,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showTab("events");render();window.scrollTo(0,0)};
 
-const APP_VERSION="1.6.2";
+const APP_VERSION="1.6.3";
 const CHANGES=[
+ ["1.6.3","3 Nov 2026",["Planner days now stretch to fill the screen, so a shorter range gives wider days"]],
  ["1.6.2","3 Nov 2026",["Fixed the Add button alignment in Team & resources"]],
  ["1.6.1","3 Nov 2026",["Items import automatically from the item_list tab of your Google Sheet on every sync","Requires the updated Code.gs"]],
  ["1.6.0","3 Nov 2026",["New Planner: a timeline like Toggl Plan with Team, Events and Vehicles views","Tasks and milestones you can drag to move or resize, assigned to people, vehicles and equipment","Workload colours when someone or a vehicle is double-booked","Plan from event: creates the usual prepare, load, set up, collect and check-in tasks","Requires the updated Code.gs (adds the tasks and resources tabs)"]],
@@ -962,7 +963,7 @@ async function delEvent(id){const e=S.events[id];if(!e)return;const mv=Object.en
  for(const [mid] of mv)await del("movements",mid);for(const [pid,x] of pls)await put("picklists",pid,{...x,eventId:""});delete openEv[id];await del("events",id);say("Event deleted.");setTimeout(()=>say(""),4000)}
 
 /* ===== Planner (timeline like Toggl Plan) ===== */
-const DW=46,P={g:"person",n:28,from:""},PR=[];let pdrag=null,ptkId=null;
+let DW=46;const P={g:"person",n:28,from:""},PR=[];let pdrag=null,ptkId=null;
 try{const q=JSON.parse(localStorage.getItem("ev_pl")||"{}");if(q.g)P.g=q.g;if(q.n)P.n=q.n}catch(e){}
 const addD=(iso,n)=>new Date(Date.parse(iso)+n*864e5).toISOString().slice(0,10),dd=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
 P.from=addD(today(),-3);
@@ -973,7 +974,7 @@ function layoutLanes(list){const ends=[];list.sort((a,b)=>a.s-b.s||a.e-b.e).forE
 function renderPlan(){
  const g=$("pgrid");if(!g||pdrag)return;
  $("pr").value=String(P.n);document.querySelectorAll("[data-pg]").forEach(b=>b.classList.toggle("on",b.dataset.pg===P.g));
- const from=P.from,n=P.n,last=addD(from,n-1),t0=today(),W=n*DW,fmt=d=>new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",timeZone:"UTC"});
+ const from=P.from,n=P.n;DW=Math.max(36,Math.floor(((g.clientWidth||960)-172)/n));const last=addD(from,n-1),t0=today(),W=n*DW,fmt=d=>new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",timeZone:"UTC"});
  $("prl").textContent=fmt(from)+" – "+fmt(last);
  const tasks=Object.entries(S.tasks).map(([id,v])=>({id,...v})).filter(t=>t.start&&t.end&&t.end>=from&&t.start<=last);
  const rows=[];let hint="";
@@ -1010,6 +1011,7 @@ function endDrag(e){if(!pdrag)return;const {id,mode,d,moved}=pdrag;pdrag=null;co
 $("pgrid").addEventListener("pointerup",endDrag);$("pgrid").addEventListener("pointercancel",()=>{pdrag=null;renderPlan()});
 $("pgrid").addEventListener("click",e=>{const c=e.target.closest(".pgc");if(!c)return;const b=c.closest(".pgb");openTask(null,{...(PR[+b.dataset.ri]||{}),start:c.dataset.d,end:c.dataset.d})});
 document.querySelectorAll("[data-pg]").forEach(b=>b.onclick=()=>{P.g=b.dataset.pg;savePl();renderPlan()});
+let rzT=null;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(!$("plan").classList.contains("hide"))renderPlan()},120)});
 $("pr").onchange=()=>{P.n=+$("pr").value;savePl();renderPlan()};
 $("ppv").onclick=()=>{P.from=addD(P.from,-7);renderPlan()};$("pnx").onclick=()=>{P.from=addD(P.from,7);renderPlan()};$("ptd").onclick=()=>{P.from=addD(today(),-3);renderPlan()};
 $("pnew").onclick=()=>openTask(null,{});$("pms").onclick=()=>openTask(null,{ms:true});
