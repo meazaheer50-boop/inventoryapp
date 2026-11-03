@@ -1,0 +1,17 @@
+{
+  "name": "everafter-inventory-android",
+  "version": "1.12.8",
+  "private": true,
+  "description": "Everafter Events inventory - Android app (Capacitor)",
+  "scripts": {
+    "sync": "cp ../app/index.html ../app/version.json ../app/sw.js www/ && npx cap sync android",
+    "open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "7.6.10",
+    "@capacitor/core": "7.6.10"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "7.6.10"
+  }
+}

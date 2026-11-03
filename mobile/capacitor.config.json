@@ -1,0 +1,11 @@
+{
+  "appId": "com.everafter.inventory",
+  "appName": "Everafter Inventory",
+  "webDir": "www",
+  "backgroundColor": "#f6f1e9",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": true,
+    "adjustMarginsForEdgeToEdge": "force"
+  }
+}
