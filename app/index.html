@@ -252,7 +252,13 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
 .loading{background:linear-gradient(90deg,var(--bg) 25%,var(--acs) 50%,var(--bg) 75%);background-size:400px 100%;animation:shimmer 1.2s infinite linear}
 @media(prefers-reduced-motion:reduce){.rip{display:none}}
 /* ===== PHONE LAYOUT (<= 760px) ===== */
-#mnav,#msheet{display:none}
+#drawer,#scrim,#msheet,#fab,#mham,#msrch,#mmore,#cag{display:none}
+#home #homec{max-width:980px}
+#home .hm-t{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}#home .hm-t button{text-align:left;background:var(--acs);border:1px solid #f0e2c3;border-radius:16px;padding:16px;cursor:pointer;font:inherit}#home .hm-t b{display:block;font-size:26px;font-family:Georgia,serif;font-weight:600}#home .hm-t span{color:var(--mu)}#home .hm-t .w b{color:var(--bad)}
+#home .hm-h{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);font-weight:600;margin:6px 0 10px}
+#home .hm-q{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px}#home .hm-q button{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer;font:inherit;width:90px;color:var(--tx)}#home .hm-q i{display:grid;place-items:center;width:64px;height:64px;border-radius:16px;background:#f7f4ee;border:1px solid var(--bd)}#home .hm-q svg{width:28px;height:28px;stroke:var(--ac);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#home .hm-l{background:var(--card);border:1px solid var(--bd);border-radius:16px;margin-bottom:22px;overflow:hidden}#home .hm-l button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0;padding:12px 16px;text-align:left;font:inherit;cursor:pointer}#home .hm-l button:last-child{border:0}#home .hm-l .dt{width:48px;text-align:center;background:var(--acs);border-radius:10px;padding:4px 0}#home .hm-l .dt b{display:block;font-size:18px}#home .hm-l .dt small{font-size:11px;text-transform:uppercase;color:var(--mu)}#home .hm-l .tx b{display:block}#home .hm-l .tx span{color:var(--mu);font-size:13px}#home .hm-e{padding:16px;color:var(--mu)}
+
 @media(max-width:760px){
  html,body{overflow-x:hidden}
  body{font-size:15px;-webkit-tap-highlight-color:transparent;padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
@@ -336,22 +342,90 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
  .dh .hdr .th.md{width:48px;height:48px;flex:none}
  .mn>.bd2>section>p.mu{font-size:13px}
  h3{font-size:17px}h4{font-size:12px}
- /* bottom nav */
- #mnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--sb);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(0,0,0,.18)}
- #mnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:var(--sbt);font:inherit;font-size:10.5px;min-height:50px;padding:4px 2px;border-radius:12px;position:relative}
- #mnav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
- #mnav button.on{color:#fff}#mnav button.on::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:#dcb86d}
- #mnav button.hide{display:none}
- #msheet{display:block;position:fixed;inset:0;z-index:60;background:rgba(30,20,10,.45)}#msheet.hide{display:none}
- #msheet>div{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:22px 22px 0 0;padding:14px 12px calc(14px + env(safe-area-inset-bottom,0px));animation:sheetUp .25s cubic-bezier(.2,.8,.2,1)}
+ /* ---- app bar ---- */
+ .tb{height:56px;padding:0 10px 0 6px;gap:6px;flex-wrap:nowrap;align-items:center;background:var(--card);border-bottom:1px solid var(--bd);backdrop-filter:none}
+ .tbt{flex:1;min-width:0}.tb h2{font-family:inherit;font-size:19px;font-weight:600;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:none}
+ .tbr{display:flex;align-items:center;gap:6px}.tbr #note{display:none}
+ #mham,#msrch,#mmore{display:grid;place-items:center;width:42px;height:42px;min-height:0;padding:0;border-radius:12px;border:0;background:none;color:var(--tx)}
+ #msrch,#mmore{border:1px solid var(--bd);background:#fff;width:40px;height:40px}
+ #mham svg,#msrch svg,#mmore svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+ #msrch.hide,#mmore.hide{display:none}
+ #syn{width:10px;height:10px;min-height:0;padding:0;border-radius:50%;font-size:0;border:0;background:#c9bfae;margin:0 4px}#syn.ok{background:var(--ok)}#syn.bad{background:var(--bad)}
+ /* ---- drawer ---- */
+ #scrim{display:block;position:fixed;inset:0;z-index:70;background:rgba(30,20,10,.45);opacity:1;animation:fadeIn .2s}#scrim.hide{display:none}
+ #drawer{display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;width:min(82vw,330px);z-index:71;background:var(--card);transform:translateX(-102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);box-shadow:8px 0 30px rgba(0,0,0,.2);overflow-y:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+ #drawer.open{transform:none}
+ #drawer .dp{padding:calc(22px + env(safe-area-inset-top,0px)) 18px 14px;border-bottom:1px solid var(--bd)}
+ #drawer .av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#dcb86d,#a67c37);color:#fff;display:grid;place-items:center;font:600 28px Georgia,serif;margin-bottom:12px}
+ #drawer .dn{font-size:17px;font-weight:600}#drawer .ds{font-size:13px;color:var(--mu);margin-top:2px;word-break:break-all}
+ #drawer nav{display:flex;flex-direction:column;gap:0;padding:8px 0}
+ #drawer button.dn1{display:flex;align-items:center;gap:18px;width:100%;background:none;border:0;border-radius:0;padding:0 20px;min-height:54px;font:inherit;font-size:16px;color:var(--tx);text-align:left}
+ #drawer button.dn1 svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+ #drawer button.dn1.on{background:var(--acs);color:var(--ac);font-weight:600}
+ #drawer button.dn1:active{background:var(--acs)}
+ #drawer .dv{margin-top:auto;padding:12px 20px 0;font-size:12px;color:var(--mu)}
+ /* ---- fab ---- */
+ #fab{display:grid;position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;width:58px;height:58px;min-height:0;padding:0;border-radius:18px;border:0;background:var(--sb);color:#fff;display:grid;place-items:center;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+ #fab.hide{display:none!important}#fab svg{width:28px;height:28px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round}
+ #fab:active{transform:scale(.94)}
+ body{padding-bottom:96px}
+ #note{position:fixed;left:12px;right:12px;bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:40;background:var(--sb);color:#fff;border-radius:12px;padding:10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:block!important}#note:empty{display:none!important}
+ /* ---- msheet (actions) ---- */
+ #msheet{display:block;position:fixed;inset:0;z-index:80;background:rgba(30,20,10,.45)}#msheet.hide{display:none}
+ #msheet>div{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:22px 22px 0 0;padding:14px 12px calc(14px + env(safe-area-inset-bottom,0px));animation:sheetUp .25s cubic-bezier(.2,.8,.2,1);max-height:80vh;overflow:auto}
  #msheet button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:0;padding:14px 12px;font:inherit;font-size:16px;color:var(--tx);border-radius:12px;text-align:left}
- #msheet button:active{background:var(--acs)}#msheet svg{width:22px;height:22px;stroke:var(--ac);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
- #msheet .grab{width:40px;height:4px;border-radius:3px;background:var(--bd);margin:0 auto 8px}
+ #msheet button:active{background:var(--acs)}#msheet .grab{width:40px;height:4px;border-radius:3px;background:var(--bd);margin:0 auto 8px}
+ /* ---- list pages: flat rows, full bleed ---- */
+ .bd2{padding:0 0 24px}.bd2>section>.card.flush,.bd2>section>.card{border-radius:0;border-left:0;border-right:0;box-shadow:none;margin-left:0;margin-right:0}
+ .card.flush>.sc,.sc{padding:0!important}
+ .ltb{padding:10px 14px;gap:8px;background:var(--acs);border-bottom:1px solid var(--bd)}
+ .ltb .lt{display:flex;flex-wrap:wrap;gap:8px}.ltb .lt>*:not(:first-child){display:none}
+ body.srch .ltb .lt>*:not(:first-child){display:block;flex:1 1 45%;min-width:0}body.srch .ltb .lt #q,body.srch .ltb .lt input{flex:1 1 100%}
+ .ltb .lt select:first-child{width:auto;max-width:100%;background:transparent;border:0;font-weight:600;color:var(--ac);font-size:16px;padding-left:0;min-height:36px}
+ .ltb .la{display:none}
+ .sc table:not(.avt) tr{border:0;border-bottom:1px solid var(--bd);border-radius:0;margin:0;padding:12px 16px;box-shadow:none;background:var(--card)}
+ .sc table:not(.avt) td{justify-content:flex-start;text-align:left!important;gap:6px;font-size:14px;color:var(--tx);padding:1px 0!important}
+ .sc table:not(.avt) td::before{content:attr(data-l) ":";color:var(--mu);font-size:13.5px}
+ .sc table:not(.avt) td:first-child{font-size:16px;font-weight:600;border-bottom:0!important;padding-bottom:4px!important;margin-bottom:0}
+ .sc table:not(.avt) td:first-child .th.sm,.sc table:not(.avt) td .th.sm{width:56px;height:56px;border-radius:14px;font-size:22px}
+ .sc table:not(.avt) td:first-child .nm{gap:14px}
+ #st td:nth-child(3),#st td:nth-child(6),#st td:nth-child(7){display:none}
+ #home .hm-t{grid-template-columns:1fr 1fr}#home .hm-t button{min-height:88px}#home .hm-q{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}#home .hm-q button{width:auto}#home .hm-q i{width:100%;max-width:74px}
+ #events>.row{display:none}
+ .erow{border-radius:0!important;border-left:0!important;border-right:0!important;margin:0!important;box-shadow:none!important;padding:14px 16px!important;border-bottom:1px solid var(--bd)}.erow .top>div:last-child{display:none}
+ #el .erow:active{background:var(--acs)}
+ .sc table:not(.avt) td:last-child:has(button){justify-content:flex-start;padding-top:8px!important;flex-wrap:wrap}
+ .sc table:not(.avt) td[colspan]{justify-content:center}
+ /* ---- detail pages: back arrow replaces back buttons ---- */
+ #item>p:first-child,#evd>p:first-child,[data-plback]{display:none!important}
+ .tabs{top:56px}
+ .dh,.tbd{border-radius:0}
+ #ir>.card,#evr>.card,#plE>.card{border-radius:0;border-left:0;border-right:0;margin-bottom:10px}
+ /* ---- home ---- */
+ #homec{padding:14px 14px 8px}
+ .hm-t{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+ .hm-t button{display:block;text-align:left;background:var(--acs);border:1px solid #f0e2c3;border-radius:18px;padding:16px;min-height:96px}.hm-t b{display:block;font-size:26px;font-family:Georgia,serif;font-weight:600}.hm-t span{color:var(--mu);font-size:14px}.hm-t .w b{color:var(--bad)}
+ .hm-h{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);font-weight:600;margin:6px 2px 10px}
+ .hm-q{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+ .hm-q button{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;padding:0;min-height:0;font-size:12.5px;line-height:1.25;color:var(--tx);text-align:center}
+ .hm-q i{display:grid;place-items:center;width:100%;max-width:74px;aspect-ratio:1;border-radius:18px;background:#f7f4ee;border:1px solid var(--bd)}.hm-q svg{width:30px;height:30px;stroke:var(--ac);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+ .hm-l{background:var(--card);border:1px solid var(--bd);border-radius:18px;margin-bottom:18px;overflow:hidden}
+ .hm-l button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0;padding:12px 14px;text-align:left;font:inherit;min-height:56px}.hm-l button:last-child{border-bottom:0}
+ .hm-l .dt{flex:none;width:46px;text-align:center;border-radius:12px;background:var(--acs);padding:5px 0;line-height:1.1}.hm-l .dt b{display:block;font-size:18px}.hm-l .dt small{font-size:10.5px;text-transform:uppercase;color:var(--mu)}
+ .hm-l .tx{flex:1;min-width:0}.hm-l .tx b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hm-l .tx span{font-size:13px;color:var(--mu)}
+ .hm-e{padding:16px;color:var(--mu);font-size:14px}
+ /* ---- calendar agenda ---- */
+ #cag{display:block;padding:6px 14px 10px}#cag h4{margin:10px 0 8px}
+ #cag button.ag{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--bd);border-radius:0;text-align:left;padding:10px 0;font:inherit;min-height:56px}
+ #cag .dt{flex:none;width:44px;text-align:center;line-height:1.1}#cag .dt b{display:block;font-size:19px}#cag .dt small{font-size:11px;text-transform:uppercase;color:var(--mu)}#cag .bar2{width:4px;align-self:stretch;border-radius:3px;flex:none}
+ #cag .tx b{display:block}#cag .tx span{font-size:13px;color:var(--mu)}
 }
 @keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
-<nav><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
-<main class="mn"><header class="tb"><div><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div style="display:flex;align-items:center;gap:10px"><span id="note" class="msg"></span><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
+<nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
+<main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
+
+<section id="home" class="hide"><div id="homec"></div></section>
 
 <section id="stock">
  <div class="card flush">
@@ -445,7 +519,7 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
 <div id="ptk" class="ov hide"><form id="fpk" class="dlg"><h3 id="pkh">New task</h3><label>Title<input id="pkt" required placeholder="e.g. Load the truck"></label><label class="ck"><input type="checkbox" id="pkm"> Milestone (a single key date)</label><label>Event<select id="pke"></select></label><div class="row"><label style="flex:1">Start<input id="pks" type="date" required></label><label style="flex:1" id="pkdw">End<input id="pkd" type="date"></label></div><label>Status<select id="pkx"><option value="todo">To do</option><option value="doing">In progress</option><option value="done">Done</option></select></label><div><div class="mu" style="font-size:12px;margin-bottom:4px">Assigned to</div><div id="pkr" class="pkr"></div></div><label>Notes<input id="pkn"></label><div id="pkmsg" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" id="pkcx">Cancel</button><button class="g dng hide" type="button" id="pkdel">Delete</button></div></form></div>
 <div id="pge" class="ov hide"><form id="fpg" class="dlg"><h3>Plan from event</h3><p class="mu" style="margin:0;font-size:13px">Creates a standard set of tasks around the event dates: prepare items, load the truck, set up, collect and return, check in. The invoice due date is added as a milestone when the event has an invoice. You can then assign people and move the dates.</p><label>Event<select id="pgsel"></select></label><div id="pgm" class="msg"></div><div class="row"><button class="b">Create tasks</button><button class="g" type="button" id="pgcx">Cancel</button></div></form></div>
 <div id="lgn" class="ov hide" style="z-index:100;background:var(--bg)"><form id="flg" class="dlg"><h3>Sign in</h3><div id="lgi" class="mu" style="font-size:13px">Everafter Events inventory</div><label>Name<input id="lgu" autocomplete="username" required></label><label>PIN<input id="lgp" type="password" inputmode="numeric" autocomplete="current-password" required></label><div id="lgm" class="msg"></div><button class="b">Sign in</button><p class="mu" style="font-size:12px;margin:0">Once you have signed in on this device, you can sign in again offline.</p></form></div>
-<div id="mnav"></div><div id="msheet" class="hide"><div></div></div>
+<div id="scrim" class="hide"></div><aside id="drawer" aria-hidden="true"></aside><div id="msheet" class="hide"><div></div></div><button type="button" id="fab" class="hide" aria-label="Add"></button>
 <div id="lb" class="ov hide" style="z-index:60;flex-direction:column;gap:10px;cursor:zoom-out"><img id="lbi" alt="" style="max-width:min(96vw,1100px);max-height:86vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff"><div id="lbc" style="color:#fff;font-size:15px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6)"></div></div>
 <div id="ov" class="ov hide"><form id="fadj" class="dlg"><h3>Adjust stock</h3><div id="adjn" class="mu"></div><label>Change in quantity (+ to add, − to remove)<input id="adq" type="number" step="1" required></label><label>Reason<select id="adr"><option>New purchase</option><option>Damaged</option><option>Lost</option><option>Recount</option><option>Other</option></select></label><label>Notes<input id="adn"></label><div id="adm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-cx="1">Cancel</button></div></form></div></div>
 <script>
@@ -745,7 +819,7 @@ function renderPL(){
  const _all=Object.entries(S.picklists).map(([id,x])=>({id,...x,st:plState(id,x)}));
  $("plsum").innerHTML=`<div><b>${_all.filter(x=>x.st==="Draft").length}</b><span class="mu">Drafts</span></div><div><b class="${_all.some(x=>x.st==="Out on site"||x.st==="Partly returned")?"warn":""}">${_all.filter(x=>x.st==="Out on site"||x.st==="Partly returned").length}</b><span class="mu">Out on site</span></div><div><b>${_all.filter(x=>x.st==="Out on site"||x.st==="Partly returned").reduce((a,x)=>a+Math.max(0,plQty(x.id,null,"out")-plQty(x.id,null,"in")),0)}</b><span class="mu">Pieces still out</span></div><div><b>${_all.filter(x=>x.st==="Returned").length}</b><span class="mu">Returned</span></div>`;
  $("plt").innerHTML=L.map(x=>{const pg=prog(x),pc=pg.t?Math.round(pg.n/pg.t*100):0,ev=S.events[x.eventId];return`<tr class="rw" data-plid="${x.id}"><td><b>${esc(x.number)}</b><div class="mu" style="font-size:12px">${new Date(x.created||0).toLocaleDateString("en-GB",{dateStyle:"medium"})}</div></td><td>${esc(evName(x.eventId))}${ev?`<div class="mu" style="font-size:12px">${esc(ev.start)} \u2192 ${esc(ev.end)}</div>`:""}</td><td>${esc(x.invoice)}${x.customer?`<div class="mu" style="font-size:12px">${esc(x.customer)}</div>`:""}</td><td class="n">${(x.lines||[]).length}</td><td class="n">${(x.lines||[]).reduce((a,l)=>a+l.qty,0)}</td><td style="min-width:120px"><div class="bar" style="margin:0 0 3px"><i style="width:${pc}%"></i></div><span class="mu" style="font-size:12px">${pg.n} / ${pg.t} ${pg.lab}</span></td><td><span class="pill ${x.st==="Draft"||x.st==="Returned"||x.st==="Cancelled"?"off":""}">${x.st}</span></td><td style="text-align:right"><button class="g" data-plcl="${x.id}">Clone</button></td></tr>`}).join("")||`<tr><td colspan="8" class="mu" style="padding:22px">No picklists here. Click <b>+ New picklist</b>.</td></tr>`;
- $("plL").classList.toggle("hide",!!plMode);$("plE").classList.toggle("hide",!plMode);
+ $("plL").classList.toggle("hide",!!plMode);$("plsum").classList.toggle("hide",!!plMode);$("plE").classList.toggle("hide",!plMode);
  if(plMode==="view"&&pld&&!$("plE").contains(document.activeElement))renderPLE()}
 $("plt").onclick=e=>{if(e.target.closest("button"))return;const tr=e.target.closest("tr[data-plid]");if(tr)openPL(tr.dataset.plid)};
 $("plf").onchange=$("plq").oninput=render;
@@ -888,24 +962,70 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.ad
   const b=e.target.closest&&e.target.closest("button.b,button.g");if(b&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const r=b.getBoundingClientRect(),sp=document.createElement("span");sp.className="rip";sp.style.left=(e.clientX-r.left)+"px";sp.style.top=(e.clientY-r.top)+"px";b.appendChild(sp);setTimeout(()=>sp.remove(),600)}},true);
  const _st=showTab;showTab=function(t){const r=_st.apply(this,arguments);const el=$(t);if(el){el.classList.add("stag");setTimeout(()=>el.classList.remove("stag"),800)}return r}}
 
-/* ===== phone navigation and table labels ===== */
-{const MB=[["stock","Inventory"],["events","Events"],["cal","Calendar"],["pl","Picklists"]],MORE=["plan","inv","rp","moves","settings"];
- const nb=t=>document.querySelector('nav button[data-t="'+t+'"]'),ico=t=>{const b=nb(t);const v=b&&b.querySelector("svg");return v?v.outerHTML:""},lab=t=>{const b=nb(t);return b?b.textContent.trim():t};
- const moreSvg='<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>';
- function buildMnav(){const m=$("mnav");if(!m)return;const hid=t=>{const b=nb(t);return !b||b.classList.contains("hide")||b.style.display==="none"};
-  const cur=(document.querySelector("nav button.on")||{dataset:{}}).dataset.t;
-  m.innerHTML=MB.map(([t,l])=>`<button type="button" data-mt="${t}" class="${cur===t?"on":""}${hid(t)?" hide":""}">${ico(t)}<span>${l}</span></button>`).join("")+`<button type="button" data-mt="more" class="${MORE.includes(cur)?"on":""}">${moreSvg}<span>More</span></button>`;
-  $("msheet").firstElementChild.innerHTML='<div class="grab"></div>'+MORE.filter(t=>!hid(t)).map(t=>`<button type="button" data-ms="${t}">${ico(t)}<span>${lab(t)}</span></button>`).join("")}
- document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#mnav button,#msheet button");
-  if(!b){if(e.target.id==="msheet")$("msheet").classList.add("hide");return}
-  if(b.dataset.mt==="more"){buildMnav();$("msheet").classList.remove("hide");return}
-  const t=b.dataset.mt||b.dataset.ms;$("msheet").classList.add("hide");const n=nb(t);if(n)n.click();setTimeout(buildMnav,30);window.scrollTo(0,0)});
- const _st2=showTab;showTab=function(){const r=_st2.apply(this,arguments);buildMnav();return r};
- const _aa=applyAccess;applyAccess=function(){const r=_aa.apply(this,arguments);buildMnav();return r};
- buildMnav();
+/* ===== phone app shell: drawer, app bar, FAB, home, table labels ===== */
+{const isPhone=()=>matchMedia("(max-width:760px)").matches;
+ const I=(d)=>`<svg viewBox="0 0 24 24">${d}</svg>`,
+  ICO={menu:I('<path d="M4 7h16M4 12h16M4 17h16"/>'),back:I('<path d="M15 5l-7 7 7 7"/>'),search:I('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'),more:I('<circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/>'),plus:I('<path d="M12 5v14M5 12h14"/>'),
+   item:I('<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>'),event:I('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),pl:I('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12l2 2 4-4"/>'),repair:I('<path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.2-.6-.6-2.2z"/>'),move:I('<path d="M4 8h14l-3-3M20 16H6l3 3"/>')};
+ const nb=t=>document.querySelector('nav button[data-t="'+t+'"]'),cur=()=>{const b=document.querySelector("nav button.on");return b?b.dataset.t:"home"};
+ const vis=id=>{const e=$(id);return e&&!e.classList.contains("hide")};
+ const sect=()=>["home","stock","item","events","evd","cal","plan","inv","pl","rp","moves","settings"].find(vis)||"home";
+ $("mham").innerHTML=ICO.menu;$("msrch").innerHTML=ICO.search;$("mmore").innerHTML=ICO.more;$("fab").innerHTML=ICO.plus;
+ /* drawer */
+ function buildDrawer(){const st=S.settings.main||{},biz=st.biz||"Everafter Events",ss=SESS(),sub=ss&&ss.name?ss.name+(ss.role?" · "+ss.role:""):(CFG.dev||"Inventory");
+  const c=cur();$("drawer").innerHTML=`<div class="dp"><div class="av">${esc(biz.trim().charAt(0).toUpperCase())}</div><div class="dn">${esc(biz)}</div><div class="ds">${esc(sub)}</div></div><nav>`+[...document.querySelectorAll("nav button")].filter(b=>!b.classList.contains("hide")).map(b=>`<button type="button" class="dn1${b.dataset.t===c?" on":""}" data-dn="${b.dataset.t}">${b.querySelector("svg").outerHTML}<span>${b.textContent.trim()}</span></button>`).join("")+`</nav><div class="dv">Version ${APP_VERSION}</div>`}
+ const openD=()=>{buildDrawer();$("scrim").classList.remove("hide");$("drawer").classList.add("open")},closeD=()=>{$("scrim").classList.add("hide");$("drawer").classList.remove("open")};
+ /* app bar mode: menu or back */
+ const backBtn=()=>{const t=sect();if(t==="item")return document.querySelector("[data-bk]");if(t==="evd")return document.querySelector("[data-evbk]");if(t==="pl"&&plMode)return document.querySelector("[data-plback]");return null};
+ const FABS={stock:"#stock [data-nw]",events:"#events button.b",pl:"#pl [data-npl]",rp:"#rp [data-nr]",plan:"#plan button.b"};
+ function updBar(){if(!isPhone())return;const t=sect(),bk=backBtn();$("mham").innerHTML=bk?ICO.back:ICO.menu;$("mham").dataset.back=bk?"1":"";
+  const fs=FABS[t],fb=fs&&!bk?document.querySelector(fs):null;$("fab").classList.toggle("hide",!fb||!!(t==="events"&&emode&&emode!=="view"&&false));
+  const hasSearch=!!document.querySelector("#"+t+" .ltb")||t==="cal";$("msrch").classList.toggle("hide",!hasSearch||!!bk);
+  const hasMore=!!document.querySelector("#"+t+" .ltb .la button")||t==="plan"||t==="cal";$("mmore").classList.toggle("hide",!hasMore&&!bk&&false);
+  const e=$("syn");e.classList.toggle("bad",/failed/i.test(e.textContent));e.classList.toggle("ok",/^Synced/.test(e.textContent))}
+ $("mham").onclick=()=>{if($("mham").dataset.back){const b=backBtn();if(b)b.click();setTimeout(updBar,30)}else openD()};
+ $("scrim").onclick=closeD;
+ $("drawer").onclick=e=>{const b=e.target.closest("[data-dn]");if(!b)return;closeD();const n=nb(b.dataset.dn);if(n)n.click();setTimeout(()=>{updBar();window.scrollTo(0,0)},30)};
+ $("msrch").onclick=()=>{document.body.classList.toggle("srch");const t=sect(),q=document.querySelector("#"+t+" .ltb input,#cs");if(document.body.classList.contains("srch")&&q)setTimeout(()=>q.focus(),50)};
+ $("fab").onclick=()=>{const fs=FABS[sect()],b=fs&&document.querySelector(fs);if(b)b.click();setTimeout(updBar,30)};
+ /* more sheet = the page's actions */
+ $("mmore").onclick=()=>{const t=sect(),bs=[...document.querySelectorAll("#"+t+" .ltb .la button, #"+t+" .seg button, #"+t+" .row>button.g, #"+t+" .row>button.b")].filter((b,i,a)=>b.textContent.trim()&&a.findIndex(x=>x.textContent.trim()===b.textContent.trim())===i&&!b.matches("[data-nw],[data-npl],[data-nr],.erow *")&&!(t==="events"&&/^\+ New event/.test(b.textContent.trim())));
+  const sh=$("msheet").firstElementChild;sh.innerHTML='<div class="grab"></div>'+bs.map((b,i)=>`<button type="button" data-ma="${i}">${b.textContent.trim()}</button>`).join("")+'<button type="button" data-ma="sync">Sync now</button>';sh._bs=bs;$("msheet").classList.remove("hide")};
+ $("msheet").onclick=e=>{const b=e.target.closest("[data-ma]");if(!b){if(e.target.id==="msheet")$("msheet").classList.add("hide");return}const sh=$("msheet").firstElementChild;$("msheet").classList.add("hide");if(b.dataset.ma==="sync")$("syn").click();else{const x=sh._bs[+b.dataset.ma];if(x)x.click()}setTimeout(updBar,30)};
+ const _st2=showTab;showTab=function(){const r=_st2.apply(this,arguments);document.body.classList.remove("srch");closeD();updBar();return r};
+ const _aa=applyAccess;applyAccess=function(){const r=_aa.apply(this,arguments);updBar();return r};
+ new MutationObserver(()=>updBar()).observe($("syn"),{childList:true,characterData:true,subtree:true});
+ document.addEventListener("click",()=>setTimeout(updBar,60),true);
+ /* home */
+ const todayD=()=>today();
+ function renderHome(){const h=$("homec");if(!h||$("home").classList.contains("hide"))return;const its=items().filter(i=>i.active!==false),t=todayD();
+  const low=its.filter(i=>{const w=i.total-net(i.id)-repQty(i.id);return isLow(i,w)}).length,out=Object.values(S.movements).reduce((a,m)=>a+(m.type==="out"?m.qty:-m.qty),0),op=Object.values(S.repairs).filter(r=>r.status==="reported"||r.status==="in_repair").length;
+  const evs=events().filter(e=>(e.end||"")>=t).slice(0,5),pls=Object.entries(S.picklists).map(([id,x])=>({id,...x,st:plState(id,x)})).filter(x=>x.st==="Draft"||x.st==="Out on site"||x.st==="Partly returned").sort((a,b)=>(b.created||0)-(a.created||0)).slice(0,5);
+  let ivs=[];try{ivs=invs().filter(v=>invState(v)==="Overdue").slice(0,5)}catch(e){}
+  const D=d=>{const x=new Date(d+"T00:00:00Z");return`<div class="dt"><b>${x.getUTCDate()}</b><small>${x.toLocaleDateString("en-GB",{month:"short",timeZone:"UTC"})}</small></div>`};
+  h.innerHTML=`<div class="hm-t"><button data-hq="stock"><b>${its.length}</b><span>Items</span></button><button data-hq="low" class="${low?"w":""}"><b>${low}</b><span>Low stock</span></button><button data-hq="pl-out"><b>${Math.max(0,out)}</b><span>Pieces out on site</span></button><button data-hq="rp" class="${op?"w":""}"><b>${op}</b><span>Open repairs</span></button></div>
+  <div class="hm-h">Quick create</div><div class="hm-q"><button data-hq="n-item"><i>${ICO.item}</i>New item</button><button data-hq="n-event"><i>${ICO.event}</i>New event</button><button data-hq="n-pl"><i>${ICO.pl}</i>New picklist</button><button data-hq="n-rp"><i>${ICO.repair}</i>Report repair</button></div>
+  <div class="hm-h">Upcoming events</div><div class="hm-l">${evs.map(e=>`<button data-hq="ev:${e.id}">${D(e.start)}<div class="tx"><b>${esc(e.name)}</b><span>${esc(e.client||"")}${e.venue?" · "+esc(e.venue):""}${e.end!==e.start?" · until "+esc(e.end):""}</span></div></button>`).join("")||'<div class="hm-e">No upcoming events.</div>'}</div>
+  <div class="hm-h">Open picklists</div><div class="hm-l">${pls.map(x=>`<button data-hq="pl:${x.id}"><div class="tx"><b>${esc(x.number)} · ${esc(evName(x.eventId))}</b><span>${x.st} · ${(x.lines||[]).reduce((a,l)=>a+l.qty,0)} pieces</span></div></button>`).join("")||'<div class="hm-e">Nothing open.</div>'}</div>
+  ${ivs.length?`<div class="hm-h">Overdue invoices</div><div class="hm-l">${ivs.map(v=>`<button data-hq="inv"><div class="tx"><b>${esc(v.number)} · ${esc(v.customer)}</b><span>Due ${esc(v.due||"")} · balance ${fm(v.balance,v.currency)}</span></div></button>`).join("")}</div>`:""}`}
+ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-hq]");if(!b)return;const k=b.dataset.hq;
+  if(k==="stock")nb("stock").click();else if(k==="low"){nb("stock").click();const f=$("lf");if(f){f.value="low";f.dispatchEvent(new Event("change",{bubbles:true}))}}else if(k==="pl-out"){nb("pl").click();const f=$("plf");if(f){f.value="out";f.dispatchEvent(new Event("change",{bubbles:true}))}}else if(k==="rp")nb("rp").click();else if(k==="inv")nb("inv").click();
+  else if(k==="n-item"){nb("stock").click();const n=document.querySelector("#stock [data-nw]");if(n)n.click()}else if(k==="n-event")newEvent();else if(k==="n-pl")openPL(null,"");else if(k==="n-rp"){nb("rp").click();openRepair(null,"")}
+  else if(k.startsWith("ev:"))showEvent(k.slice(3));else if(k.startsWith("pl:"))openPL(k.slice(3));setTimeout(updBar,40)});
+ const _rd2=render;render=function(){_rd2.apply(this,arguments);renderHome()};
+ const _rc=renderCal;renderCal=function(){_rc.apply(this,arguments);if(isPhone())agenda()};
+ const _stH=showTab;showTab=function(t){const r=_stH.apply(this,arguments);if(t==="home")renderHome();if(t==="cal"&&isPhone())renderCal();return r};
+ /* calendar agenda (phone) */
+ function agenda(){if($("cal").classList.contains("hide")||cal.mode!=="month")return;let a=$("cag");if(!a){a=document.createElement("div");a.id="cag";$("cv").after(a)}
+  const[y,mo]=cal.m.split("-").map(Number),m0=mo-1,dim=new Date(Date.UTC(y,mo,0)).getUTCDate(),from=dIso(y,m0,1),to=dIso(y,m0,dim);
+  const es=events().filter(e=>e.start<=to&&e.end>=from&&(!cal.q||evMatches(e,cal.q,cal.dk))).sort((p,q)=>p.start.localeCompare(q.start));
+  a.innerHTML=`<h4>Events this month</h4>`+(es.map(e=>{const d=new Date((e.start<from?from:e.start)+"T00:00:00Z");return`<button class="ag" type="button" data-go="${e.id}"><div class="dt"><b>${d.getUTCDate()}</b><small>${d.toLocaleDateString("en-GB",{weekday:"short",timeZone:"UTC"})}</small></div><div class="bar2" style="background:hsl(${hue(e.id)} 45% 40%)"></div><div class="tx"><b>${esc(e.name)}</b><span>${esc(e.client||"")}${e.venue?" · "+esc(e.venue):""}${e.end!==e.start?" · until "+esc(e.end):""}</span></div></button>`}).join("")||'<p class="mu">No events this month.</p>')}
  /* label table cells for the phone card layout */
  let lt=0;const labelTables=()=>{document.querySelectorAll("table:not(.avt)").forEach(t=>{const h=[...t.querySelectorAll("thead th")].map(x=>x.textContent.trim());if(!h.length)return;t.querySelectorAll("tbody tr").forEach(r=>{[...r.children].forEach((c,i)=>{if(c.tagName==="TD"){if(h[i]&&c.dataset.l!==h[i])c.dataset.l=h[i];const tx=c.textContent.trim();if(!tx&&!c.querySelector("img,input,button,select,.th,.nm,.pill"))c.dataset.e="1";else delete c.dataset.e}})})})};
- new MutationObserver(()=>{clearTimeout(lt);lt=setTimeout(labelTables,40)}).observe(document.querySelector(".bd2"),{childList:true,subtree:true});labelTables()}
+ new MutationObserver(()=>{clearTimeout(lt);lt=setTimeout(()=>{labelTables();updBar()},40)}).observe(document.querySelector(".bd2"),{childList:true,subtree:true});labelTables();
+ addEventListener("resize",updBar);
+ /* phone opens on Home */
+ if(isPhone())setTimeout(()=>{showTab("home");renderHome();updBar()},60)}
 /* ===== drag and drop photos ===== */
 const normN=s=>String(s||"").toLowerCase().replace(/\.[a-z0-9]{2,5}$/,"").replace(/[^a-z0-9]+/g,"");
 async function setItemPhoto(id,file){const it=S.items[id];if(!it||!file)return false;try{const photo=await uploadPhoto(file);await put("items",id,{...it,photo});logIt(id,"Photo changed","");return true}catch(x){say(x.message||"Could not add that photo");return false}}
@@ -1099,8 +1219,8 @@ document.addEventListener("drop",e=>{const c=e.target.closest&&e.target.closest(
 initViews();
 
 const cal={m:today().slice(0,7),mode:"month",q:"",dk:null};
-const TT={evd:"Event",plan:"Planner",stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
-function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t==="evd"?"events":t)));["stock","item","events","evd","cal","plan","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});if(t==="plan"&&typeof renderPlan==="function")renderPlan()}
+const TT={home:"Home",evd:"Event",plan:"Planner",stock:"Inventory",item:"Item overview",events:"Events",cal:"Calendar",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Settings"};
+function showTab(t){document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===(t==="item"?"stock":t==="evd"?"events":t)));["home","stock","item","events","evd","cal","plan","inv","pl","rp","moves","settings"].forEach(s=>$(s).classList.toggle("hide",s!==t));$("pt").textContent=TT[t]||"";$("pdt").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});if(t==="plan"&&typeof renderPlan==="function")renderPlan()}
 const dIso=(y,m,d)=>new Date(Date.UTC(y,m,d)).toISOString().slice(0,10);
 const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h};
 function dateKey(q){let m=q.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return q;m=q.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);if(m)return`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return/^\d{4}-\d{2}$/.test(q)?q:null}
@@ -1221,8 +1341,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.10.0";
+const APP_VERSION="1.11.0";
 const CHANGES=[
+ ["1.11.0","3 Nov 2026",["Phone app look like Zoho Books: side drawer menu, app bar with search and actions, floating add button, flat list rows, Home dashboard with quick create, back arrow on detail pages","New Home dashboard (also on desktop)"]],
  ["1.10.0","3 Nov 2026",["Phone layout: bottom navigation bar with a More sheet, lists shown as cards, bottom-sheet dialogs, touch-sized buttons and full-width pages"]],
  ["1.9.2","3 Nov 2026",["Version history shows the latest 3 versions, with a button for older ones"]],
  ["1.9.1","3 Nov 2026",["More animation everywhere: lists slide in, tab content fades, animated tab underline, button ripples, photo and popup zoom, smoother hovers, focus glow (all switch off if your device is set to reduce motion)"]],
