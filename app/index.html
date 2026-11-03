@@ -477,6 +477,25 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
 .dlg>*{flex:none;min-width:0;max-width:100%}
 .dlg .row{flex-wrap:wrap}
 }
+#pbar{display:none}.pgl .av{display:none}
+@media(max-width:760px){
+#plan .ltb .la #ppv,#plan .ltb .la #ptd,#plan .ltb .la #pnx,#plan .ltb .la #pnew,#plan #pr,#plan #prl{display:none!important}
+#plan .ltb .la{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap}#plan .ltb .la button{flex:none;white-space:nowrap}
+#plan .pg{max-height:calc(100vh - 250px);border-top:1px solid var(--bd)}
+.pgl{width:66px;padding:10px 3px;align-items:center;text-align:center;justify-content:flex-start;gap:4px}
+.pgl .av{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:hsl(var(--h) 60% 93%);color:hsl(var(--h) 50% 38%);font-weight:700;font-size:15px;border:1px solid hsl(var(--h) 40% 88%)}
+.pgl b{font-size:11.5px;font-weight:500;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pgl small{display:none}
+.pgh .pgl{justify-content:center;padding:6px 2px}.pgh .pgl b{display:none}.pgh .pgl::after{content:attr(data-m);font-size:11px;font-weight:700;color:var(--ac);background:var(--acs);border-radius:10px;padding:5px 6px;letter-spacing:.03em}
+.pgd{padding:8px 0;font-size:14px;color:var(--tx)}.pgd br{display:none}.pgd small{position:absolute;display:none}.pgd b{margin-left:4px;font-size:14px}
+.pgd.td{background:none}.pgd.td b{background:var(--ac);color:#fff;border-radius:9px;padding:3px 7px}.pgd.we{color:var(--mu)}
+.pgb{background:color-mix(in srgb,var(--bd) 18%,transparent)}.pgr{border-top:6px solid var(--card)}
+.pgt{height:28px;line-height:28px;font-size:12.5px;border-radius:8px}.pgm{font-size:12.5px}
+#pbar{display:flex;position:fixed;left:14px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;gap:10px;align-items:center}
+#pbar button{background:var(--card);color:var(--ac);border:0;box-shadow:0 4px 14px rgba(40,25,5,.18);min-height:0;height:56px;width:56px;border-radius:28px;padding:0;display:grid;place-items:center;font-size:30px;line-height:1}
+#pbar svg{width:26px;height:26px;fill:currentColor}
+#pbar .pp{display:flex;align-items:center;background:var(--card);border-radius:28px;box-shadow:0 4px 14px rgba(40,25,5,.18);height:56px}#pbar .pp button{box-shadow:none;background:none;width:50px}#pbar .pp i{width:1px;height:26px;background:var(--bd)}
+#plan.hide #pbar{display:none}
+}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -530,6 +549,7 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
   <div id="pmgr" class="hide" style="padding:14px 16px;border-bottom:1px solid var(--bd)"></div>
   <div id="phint" class="mu" style="padding:10px 16px;font-size:13px"></div>
   <div class="pg" id="pgrid"></div>
+  <div id="pbar"><button id="pbt" type="button" aria-label="Today"><svg viewBox="0 0 24 24"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm0 5v10h14V9zm2 2h4v4H7z"/></svg></button><div class="pp"><button id="pbp" type="button" aria-label="Previous">‹</button><button id="pbn" type="button" aria-label="Next">›</button><i></i><button id="pbz" type="button" aria-label="Zoom"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l5 5M10 7v6M7 10h6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></button></div></div>
  </div>
  <p class="mu" style="font-size:12px;margin:0">Click an empty day to add a task. Drag a bar to move it, drag its edges to change the length. In Team and Vehicles views, a day turns amber with 2 tasks and red with 3 or more for the same person or vehicle.</p>
 </section>
@@ -1408,8 +1428,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.12.4";
+const APP_VERSION="1.12.5";
 const CHANGES=[
+ ["1.12.5","4 Nov 2026",["Phone Planner redesigned: team rows with avatars, roomy day columns with weekday and date, today highlighted, floating Today / previous / next / zoom bar and a + button for new tasks"]],
  ["1.12.4","4 Nov 2026",["Phone: removed the summary boxes from Invoices, Picklists and Repairs; fixed the Report repair window splitting into two cut-off columns"]],
  ["1.12.3","4 Nov 2026",["Phone picklists list: removed the four summary boxes and made each picklist a compact card with number, status, event, invoice and progress"]],
  ["1.12.2","4 Nov 2026",["Phone picklist Items tab reworked: each line shows name, a compact quantity stepper, stock and remove on one row; the add-items list is tidier and no longer scrolls inside itself"]],
@@ -1475,7 +1496,7 @@ async function delEvent(id){const e=S.events[id];if(!e)return;const mv=Object.en
  for(const [mid] of mv)await del("movements",mid);for(const [pid,x] of pls)await put("picklists",pid,{...x,eventId:""});delete openEv[id];await del("events",id);if(!$("evd").classList.contains("hide")){ecur=null;showTab("events")}say("Event deleted.");setTimeout(()=>say(""),4000)}
 
 /* ===== Planner (timeline like Toggl Plan) ===== */
-let DW=46;const P={g:"person",n:28,from:""},PR=[];let pdrag=null,ptkId=null;
+let DW=46,PW=64;const phonePl=()=>window.matchMedia("(max-width:760px)").matches,iniOf=n=>String(n||"?").trim().split(/\s+/).slice(0,2).map(w=>(w[0]||"").toUpperCase()).join("")||"?";const P={g:"person",n:28,from:""},PR=[];let pdrag=null,ptkId=null;
 try{const q=JSON.parse(localStorage.getItem("ev_pl")||"{}");if(q.g)P.g=q.g;if(q.n)P.n=q.n}catch(e){}
 const addD=(iso,n)=>new Date(Date.parse(iso)+n*864e5).toISOString().slice(0,10),dd=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
 P.from=addD(today(),-3);
@@ -1486,7 +1507,7 @@ function layoutLanes(list){const ends=[];list.sort((a,b)=>a.s-b.s||a.e-b.e).forE
 function renderPlan(){
  const g=$("pgrid");if(!g||pdrag)return;
  $("pr").value=String(P.n);document.querySelectorAll("[data-pg]").forEach(b=>b.classList.toggle("on",b.dataset.pg===P.g));
- const from=P.from,n=P.n;DW=Math.max(36,Math.floor(((g.clientWidth||960)-172)/n));const last=addD(from,n-1),t0=today(),W=n*DW,fmt=d=>new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",timeZone:"UTC"});
+ const from=P.from,n=P.n,PH=phonePl(),LW=PH?66:170;DW=PH?PW:Math.max(36,Math.floor(((g.clientWidth||960)-172)/n));const last=addD(from,n-1),t0=today(),W=n*DW,fmt=d=>new Date(d+"T00:00:00Z").toLocaleDateString("en-GB",{day:"numeric",month:"short",timeZone:"UTC"});
  $("prl").textContent=fmt(from)+" – "+fmt(last);
  const tasks=Object.entries(S.tasks).map(([id,v])=>({id,...v})).filter(t=>t.start&&t.end&&t.end>=from&&t.start<=last);
  const rows=[];let hint="";
@@ -1494,11 +1515,11 @@ function renderPlan(){
  else if(P.g==="res"){const L=resList("res");L.forEach(r=>rows.push({name:r.name,sub:r.type==="vehicle"?"Vehicle":"Equipment",load:true,f:t=>(t.res||[]).includes(r.id),preset:{res:[r.id]}}));if(!L.length)hint='No vehicles or equipment yet. Click <b>Team &amp; resources</b> to add your truck and other resources, then assign them to tasks.'}
  else{events().filter(e=>e.end>=from&&e.start<=last).forEach(e=>rows.push({name:e.name,sub:(e.client?e.client+" · ":"")+e.start+(e.end!==e.start?" → "+e.end:""),band:e,f:t=>t.eventId===e.id,preset:{eventId:e.id}}));rows.push({name:"No event",sub:"General tasks",f:t=>!t.eventId||!S.events[t.eventId],preset:{}})}
  $("phint").innerHTML=hint;$("phint").classList.toggle("hide",!hint);
- const head=`<div class="pgh"><div class="pgl"><b>${P.g==="event"?"Event":P.g==="res"?"Vehicle / equipment":"Team member"}</b></div>`+Array.from({length:n},(_,i)=>{const d=addD(from,i),dt=new Date(d+"T00:00:00Z"),wd=dt.getUTCDay(),dn=dt.getUTCDate();return`<div class="pgd${wd===0||wd===6?" we":""}${d===t0?" td":""}" style="width:${DW}px"><small>${i===0||dn===1?dt.toLocaleDateString("en-GB",{month:"short",timeZone:"UTC"}):"&nbsp;"}</small>${"SMTWTFS"[wd]}<br><b>${dn}</b></div>`}).join("")+"</div>";
+ const head=`<div class="pgh"><div class="pgl" data-m="${new Date(from+"T00:00:00Z").toLocaleDateString("en-GB",{year:"numeric",month:"short",timeZone:"UTC"}).toUpperCase()}"><b>${P.g==="event"?"Event":P.g==="res"?"Vehicle / equipment":"Team member"}</b></div>`+Array.from({length:n},(_,i)=>{const d=addD(from,i),dt=new Date(d+"T00:00:00Z"),wd=dt.getUTCDay(),dn=dt.getUTCDate();return`<div class="pgd${wd===0||wd===6?" we":""}${d===t0?" td":""}" style="width:${DW}px"><small>${i===0||dn===1?dt.toLocaleDateString("en-GB",{month:"short",timeZone:"UTC"}):"&nbsp;"}</small>${"SMTWTFS"[wd]}<br><b>${dn}</b></div>`}).join("")+"</div>";
  PR.length=0;
  const body=rows.map((row,ri)=>{PR[ri]=row.preset||{};
   const mine=tasks.filter(row.f).map(t=>{const ms=!!t.ms,s=Math.max(0,dd(from,t.start)),e=ms?s:Math.min(n-1,dd(from,t.end));return{t,s,e}});
-  const lanes=layoutLanes(mine),h=Math.max(46,lanes*30+14),load=new Array(n).fill(0);
+  const lanes=layoutLanes(mine),h=Math.max(PH?84:46,lanes*30+14),load=new Array(n).fill(0);
   if(row.load)mine.forEach(x=>{if(!x.t.ms&&x.t.status!=="done")for(let i=x.s;i<=x.e;i++)load[i]++});
   const cells=Array.from({length:n},(_,i)=>{const d=addD(from,i),wd=new Date(d+"T00:00:00Z").getUTCDay(),c=load[i];return`<div class="pgc${wd===0||wd===6?" we":""}${d===t0?" td":""}${c===2?" l2":c>=3?" l3":""}" data-d="${d}" style="left:${i*DW}px;width:${DW}px"></div>`}).join("");
   const band=row.band?(()=>{const e=row.band,a=Math.max(0,dd(from,e.start)),b=Math.min(n-1,dd(from,e.end));return`<div class="pgev" style="left:${a*DW}px;width:${(b-a+1)*DW}px;background:hsl(${hue(e.id)} 45% 50% / .15);border-left:3px solid hsl(${hue(e.id)} 45% 40%)"></div>`})():"";
@@ -1506,8 +1527,8 @@ function renderPlan(){
    if(t.ms)return`<div class="pgm${t.status==="done"?" done":""}" data-tk="${t.id}" style="left:${x.s*DW+DW/2-8}px;top:${top+1}px;--c:${col}" title="${tip}"><i></i><span>${esc(t.title)}</span></div>`;
    const sl=t.start>=from,el=t.end<=last,pre=t.status==="done"?"✓ ":t.status==="doing"?"▶ ":"";
    return`<div class="pgt${t.status==="done"?" done":""}" data-tk="${t.id}" style="left:${x.s*DW+2}px;width:${(x.e-x.s+1)*DW-4}px;top:${top}px;background:${col}" title="${tip}">${sl?'<span class="rs l"></span>':""}${pre}${esc(t.title)}${extra?` <em>· ${esc(extra)}</em>`:""}${el?'<span class="rs r"></span>':""}</div>`}).join("");
-  return`<div class="pgr"><div class="pgl"><b>${esc(row.name)}</b><small>${esc(row.sub||"")}</small></div><div class="pgb" data-ri="${ri}" style="width:${W}px;height:${h}px">${cells}${band}${bars}</div></div>`}).join("");
- g.innerHTML=`<div class="pgi" style="min-width:${170+W}px">${head}${body}</div>`}
+  return`<div class="pgr"><div class="pgl"><span class="av" style="--h:${hue(row.band?row.band.id:row.name)}">${esc(iniOf(row.name))}</span><b>${esc(row.name)}</b><small>${esc(row.sub||"")}</small></div><div class="pgb" data-ri="${ri}" style="width:${W}px;height:${h}px">${cells}${band}${bars}</div></div>`}).join("");
+ g.innerHTML=`<div class="pgi" style="min-width:${LW+W}px">${head}${body}</div>`}
 $("pgrid").addEventListener("pointerdown",e=>{const el=e.target.closest("[data-tk]");if(!el||(e.button&&e.button>0))return;const t=S.tasks[el.dataset.tk];if(!t)return;
  const mode=e.target.classList.contains("rs")?(e.target.classList.contains("l")?"l":"r"):"m";
  pdrag={id:el.dataset.tk,el,mode,x:e.clientX,d:0,moved:false,left:el.offsetLeft,width:el.offsetWidth};try{el.setPointerCapture(e.pointerId)}catch(x){}e.preventDefault()});
@@ -1526,6 +1547,7 @@ document.querySelectorAll("[data-pg]").forEach(b=>b.onclick=()=>{P.g=b.dataset.p
 let rzT=null;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(!$("plan").classList.contains("hide"))renderPlan()},120)});
 $("pr").onchange=()=>{P.n=+$("pr").value;savePl();renderPlan()};
 $("ppv").onclick=()=>{P.from=addD(P.from,-7);renderPlan()};$("pnx").onclick=()=>{P.from=addD(P.from,7);renderPlan()};$("ptd").onclick=()=>{P.from=addD(today(),-3);renderPlan()};
+$("pbt").onclick=()=>$("ptd").click();$("pbp").onclick=()=>$("ppv").click();$("pbn").onclick=()=>$("pnx").click();$("pbz").onclick=()=>{const Z=[44,64,92];PW=Z[(Z.indexOf(PW)+1)%Z.length];renderPlan()};
 $("pnew").onclick=()=>openTask(null,{});$("pms").onclick=()=>openTask(null,{ms:true});
 function openTask(id,pre){ptkId=id;const t=id?S.tasks[id]:{status:"todo",...(pre||{})};if(id&&!t)return;
  $("pkh").textContent=id?(t.ms?"Edit milestone":"Edit task"):(t.ms?"New milestone":"New task");
