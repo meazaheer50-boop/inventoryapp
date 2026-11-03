@@ -1100,6 +1100,18 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.ad
   const hasSearch=!!document.querySelector("#"+t+" .ltb")||t==="cal";$("msrch").classList.toggle("hide",!hasSearch||!!bk);
   const hasMore=!!document.querySelector("#"+t+" .ltb .la button")||t==="plan"||t==="cal"||!!document.querySelector("#"+t+" .dh .acts button");const ed=document.querySelector("#"+t+" .dh .acts [data-ed],#"+t+" .dh .acts [data-eed]");$("medit").classList.toggle("hide",!ed);$("mmore").classList.toggle("hide",!hasMore&&!bk&&false);
   const e=$("syn");e.classList.toggle("bad",/failed/i.test(e.textContent));e.classList.toggle("ok",/^Synced/.test(e.textContent))}
+ /* Android back button: close things, go up a level, go Home, only then exit */
+ function appBack(){
+  const ov=[...document.querySelectorAll(".ov:not(.hide)")][0];
+  if(ov){const c=ov.querySelector("[data-rcx],#evx,#pkcx,#pge button.g,button.g[type=button]");if(ov.id==="lb"||!c)ov.classList.add("hide");else c.click();return true}
+  if(!$("msheet").classList.contains("hide")){$("msheet").classList.add("hide");return true}
+  if($("drawer").classList.contains("open")){closeD();return true}
+  if(document.body.classList.contains("srch")){document.body.classList.remove("srch");return true}
+  if(!isPhone())return false;
+  const b=backBtn();if(b){b.click();setTimeout(updBar,30);return true}
+  if(sect()!=="home"){const n=nb("home");if(n)n.click();else showTab("home");setTimeout(()=>{updBar();window.scrollTo(0,0)},30);return true}
+  return false}
+ try{const A=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;if(A&&A.addListener)A.addListener("backButton",()=>{if(!appBack())A.exitApp()})}catch(e){}
  $("mham").onclick=()=>{if($("mham").dataset.back){const b=backBtn();if(b)b.click();setTimeout(updBar,30)}else openD()};
  $("scrim").onclick=closeD;
  $("drawer").onclick=e=>{const b=e.target.closest("[data-dn]");if(!b)return;closeD();const n=nb(b.dataset.dn);if(n)n.click();setTimeout(()=>{updBar();window.scrollTo(0,0)},30)};
@@ -1469,8 +1481,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.12.8";
+const APP_VERSION="1.12.9";
 const CHANGES=[
+ ["1.12.9","4 Nov 2026",["Android app: the back button now closes menus, goes back a page, returns to Home and only then exits"]],
  ["1.12.8","4 Nov 2026",["Phone Events page: Filter and List / Board bar is back"]],
  ["1.12.7","4 Nov 2026",["Phone Movements page: the log form now fits the screen (Qty and Date side by side) and each logged movement is a compact card"]],
  ["1.12.6","4 Nov 2026",["Phone invoices list reworked like Zoho Books: customer and balance on top, invoice number and status below, date and due info, picklists underneath"]],
