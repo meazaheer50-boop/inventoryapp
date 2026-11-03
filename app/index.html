@@ -60,7 +60,7 @@ details summary{cursor:pointer;font-weight:600}
 .flush{padding:0;overflow:hidden}
 .ltb{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bd);flex-wrap:wrap;align-items:center}.lt,.la{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.lt select{font-weight:600;font-size:15px}
 .rw{cursor:pointer}.off{opacity:.65}.pill.off{background:var(--bd);color:var(--mu)}
-.split{display:grid;grid-template-columns:290px 1fr;gap:14px;align-items:start}
+.split{display:grid;grid-template-columns:290px minmax(0,1fr);gap:14px;align-items:start}.split>*,.tbd,.card,#ir,#evr{min-width:0;max-width:100%}.tbd{overflow-x:hidden}.sc{overflow-x:auto;max-width:100%}
 .il{max-height:calc(100vh - 110px);overflow:auto;position:sticky;top:12px;margin:0}
 .ilh{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--card);z-index:1}
 .ili{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd);padding:10px 12px;font:inherit;color:var(--tx);cursor:pointer}
@@ -1029,8 +1029,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.8.6";
+const APP_VERSION="1.8.7";
 const CHANGES=[
+ ["1.8.7","3 Nov 2026",["Availability calendar scrolls on its own; the page no longer scrolls sideways"]],
  ["1.8.6","3 Nov 2026",["Restored the item and event pages with the list beside them (as in 1.8.4)"]],
  ["1.8.5","3 Nov 2026",["Items and events now open full screen (no side list); use the Back button to return"]],
  ["1.8.4","3 Nov 2026",["Picklist profile page like events: header, Overview with totals and event details, Items, Checklist and Movements tabs, stock and reservation warnings"]],
