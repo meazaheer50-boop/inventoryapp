@@ -358,7 +358,7 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
  #drawer .dp{padding:calc(22px + env(safe-area-inset-top,0px)) 18px 14px;border-bottom:1px solid var(--bd)}
  #drawer .av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#dcb86d,#a67c37);color:#fff;display:grid;place-items:center;font:600 28px Georgia,serif;margin-bottom:12px}
  #drawer .dn{font-size:17px;font-weight:600}#drawer .ds{font-size:13px;color:var(--mu);margin-top:2px;word-break:break-all}
- #drawer nav{display:flex;flex-direction:column;gap:0;padding:8px 0}
+ #drawer .dnav{display:flex;flex-direction:column;gap:0;padding:8px 0}
  #drawer button.dn1{display:flex;align-items:center;gap:18px;width:100%;background:none;border:0;border-radius:0;padding:0 20px;min-height:54px;font:inherit;font-size:16px;color:var(--tx);text-align:left}
  #drawer button.dn1 svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
  #drawer button.dn1.on{background:var(--acs);color:var(--ac);font-weight:600}
@@ -967,13 +967,13 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.ad
  const I=(d)=>`<svg viewBox="0 0 24 24">${d}</svg>`,
   ICO={menu:I('<path d="M4 7h16M4 12h16M4 17h16"/>'),back:I('<path d="M15 5l-7 7 7 7"/>'),search:I('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'),more:I('<circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/>'),plus:I('<path d="M12 5v14M5 12h14"/>'),
    item:I('<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>'),event:I('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),pl:I('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12l2 2 4-4"/>'),repair:I('<path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.2-.6-.6-2.2z"/>'),move:I('<path d="M4 8h14l-3-3M20 16H6l3 3"/>')};
- const nb=t=>document.querySelector('nav button[data-t="'+t+'"]'),cur=()=>{const b=document.querySelector("nav button.on");return b?b.dataset.t:"home"};
+ const nb=t=>document.querySelector('.sb nav button[data-t="'+t+'"]'),cur=()=>{const b=document.querySelector(".sb nav button.on");return b?b.dataset.t:"home"};
  const vis=id=>{const e=$(id);return e&&!e.classList.contains("hide")};
  const sect=()=>["home","stock","item","events","evd","cal","plan","inv","pl","rp","moves","settings"].find(vis)||"home";
  $("mham").innerHTML=ICO.menu;$("msrch").innerHTML=ICO.search;$("mmore").innerHTML=ICO.more;$("fab").innerHTML=ICO.plus;
  /* drawer */
  function buildDrawer(){const st=S.settings.main||{},biz=st.biz||"Everafter Events",ss=SESS(),sub=ss&&ss.name?ss.name+(ss.role?" · "+ss.role:""):(CFG.dev||"Inventory");
-  const c=cur();$("drawer").innerHTML=`<div class="dp"><div class="av">${esc(biz.trim().charAt(0).toUpperCase())}</div><div class="dn">${esc(biz)}</div><div class="ds">${esc(sub)}</div></div><nav>`+[...document.querySelectorAll("nav button")].filter(b=>!b.classList.contains("hide")).map(b=>`<button type="button" class="dn1${b.dataset.t===c?" on":""}" data-dn="${b.dataset.t}">${b.querySelector("svg").outerHTML}<span>${b.textContent.trim()}</span></button>`).join("")+`</nav><div class="dv">Version ${APP_VERSION}</div>`}
+  const c=cur();$("drawer").innerHTML=`<div class="dp"><div class="av">${esc(biz.trim().charAt(0).toUpperCase())}</div><div class="dn">${esc(biz)}</div><div class="ds">${esc(sub)}</div></div><div class="dnav">`+[...document.querySelectorAll(".sb nav button")].filter(b=>!b.classList.contains("hide")).map(b=>`<button type="button" class="dn1${b.dataset.t===c?" on":""}" data-dn="${b.dataset.t}">${b.querySelector("svg").outerHTML}<span>${b.textContent.trim()}</span></button>`).join("")+`</div><div class="dv">Version ${APP_VERSION}</div>`}
  const openD=()=>{buildDrawer();$("scrim").classList.remove("hide");$("drawer").classList.add("open")},closeD=()=>{$("scrim").classList.add("hide");$("drawer").classList.remove("open")};
  /* app bar mode: menu or back */
  const backBtn=()=>{const t=sect();if(t==="item")return document.querySelector("[data-bk]");if(t==="evd")return document.querySelector("[data-evbk]");if(t==="pl"&&plMode)return document.querySelector("[data-plback]");return null};
@@ -1341,8 +1341,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.11.0";
+const APP_VERSION="1.11.1";
 const CHANGES=[
+ ["1.11.1","3 Nov 2026",["Fixed the phone menu showing every page name twice or more after opening it again"]],
  ["1.11.0","3 Nov 2026",["Phone app look like Zoho Books: side drawer menu, app bar with search and actions, floating add button, flat list rows, Home dashboard with quick create, back arrow on detail pages","New Home dashboard (also on desktop)"]],
  ["1.10.0","3 Nov 2026",["Phone layout: bottom navigation bar with a More sheet, lists shown as cards, bottom-sheet dialogs, touch-sized buttons and full-width pages"]],
  ["1.9.2","3 Nov 2026",["Version history shows the latest 3 versions, with a button for older ones"]],
