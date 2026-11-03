@@ -392,7 +392,7 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
  .sc table:not(.avt) td:first-child .nm{gap:14px}
  #st td:nth-child(3),#st td:nth-child(6),#st td:nth-child(7){display:none}
  #home .hm-t{grid-template-columns:1fr 1fr}#home .hm-t button{min-height:88px}#home .hm-q{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}#home .hm-q button{width:auto}#home .hm-q i{width:100%;max-width:74px}
- #events>.row{display:none}
+ #events>.row:first-child{display:none}#events>.row:nth-child(2){padding:10px 16px;margin:0!important;justify-content:flex-start!important}
  .erow{border-radius:0!important;border-left:0!important;border-right:0!important;margin:0!important;box-shadow:none!important;padding:14px 16px!important;border-bottom:1px solid var(--bd)}.erow .top>div:last-child{display:none}
  #el .erow:active{background:var(--acs)}
  .sc table:not(.avt) td:last-child:has(button){justify-content:flex-start;padding-top:8px!important;flex-wrap:wrap}
@@ -1469,8 +1469,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.12.7";
+const APP_VERSION="1.12.8";
 const CHANGES=[
+ ["1.12.8","4 Nov 2026",["Phone Events page: Filter and List / Board bar is back"]],
  ["1.12.7","4 Nov 2026",["Phone Movements page: the log form now fits the screen (Qty and Date side by side) and each logged movement is a compact card"]],
  ["1.12.6","4 Nov 2026",["Phone invoices list reworked like Zoho Books: customer and balance on top, invoice number and status below, date and due info, picklists underneath"]],
  ["1.12.5","4 Nov 2026",["Phone Planner redesigned: team rows with avatars, roomy day columns with weekday and date, today highlighted, floating Today / previous / next / zoom bar and a + button for new tasks"]],
