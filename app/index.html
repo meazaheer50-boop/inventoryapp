@@ -95,6 +95,7 @@ details summary{cursor:pointer;font-weight:600}
 .th.md{width:56px;height:56px;border-radius:10px;font-size:22px}
 @media(max-width:820px){.app{flex-direction:column}.sb{width:100%;height:auto;position:static;flex-direction:row;align-items:center;padding:10px 12px;gap:12px;overflow-x:auto}.brand span{display:none}nav{flex-direction:row}nav button{width:auto;padding:8px 10px}.tb{padding:16px 16px 0}.bd2{padding:12px 16px 40px}.split{grid-template-columns:1fr}.il{display:none}.ov2{grid-template-columns:1fr}.kv{grid-template-columns:110px 1fr}}
 
+.dragf #stock .card.flush,.dragf #item .phbox{outline:2px dashed var(--ac);outline-offset:3px;background:var(--acs)}.dragf #item .card,.dragf #item .split{outline:2px dashed var(--ac);outline-offset:-4px}
 /* ===== searchable item select ===== */
 .iw{display:flex;flex-wrap:wrap;gap:8px;align-items:end;flex:1 1 100%}.iw label{flex:1 1 220px}.iwq{flex:1 1 180px;min-width:140px}#frp.dlg{width:min(720px,100%)}.dlg .iw .iwq,.dlg .iw .iwc{width:auto}.dlg .iw label{flex:1 1 100%}.dlg .iw .iwq{flex:2 1 200px}.dlg .iw .iwc{flex:1 1 160px}.iwc{flex:0 1 180px}.iwi{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mu);flex:1 1 100%;min-height:0}.iwi:empty{display:none}
 /* ===== picklist checklist ===== */
@@ -225,7 +226,7 @@ img,video,canvas{max-width:100%}
 
 <section id="stock">
  <div class="card flush">
-  <div class="ltb"><div class="lt"><select id="lf"><option value="all">All Items</option><option value="active">Active Items</option><option value="inactive">Inactive Items</option><option value="low">Low stock</option></select><select id="lcat"></select><select id="lsub"></select><input id="q" placeholder="Search name, SKU or category" style="width:260px;max-width:100%"></div><div class="la"><button class="b" data-nw="1" type="button">+ New</button><button class="g" id="im" type="button">Import</button><button class="g" id="ex2" type="button">Export</button></div></div>
+  <div class="ltb"><div class="lt"><select id="lf"><option value="all">All Items</option><option value="active">Active Items</option><option value="inactive">Inactive Items</option><option value="low">Low stock</option></select><select id="lcat"></select><select id="lsub"></select><input id="q" placeholder="Search name, SKU or category" style="width:260px;max-width:100%"></div><div class="la"><button class="b" data-nw="1" type="button">+ New</button><button class="g" id="im" type="button">Import</button><button class="g" id="ex2" type="button">Export</button><button class="g" id="phm" type="button" title="Choose many photos, or drop them on this page. Files are matched by SKU or item name.">Add photos</button><input id="phm_f" type="file" accept="image/*" multiple hidden><input id="phf" type="file" accept="image/*" hidden></div></div>
   <div class="sc"><table><thead><tr><th>Name</th><th>SKU</th><th>Category</th><th class="n">Rate</th><th class="n">Stock on hand</th><th class="n">In warehouse</th><th class="n">Reorder level</th></tr></thead><tbody id="st"></tbody></table></div>
  </div>
  <div class="card hide" id="imc"><h3>Import items from CSV</h3><p class="mu" style="font-size:13px;margin-top:0">Items can also come from your Google Sheet automatically: put them in a tab called <b>item_list</b> and they are imported on every sync.</p>
@@ -530,7 +531,7 @@ function renderItem(){
  if(itab==="overview"){
   const first=lg.length?lg[lg.length-1].ts:it.created,st0=avFrom||t,days=Array.from({length:avN},(_,i)=>{const d=new Date(st0+"T00:00:00Z");d.setUTCDate(d.getUTCDate()+i);return d.toISOString().slice(0,10)}),
   mrow=(()=>{let o="",i=0;while(i<days.length){const m=days[i].slice(0,7);let j=i;while(j<days.length&&days[j].slice(0,7)===m)j++;o+=`<th colspan="${j-i}" style="text-align:left;padding-left:8px">${new Date(m+"-01T00:00:00Z").toLocaleDateString("en-GB",{month:"short",year:"numeric",timeZone:"UTC"})}</th>`;i=j}return o})();
-  body=`<div class="ov2"><div><h4>Item information</h4><dl class="kv">${kv("SKU",it.sku)}${kv("Unit",it.unit)}${kv("Category",it.category)}${kv("Rate",it.price?money(it.price):"")}${kv("Reorder level",it.reorder?String(it.reorder):"")}${kv("Description",it.description)}${kv("Created",first?new Date(first).toLocaleDateString("en-GB",{dateStyle:"medium"}):"")}</dl></div><div class="phbox">${it.photo&&photoSrc(it.photo)?`<img src="${photoSrc(it.photo)}" alt="">`:`<div class="ph0">${esc((it.name||"?").trim().charAt(0).toUpperCase())}<small>No image</small></div>`}</div></div>
+  body=`<div class="ov2"><div><h4>Item information</h4><dl class="kv">${kv("SKU",it.sku)}${kv("Unit",it.unit)}${kv("Category",it.category)}${kv("Rate",it.price?money(it.price):"")}${kv("Reorder level",it.reorder?String(it.reorder):"")}${kv("Description",it.description)}${kv("Created",first?new Date(first).toLocaleDateString("en-GB",{dateStyle:"medium"}):"")}</dl></div><div class="phbox" id="phb" title="Drop an image here to replace it" style="cursor:pointer">${it.photo&&photoSrc(it.photo)?`<img src="${photoSrc(it.photo)}" alt="" data-pv="1" data-cap="${esc(it.name)}" style="cursor:zoom-in">`:`<div class="ph0">${esc((it.name||"?").trim().charAt(0).toUpperCase())}<small>Drop an image here<br>or click to add</small></div>`}</div></div>
   <h4>Stock</h4><div class="tiles"><div><b>${it.total}</b><span class="mu">Stock on hand</span></div><div><b>${site}</b><span class="mu">Out on site</span></div><div><b>${inW}</b><span class="mu">In warehouse</span></div><div><b class="${rq?"warn":""}">${rq}</b><span class="mu">In repair</span></div><div><b>${committed}</b><span class="mu">Committed (upcoming)</span></div><div><b class="${avail<0?"bad":"ok"}">${avail}</b><span class="mu">Available for sale</span></div></div>${low?`<p class="warn" style="margin:10px 0 0">\u25B2 Warehouse stock is at or below the reorder level.</p>`:""}
   <h4>Availability</h4><div class="row" style="margin-bottom:8px"><label style="flex-direction:row;align-items:center;gap:8px">Show<select id="avn">${[[14,"2 weeks"],[30,"1 month"],[60,"2 months"],[90,"3 months"],[180,"6 months"],[365,"12 months"]].map(([n,l])=>`<option value="${n}"${avN===n?" selected":""}>${l}</option>`).join("")}</select></label><label style="flex-direction:row;align-items:center;gap:8px">from<input id="avf" type="date" value="${st0}"></label><button class="g" data-avt="1">Today</button></div><div class="sc"><table class="avt" style="text-align:center"><thead><tr>${mrow}</tr><tr>${days.map(d=>`<th style="text-align:center">${+d.slice(8)}</th>`).join("")}</tr></thead><tbody><tr>${days.map(d=>{const a=it.total-rq-resOn(d);return`<td class="${a<0?"bad":a===0?"warn":"ok"}"><b>${a}</b></td>`}).join("")}</tr></tbody></table></div><p class="mu" style="font-size:12px;margin:6px 0 0">Pieces free to book each day: owned, minus items in repair, minus reserved. Scroll sideways for longer ranges.</p>
   <div class="chk"><label>Check availability from<input id="af" type="date" value="${chk.f}"></label><label>to<input id="at" type="date" value="${chk.t}"></label><span id="ar">${availHtml()}</span></div>`}
@@ -750,6 +751,30 @@ function cancelRepair(){rpNew.forEach(dropPh);rpNew=[];closeRepair()}
 const thumbs=ids=>ids&&ids.length?`<div class="ths">${ids.map(id=>photoSrc(id)?`<img class="rth" data-pv="${id}" src="${photoSrc(id)}" alt="">`:'<span class="rth"></span>').join("")}</div>`:"";
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-pv]");if(t&&t.tagName==="IMG"&&t.getAttribute("src")){e.stopPropagation();e.preventDefault();$("lbi").src=t.getAttribute("src");$("lbc").textContent=t.dataset.cap||"";$("lb").classList.remove("hide");return}if(e.target.closest&&e.target.closest("#lb"))$("lb").classList.add("hide")},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.add("hide")});
+/* ===== drag and drop photos ===== */
+const normN=s=>String(s||"").toLowerCase().replace(/\.[a-z0-9]{2,5}$/,"").replace(/[^a-z0-9]+/g,"");
+async function setItemPhoto(id,file){const it=S.items[id];if(!it||!file)return false;try{const photo=await uploadPhoto(file);await put("items",id,{...it,photo});logIt(id,"Photo changed","");return true}catch(x){say(x.message||"Could not add that photo");return false}}
+async function bulkPhotos(files){const imgs=[...files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|heic)$/i.test(f.name));if(!imgs.length){say("No image files found.");return}
+ const idx={};for(const [id,it] of Object.entries(S.items)){if(it.sku)idx[normN(it.sku)]=id}const byName={};for(const [id,it] of Object.entries(S.items)){const k=normN(it.name);if(k&&!(k in byName))byName[k]=id}
+ let ok=0;const miss=[];
+ for(let i=0;i<imgs.length;i++){const f=imgs[i],k=normN(f.name),id=idx[k]||byName[k];say(`Adding photos\u2026 ${i+1} of ${imgs.length}`);
+  if(!id){miss.push(f.name);continue}if(await setItemPhoto(id,f))ok++}
+ say(`${ok} photo${ok===1?"":"s"} added.`+(miss.length?` Not matched (${miss.length}): ${miss.slice(0,6).join(", ")}${miss.length>6?"\u2026":""}. Name each file after the item's SKU or name.`:""));setTimeout(()=>say(""),miss.length?20000:6000)}
+{let dc=0;const hasF=e=>e.dataTransfer&&[...(e.dataTransfer.types||[])].includes("Files");
+ document.addEventListener("dragenter",e=>{if(hasF(e)){dc++;document.body.classList.add("dragf")}});
+ document.addEventListener("dragleave",e=>{if(hasF(e)){dc=Math.max(0,dc-1);if(!dc)document.body.classList.remove("dragf")}});
+ document.addEventListener("dragover",e=>{if(hasF(e))e.preventDefault()});
+ document.addEventListener("drop",async e=>{if(!hasF(e))return;e.preventDefault();dc=0;document.body.classList.remove("dragf");
+  const files=[...e.dataTransfer.files];if(!files.length)return;if(e.target.closest&&e.target.closest("input[type=file]"))return;
+  const onItem=!$("item").classList.contains("hide"),onList=!$("stock").classList.contains("hide");
+  if(onItem&&cur){if(imode==="edit"||imode==="new"){const inp=$("fx")&&$("fx").elements.photo;if(inp){const dt=new DataTransfer();dt.items.add(files[0]);inp.files=dt.files;say("Photo ready. Press Save.");setTimeout(()=>say(""),4000)}return}
+   if(files.length>1){await bulkPhotos(files);return}if(await setItemPhoto(cur,files[0])){say("Photo updated.");setTimeout(()=>say(""),3000)}return}
+  if(onItem&&(imode==="new")){return}
+  if(onList){const tr=e.target.closest&&e.target.closest("tr[data-id]");if(tr&&files.length===1){if(await setItemPhoto(tr.dataset.id,files[0])){say("Photo updated.");setTimeout(()=>say(""),3000)}return}await bulkPhotos(files)}}
+ );
+ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("#phb");if(b&&cur&&$("phf")&&!b.querySelector("img"))$("phf").click();if(e.target.id==="phm")$("phm_f").click()});
+ document.addEventListener("change",async e=>{if(e.target.id==="phf"&&cur){const f=e.target.files[0];e.target.value="";if(f&&await setItemPhoto(cur,f)){say("Photo updated.");setTimeout(()=>say(""),3000)}}
+  if(e.target.id==="phm_f"){const fs=[...e.target.files];e.target.value="";bulkPhotos(fs)}})}
 function createRepair(o){const id=rid(),number=nextNo("repairs","RP"),d={number,itemId:o.itemId,qty:o.qty,issue:o.issue||"",status:"reported",reportedDate:o.reportedDate||today(),assignedTo:o.assignedTo||"",cost:o.cost||0,notes:o.notes||"",photos:o.photos||[],source:o.source||"Manual",created:Date.now()};
  put("repairs",id,d);logIt(o.itemId,"Repair reported",`${number}: ${o.qty} pcs \u2014 ${d.issue}`);return id}
 function openRepair(id,itemId){rpEdit=id;const r=id?S.repairs[id]:{};if(id&&!r)return;
@@ -1041,8 +1066,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.8.9";
+const APP_VERSION="1.9.0";
 const CHANGES=[
+ ["1.9.0","3 Nov 2026",["Drag and drop photos: onto an item page, onto an item row, or many at once onto the item list (matched by SKU or name). Also an Add photos button and click-to-add on the item photo"]],
  ["1.8.9","3 Nov 2026",["Layout adapts to the screen size: smaller menu, tiles and fonts on laptops, no sideways page scrolling, panels stack on narrow windows"]],
  ["1.8.8","3 Nov 2026",["Sub-category filter and a wider window when reporting a repair; sub-category filter in Movements"]],
  ["1.8.7","3 Nov 2026",["Availability calendar scrolls on its own; the page no longer scrolls sideways"]],
