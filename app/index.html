@@ -773,7 +773,7 @@ async function doImport(text){
  const key={},local={};Object.entries(S.items).forEach(([id,v])=>{if(v.sku)key["s:"+v.sku.toLowerCase()]=id;key["n:"+v.name.toLowerCase()]=id});
  let add=0,upd=0,skip=0;const jobs=[];
  for(const r of rows.slice(1)){const name=(r[cN]||"").trim();if(!name){skip++;continue}
-  const sku=cS>=0?(r[cS]||"").trim():"",ex=(sku&&key["s:"+sku.toLowerCase()])||key["n:"+name.toLowerCase()];
+  const sku=cS>=0?(r[cS]||"").trim():"",bs=sku?key["s:"+sku.toLowerCase()]:null,bn=key["n:"+name.toLowerCase()],ex=bs||((!sku||(bn&&!(local[bn]||S.items[bn]||{}).sku))?bn:null);
   const d={...(ex?(local[ex]||S.items[ex]):{}),name};
   if(cC>=0&&(r[cC]||"").trim())d.category=r[cC].trim();
   if(cQ>=0&&(r[cQ]||"").trim()!=="")d.total=Math.max(0,Math.round(parseFloat(r[cQ].replace(/[^\d.\-]/g,""))||0));
@@ -1481,8 +1481,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.12.9";
+const APP_VERSION="1.12.10";
 const CHANGES=[
+ ["1.12.10","4 Nov 2026",["CSV import now treats SKU as the unique key: items with the same name but different SKUs stay separate (the Google Sheet import already worked this way)"]],
  ["1.12.9","4 Nov 2026",["Android app: the back button now closes menus, goes back a page, returns to Home and only then exits"]],
  ["1.12.8","4 Nov 2026",["Phone Events page: Filter and List / Board bar is back"]],
  ["1.12.7","4 Nov 2026",["Phone Movements page: the log form now fits the screen (Qty and Date side by side) and each logged movement is a compact card"]],
