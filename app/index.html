@@ -652,6 +652,53 @@ input[type=file]::file-selector-button{font:inherit;font-size:13px;border:1px so
  #inv .sc td,#inv .sc th{padding-left:8px!important;padding-right:8px!important}
 }
 @media(min-width:761px) and (max-width:1320px){#inv .sc td{font-size:13px}#invt td:nth-child(5),#invt td:nth-child(4){white-space:normal!important}#invt td:last-child{min-width:140px}}
+
+/* v1.16 users and roles (Zoho style) */
+.ur-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-2px 0 14px}.ur-top h3{margin:0;font-size:18px}.ur-top .sp{flex:1}
+.ur-seg{display:inline-flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}.ur-seg button{border:0;background:#fff;padding:7px 16px;font:inherit;font-size:13px;cursor:pointer;color:var(--mu)}.ur-seg button.on{background:var(--ac);color:var(--acx,#fff);font-weight:600}
+.ur-me{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;background:var(--acs);border:1px solid #f0e2c3;border-radius:12px;padding:10px 12px;margin-bottom:14px}.ur-me .sp{flex:1}
+.ur-sel{border:0;background:none;font:inherit;font-size:16px;font-weight:600;padding:0 22px 0 0;width:auto;cursor:pointer;color:var(--tx)}
+table.urt{width:100%;border-collapse:collapse}.urt th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);text-align:left;padding:10px 12px;border-bottom:1px solid var(--bd);background:color-mix(in srgb,var(--bd) 25%,transparent);font-weight:600}
+.urt td{padding:12px;border-bottom:1px solid var(--bd);vertical-align:middle;font-size:14px}.urt tr:hover td{background:color-mix(in srgb,var(--ac) 5%,transparent)}
+.urt .who{display:flex;align-items:center;gap:12px}.urt .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:15px;flex:0 0 38px}
+.urt .lnk{background:none;border:0;padding:0;font:inherit;font-weight:600;color:var(--ac);cursor:pointer;text-align:left}.urt .lnk:hover{text-decoration:underline}
+.urt .sub{font-size:12px;color:var(--mu);margin-top:2px}.urt .acts2{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.pill.act{background:#e5f4ea;color:#1f7a44;border-color:#cbe8d5}
+.ur-page .ur-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px}.ur-page .ur-hd h3{margin:0;font-size:18px}
+.ur-bk{border:1px solid var(--bd);background:#fff;border-radius:10px;width:34px;height:34px;cursor:pointer;font-size:18px;line-height:1}
+.ur-f{display:grid;grid-template-columns:170px minmax(0,460px);gap:12px 18px;align-items:start;margin-bottom:16px}.ur-f>.lb{font-size:13px;color:var(--tx);padding-top:9px}.ur-f>.lb.req{color:var(--bad)}.ur-f .hint{font-size:12px;color:var(--mu);margin-top:4px}
+.ur-f input,.ur-f select,.ur-f textarea{width:100%}
+.ur-adm{display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--ac) 9%,#fff);border:1px solid #ecdcb8;border-radius:12px;padding:14px 16px;margin:4px 0 18px;cursor:pointer}.ur-adm input{width:18px;height:18px;margin-top:2px;flex:0 0 18px}.ur-adm b{display:block;font-size:14px}.ur-adm span{font-size:13px;color:var(--mu)}
+.rsec{border:1px solid var(--bd);border-radius:12px;margin-bottom:16px;overflow:hidden;background:#fff}.rsec>.rsh{padding:12px 14px;font-weight:600;font-size:15px;border-bottom:1px solid var(--bd);background:color-mix(in srgb,var(--bd) 20%,transparent)}
+table.rmx{width:100%;border-collapse:collapse}.rmx th{font-size:13px;font-weight:500;color:var(--tx);padding:10px 8px;border-bottom:1px solid var(--bd);text-align:center;width:72px}.rmx th:first-child{text-align:left;width:auto;padding-left:14px}.rmx th:last-child{text-align:left;width:auto}
+.rmx td{padding:10px 8px;border-bottom:1px solid var(--bd);text-align:center;vertical-align:top}.rmx tr:last-child td{border-bottom:0}.rmx td.pn{text-align:left;padding-left:14px;font-size:14px}.rmx td.ot{text-align:left}
+.rmx input[type=checkbox]{width:17px;height:17px;margin:0;cursor:pointer;accent-color:var(--ac)}.rmx .na{color:var(--bd)}
+.rmx .rc{display:inline-flex;align-items:center;gap:6px;cursor:pointer}.rmx .rc span{display:none}.rmx td.ot .rc{display:flex;margin:0 0 6px;font-size:13px}.rmx td.ot .rc span{display:inline}
+.ur-bar{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding:12px 0 4px;display:flex;gap:8px;z-index:3}
+#ur-msg:empty{display:none}
+@media(max-width:760px){
+ .ur-f{grid-template-columns:1fr;gap:4px}.ur-f>.lb{padding-top:8px}
+ table.urt thead{display:none}.urt,.urt tbody,.urt tr,.urt td{display:block;width:100%}.urt tr{border-bottom:1px solid var(--bd);padding:10px 0}.urt td{border:0;padding:4px 2px}
+ .urt td[data-l]:not(:first-child)::before{content:attr(data-l) ": ";color:var(--mu);font-size:12px}.urt .acts2{justify-content:flex-start;margin-top:4px}.urt .acts2 button{min-height:38px}
+ table.rmx thead{display:none}.rmx,.rmx tbody,.rmx tr{display:block}.rmx tr{padding:12px 12px 8px;border-bottom:1px solid var(--bd)}.rmx tr:last-child{border-bottom:0}
+ .rmx td{display:inline-block;border:0;padding:0;margin:0 6px 8px 0;text-align:left}.rmx td.pn{display:block;padding:0 0 8px;font-weight:600}.rmx td.na0{display:none}.rmx td.ot{display:block;margin:2px 0 0}
+ .rmx .rc{border:1px solid var(--bd);border-radius:10px;padding:8px 11px;background:#fff}.rmx .rc span{display:inline;font-size:13px}.rmx td.ot .rc{border:0;padding:4px 0;background:none}
+ .rmx .rc:has(input:checked){border-color:var(--ac);background:var(--acs)}
+ .ur-bar{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}.ur-bar button{flex:1;min-height:44px}
+ .ur-top .b{min-height:40px}
+}
+
+/* users and roles: layout fixes */
+#frole2,#fuser2{display:block!important}
+#usrb label.rc,#usrb label.ur-adm{flex-direction:row!important}
+#usrb label.rc{align-items:center!important;gap:7px!important;font-size:13px!important;color:var(--tx)!important;font-weight:400}
+#usrb label.ur-adm{align-items:flex-start!important;gap:12px!important;color:var(--tx)!important;font-size:inherit!important}
+#usrb label.ur-adm>div{display:flex;flex-direction:column;gap:2px}
+#usrb .av{width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;font-weight:600;font-size:14px;flex:0 0 34px}.urt .av{width:38px;height:38px;flex-basis:38px}
+.urt td{white-space:normal!important}
+table.rmx{table-layout:fixed}.rmx th:first-child,.rmx td.pn{width:28%}.rmx th:nth-child(n+2):nth-child(-n+6){width:74px}
+.rmx td.ot .rc{justify-content:flex-start}.rmx td.ot .rc:last-child{margin-bottom:0}
+@media(max-width:760px){.rmx td.ot .na{display:none}.rmx td.ot:has(.na){display:none}#usrb label.rc{padding:8px 8px;gap:5px!important}.rmx td{margin:0 4px 8px 0}.rmx td.pn{margin:0}}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -680,7 +727,7 @@ input[type=file]::file-selector-button{font:inherit;font-size:13px;border:1px so
  <div class="card"><h3>Sync</h3><p class="mu" style="margin:0 0 10px;font-size:13px">The app works offline and keeps its own copy of everything. Changes sync with your Google Sheet whenever the device is online.</p><form id="fcfg"><label>Sync URL (Apps Script web app)<input id="cfu" placeholder="https://script.google.com/macros/s/.../exec" style="width:380px;max-width:100%"></label><label>Access key<input id="cfk" type="password" autocomplete="off" style="width:230px"></label><label>This device is called<input id="cfd" placeholder="e.g. Warehouse phone" style="width:190px"></label><button class="b">Save and sync</button></form><div id="cfs" class="msg" style="margin-top:8px"></div></div>
  <div class="card dtcard"><h3>Display and shortcuts (desktop)</h3><div class="row" style="align-items:end"><label>Row density<select id="dtden"><option value="">Comfortable</option><option value="c">Compact</option></select></label><button class="g" type="button" id="dtrst">Reset columns and sorting</button><button class="g" type="button" id="dtkb">Keyboard shortcuts</button></div><p class="mu" style="font-size:13px;margin:10px 0 0">Click a column heading to sort. Use the Columns button above a list to show or hide columns. Press <b>?</b> anywhere to see the shortcuts.</p></div>
 <div class="card"><h3>About and version history</h3><div class="row" style="margin-bottom:10px"><b id="vcur"></b><span id="vst" class="msg"></span><button class="g" type="button" id="vchk">Check for updates</button><button class="b hide" type="button" id="vrel">Reload to update</button></div><div id="vlog"></div></div>
-<div class="card" id="usrc"><h3>Users and roles</h3><div id="usrb"></div></div>
+<div class="card" id="usrc"><div id="usrb"></div></div>
 <div class="card"><h3>Data</h3><p class="mu" style="margin:0 0 10px">Download your item list as a CSV file (same columns as the importer), or a full backup of everything in the app as a JSON file. Photos stay in Google Drive and are not included.</p><div class="row"><button class="g" id="ex" type="button">Export items (CSV)</button><button class="g" id="exall" type="button">Download full backup (JSON)</button></div></div>
 </section>
 
@@ -815,8 +862,8 @@ async function syncNow(manual){
 
 const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10);
 const rid=()=>Math.random().toString(36).slice(2,10);
-function put(c,id,d){if(deny(c))return Promise.resolve();S[c][id]=d;saveRec(c,id,d,0);render();schedSync();return Promise.resolve()}
-function del(c,id){if(deny(c))return Promise.resolve();delete S[c][id];saveRec(c,id,{},1);render();schedSync();return Promise.resolve()}
+function put(c,id,d){if(deny(c,S[c]&&S[c][id]?"edit":"create"))return Promise.resolve();S[c][id]=d;saveRec(c,id,d,0);render();schedSync();return Promise.resolve()}
+function del(c,id){if(deny(c,"delete"))return Promise.resolve();delete S[c][id];saveRec(c,id,{},1);render();schedSync();return Promise.resolve()}
 function say(t){$("note").textContent=t}
 const items=()=>Object.entries(S.items).map(([id,v])=>({id,...v})).sort((a,b)=>a.name.localeCompare(b.name));
 const events=()=>Object.entries(S.events).map(([id,v])=>({id,...v})).sort((a,b)=>(a.start||"").localeCompare(b.start||""));
@@ -1212,9 +1259,9 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.ad
  const backBtn=()=>{const t=sect();if(t==="item")return document.querySelector("[data-bk]");if(t==="evd")return document.querySelector("[data-evbk]");if(t==="pl"&&plMode)return document.querySelector("[data-plback]");return null};
  const FABS={stock:"#stock [data-nw]",events:"#events button.b",pl:"#pl [data-npl]",rp:"#rp [data-nr]",plan:"#plan button.b"};
  function updBar(){if(!isPhone())return;const t=sect(),bk=backBtn();$("mham").innerHTML=bk?ICO.back:ICO.menu;$("mham").dataset.back=bk?"1":"";
-  const fs=FABS[t],fb=fs&&!bk?document.querySelector(fs):null;$("fab").classList.toggle("hide",!fb||!!(t==="events"&&emode&&emode!=="view"&&false));
+  const fs=FABS[t],fb=fs&&!bk?document.querySelector(fs):null;$("fab").classList.toggle("hide",!fb||!!(window.canDo&&TABMOD[t]&&window.RDEF[TABMOD[t]]&&!window.canDo(TABMOD[t],"create"))||!!(t==="events"&&emode&&emode!=="view"&&false));
   const hasSearch=!!document.querySelector("#"+t+" .ltb")||t==="cal";$("msrch").classList.toggle("hide",!hasSearch||!!bk);
-  const hasMore=!!document.querySelector("#"+t+" .ltb .la button")||t==="plan"||t==="cal"||!!document.querySelector("#"+t+" .dh .acts button");const ed=document.querySelector("#"+t+" .dh .acts [data-ed],#"+t+" .dh .acts [data-eed]");$("medit").classList.toggle("hide",!ed);$("mmore").classList.toggle("hide",!hasMore&&!bk&&false);
+  const hasMore=!!document.querySelector("#"+t+" .ltb .la button")||t==="plan"||t==="cal"||!!document.querySelector("#"+t+" .dh .acts button");const ed=document.querySelector("#"+t+" .dh .acts [data-ed],#"+t+" .dh .acts [data-eed]");$("medit").classList.toggle("hide",!ed||!!(window.canDo&&TABMOD[t]&&!window.canDo(TABMOD[t],"edit")));$("mmore").classList.toggle("hide",!hasMore&&!bk&&false);
   const e=$("syn");e.classList.toggle("bad",/failed/i.test(e.textContent));e.classList.toggle("ok",/^Synced/.test(e.textContent))}
  document.addEventListener("click",e=>{const c=e.target.closest&&e.target.closest("#cv .mg [data-dy]");if(c&&isPhone()&&!e.target.closest("button")){cal.sel=c.dataset.dy;agenda()}});
  /* accessible names for selects/inputs that have no visible label */
@@ -1294,6 +1341,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.ad
  colCss();dtBars();
  /* Android back button: close things, go up a level, go Home, only then exit */
  function appBack(){
+  if(!$("settings").classList.contains("hide")&&(roleEd||userEd)){roleEd=null;userEd=null;renderUsers();return true}
   const ov=[...document.querySelectorAll(".ov:not(.hide)")][0];
   if(ov){const c=ov.querySelector("[data-rcx],#evx,#pkcx,#pge button.g,button.g[type=button]");if(ov.id==="lb"||!c)ov.classList.add("hide");else c.click();return true}
   if(!$("msheet").classList.contains("hide")){$("msheet").classList.add("hide");return true}
@@ -1677,8 +1725,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.15.2";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.16.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.16.0","5 Nov 2026",["Users and roles like Zoho Books (Settings > Users and roles): a Users list with role and status, New user, mark inactive; a Roles list with descriptions; and a role page where you tick Full, View, Create, Edit and Delete for each area, plus extra rights (adjust stock, import, dispatch and returns, resolve repairs, import invoices). Buttons a person is not allowed to use are hidden. Works on the phone too"]],
  ["1.15.2","5 Nov 2026",["Laptop screens: the Invoices and Repairs tables now fit without being cut off on the right (the Picklist and action buttons wrap instead)"]],
  ["1.15.1","5 Nov 2026",["Item stock box: shows Free to book, or Short for upcoming events in red when events need more than you have (instead of a minus number). Phone: the separate Edit button is gone from event and item pages, use the pencil at the top"]],
  ["1.15.0","5 Nov 2026",["Full check of phone and desktop: the app works offline again and can be installed from the browser (the offline file and app manifest were missing from the website). One date format everywhere (choose it in Settings), new Settings: default unit and date format, full JSON backup. Task dialog checkboxes fixed, status labels no longer break over two lines, the active tab scrolls into view on the phone, - / + next to quantities when adding items, short stock shown clearly on picklists, tidier loading checklist on the phone, item pages titled New item / Edit item, sub-category suggestions, dialogs close when you change page, stock counts never go below zero"]],
@@ -1939,7 +1988,7 @@ const UC=()=>{try{return JSON.parse(lsGet("ev_ucache")||"{}")}catch(e){return{}}
 const MODN={stock:"Inventory and items",events:"Events and calendar",plan:"Planner",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Business settings",users:"Users and roles"};
 const TABMOD={stock:"stock",item:"stock",events:"events",evd:"events",cal:"events",plan:"plan",inv:"inv",pl:"pl",rp:"rp",moves:"moves"};
 const CMOD={items:"stock",events:"events",movements:"moves",settings:"settings",picklists:"pl",repairs:"rp",tasks:"plan",resources:"plan",invoices:"inv",roles:"users"};
-function ME(){if(!authOn())return{name:"",role:"",admin:true,perms:{},legacy:true};const s=SESS();if(!s)return null;const r=S.roles[s.role]||s.rsnap||{};return{name:s.name,role:s.role,admin:!!r.admin,perms:r.perms||{},roleName:r.name||s.role}}
+function ME(){if(!authOn())return{name:"",role:"",admin:true,perms:{},legacy:true};const s=SESS();if(!s)return null;const r=S.roles[s.role]||s.rsnap||{};return{name:s.name,role:s.role,admin:!!r.admin,perms:r.perms||{},acl:r.acl||null,roleName:r.name||s.role}}
 function can(mod,lvl){const m=ME();if(!m)return false;if(m.admin)return true;const l=(m.perms&&m.perms[mod])||"none";return lvl==="edit"?l==="edit":l!=="none"}
 function deny(c){const m=CMOD[c];if(m&&!can(m,"edit")){say("You do not have permission to change this.");setTimeout(()=>say(""),4000);return true}return false}
 async function hashPin(name,pin){const enc=new TextEncoder(),k=await crypto.subtle.importKey("raw",enc.encode(String(pin)),"PBKDF2",false,["deriveBits"]);
@@ -2050,4 +2099,122 @@ document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset&&e.
  /* full backup */
  const ex=$("exall");if(ex)ex.onclick=()=>{const data={app:"Everafter Inventory",version:APP_VERSION,exported:new Date().toISOString(),data:{}};for(const k of Object.keys(S))if(k!=="photos")data.data[k]=S[k];const b=new Blob([JSON.stringify(data,null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="everafter-backup-"+today()+".json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)};
 }
+
+/* ===== v1.16 Users and roles, Zoho Books style: per-area Full / View / Create / Edit / Delete + extra rights ===== */
+const RMOD=[
+ ["Inventory",[["stock","Items",["view","create","edit","delete"],[["adjust","Adjust stock"],["import","Import items and photos"]]]]],
+ ["Events and planning",[["events","Events and calendar",["view","create","edit","delete"],[]],["plan","Planner tasks and team",["view","create","edit","delete"],[]]]],
+ ["Warehouse",[["pl","Picklists",["view","create","edit","delete"],[["dispatch","Dispatch and record returns"]]],["moves","Warehouse movements",["view","create","delete"],[]],["rp","Repairs",["view","create","edit","delete"],[["resolve","Resolve repairs"]]]]],
+ ["Sales",[["inv","Invoices",["view"],[["import","Import from Zoho Books"]]]]],
+ ["Settings",[["settings","Business settings",["view","edit"],[]]]]];
+const RCOLS=["view","create","edit","delete"],RLBL={view:"View",create:"Create",edit:"Edit",delete:"Delete"};
+const RDEF={};RMOD.forEach(([,rows])=>rows.forEach(([m,l,acts,ex])=>RDEF[m]={l,acts,ex:ex.map(x=>x[0])}));
+const ROLE_DESC={admin:"Unrestricted access to everything, including users and roles.",manager:"Can view and change everything except users and roles. Can view business settings.",warehouse:"Items, picklists, movements and repairs. Can view events and the planner. No invoices or settings.",viewer:"Can view everything except settings. Cannot change anything."};
+/* the rights a role has in one area, from the new acl or from the old none / view / edit setting */
+function aclOf(r,mod){const d=RDEF[mod];if(!r)return{};if(r.admin){const o={view:true};if(d){d.acts.forEach(a=>o[a]=true);d.ex.forEach(a=>o[a]=true)}else{o.create=o.edit=o.delete=true}return o}
+ if(r.acl&&typeof r.acl==="object"&&Object.keys(r.acl).length)return r.acl[mod]||{};const l=(r.perms||{})[mod]||"none";if(l==="view")return{view:true};if(l!=="edit")return{};const o={view:true};(d?[...d.acts,...d.ex]:["create","edit","delete"]).forEach(a=>o[a]=true);return o}
+let ACT=null;
+can=function(mod,lvl){const m=ME();if(!m)return false;if(m.admin)return true;const a=aclOf(m,mod);if(!lvl||lvl==="view")return!!a.view;if(lvl==="edit")return Object.keys(a).some(k=>k!=="view"&&a[k]);return!!a[lvl]};
+const canDo=(mod,act)=>{const m=ME();if(!m)return false;if(m.admin)return true;return!!aclOf(m,mod)[act]};window.canDo=canDo;window.RDEF=RDEF;
+deny=function(c,kind){const mod=CMOD[c];if(!mod)return false;const m=ME();if(m&&m.admin)return false;
+ if(ACT&&canDo(ACT.mod,ACT.act))return false;let k=kind||"edit";
+ if(mod==="moves"&&k==="edit")k="create";if(mod==="settings")k="edit";if(mod==="inv")k="import";if(mod==="users")k="admin";
+ if(k!=="admin"&&canDo(mod,k))return false;
+ say("You do not have permission to "+(k==="delete"?"delete":k==="create"?"add":"change")+" this.");setTimeout(()=>say(""),4000);return true};
+const withAct=(mod,act,fn)=>function(){const prev=ACT;ACT={mod,act};let r;try{r=fn.apply(this,arguments)}catch(e){ACT=prev;throw e}if(r&&typeof r.then==="function")return r.finally(()=>{ACT=prev});ACT=prev;return r};
+doDispatch=withAct("pl","dispatch",doDispatch);doReturn=withAct("pl","dispatch",doReturn);delEvent=withAct("events","delete",delEvent);delPicklist=withAct("pl","delete",delPicklist);
+{const fa=$("fadj"),f1=fa.onsubmit;fa.onsubmit=function(e){if(!canDo("stock","adjust")){e.preventDefault();say("You do not have permission to adjust stock.");return}return withAct("stock","adjust",f1).call(this,e)};
+ const fr=$("frs"),f2=fr.onsubmit;fr.onsubmit=function(e){if(!canDo("rp","resolve")){e.preventDefault();say("You do not have permission to resolve repairs.");return}return withAct("rp","resolve",f2).call(this,e)}}
+/* coarse none / view / edit kept next to the new rights so an older server script still works */
+function coarseOf(acl){const p={};Object.keys(RDEF).forEach(m=>{const a=acl[m]||{};p[m]=Object.keys(a).some(k=>k!=="view"&&a[k])?"edit":a.view?"view":"none"});
+ const X=(m,a)=>acl[m]&&acl[m][a],up=m=>{p[m]="edit"};if(X("pl","dispatch")){up("moves");up("stock");up("rp")}if(X("events","delete")){up("moves");up("pl")}if(X("pl","delete"))up("moves");if(X("rp","resolve"))up("stock");
+ Object.keys(p).forEach(m=>{if(p[m]==="none")delete p[m]});return p}
+/* hide buttons a person may not use */
+const HIDE={create:{stock:'[data-nw],[data-cl],[data-hq="n-item"]',events:'[data-nev2],[data-nev],[data-hq="n-event"]',plan:'#pnew,#pms,[data-tkn],#pgen,[data-tkg]',pl:'[data-npl],[data-npe],[data-plcl],[data-hq="n-pl"]',moves:'#moves form',rp:'[data-nr],[data-hq="n-rp"]'},
+ edit:{stock:'#item [data-ed],#item [data-ia],#phm,#stock input.bk,#stock input.bka',events:'#evd [data-eed],#evd .stp,#evd [data-rr],#evd .rpw,#evd #rpl,#evd [data-radd]',pl:'[data-plsave],#plE [data-plrm],#plE [data-plstep],#plE [data-padd]',rp:'[data-rpe],[data-rps]',settings:'#fs button.b'},
+ delete:{stock:'#item [data-dl]',events:'[data-evdel],[data-de]',pl:'[data-pldel]',moves:'[data-dm]',rp:'[data-rpd]'},
+ adjust:{stock:'[data-ad]'},import:{stock:'#im,#cb,#phm',inv:'#invi,#invb'},dispatch:{pl:'[data-pldisp],[data-plret],#plE .retbar,[data-ldall],[data-ldnone]'},resolve:{rp:'[data-rpr]'}};
+{const _aa=applyAccess;applyAccess=function(){_aa.apply(this,arguments);const m=ME();let css="";
+ if(m&&!m.admin)for(const [act,mods] of Object.entries(HIDE))for(const [mod,sel] of Object.entries(mods))if(!canDo(mod,act==="edit"&&mod==="moves"?"create":act))css+=sel+"{display:none!important}\n";
+ let st=$("aclcss");if(!st){st=document.createElement("style");st.id="aclcss";document.head.appendChild(st)}if(st.textContent!==css)st.textContent=css;
+ if(typeof updBar==="function")try{updBar()}catch(e){}}}
+
+/* ===== the Users and Roles screens ===== */
+const UR={tab:"users",filter:"all"};
+const avatar=n=>{const h=hue(n||"?");return`<span class="av" style="background:hsl(${h} 60% 92%);color:hsl(${h} 45% 32%)">${esc((n||"?").trim().charAt(0).toUpperCase())}</span>`};
+const roleList=()=>Object.entries(S.roles).map(([id,v])=>({id,...v})).sort((a,c)=>(c.admin?1:0)-(a.admin?1:0)||(a.name||"").localeCompare(c.name||""));
+const roleDesc=r=>r.description||ROLE_DESC[r.id]||(r.admin?ROLE_DESC.admin:"Custom role");
+function urMe(){const me=ME();if(!authOn()||!me)return"";return`<div class="ur-me">${avatar(me.name)}<span>Signed in as <b>${esc(me.name)}</b> · ${esc(me.roleName||"")}</span><span class="sp"></span><button class="g" type="button" data-usp="1">Change my PIN</button><button class="g" type="button" data-uso="1">Sign out</button></div>`}
+renderUsers=function(){const b=$("usrb");if(!b)return;const me=ME();
+ if(!authOn()){
+  b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3></div><p class="mu" style="margin-top:0;font-size:13px">Sign-in is <b>off</b>: everyone with the sync key has full access. Create the first administrator to turn on sign-in for all devices. After that, each person signs in with a name and PIN, and what they can see and change depends on their role.</p><form id="fadm" class="row" style="align-items:flex-end"><label>Admin name<input id="adn1" required placeholder="e.g. Zaheer"></label><label>PIN (4+ characters)<input id="adp1" type="password" inputmode="numeric" minlength="4" required style="width:150px"></label><button class="b">Turn on sign-in</button></form><div id="adm1" class="msg"></div>
+  <div style="margin-top:18px">${urRoles(true)}</div>`;
+  $("fadm").onsubmit=async e=>{e.preventDefault();const name=$("adn1").value.trim(),pin=$("adp1").value,m=$("adm1");
+   if(!online()||!CFG.url){m.innerHTML='<span class="bad">Connect the sync URL and key first, and go online.</span>';return}
+   try{const ph=await hashPin(name,pin),r=await api({action:"user_save",user:{name},ph});if(!r.ok)throw new Error(r.error||"Failed");
+    ls("ev_auth","1");const uc=UC();uc[name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,ph};ls("ev_ucache",JSON.stringify(uc));
+    setSess({uid:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,token:r.token});applyAccess();syncNow(true);renderUsers()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||x)}</span>`}};
+  if(roleEd)urRoleBind();return}
+ if(!me||!me.admin){b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3></div>${urMe()}<p class="mu" style="font-size:13px;margin:0">Only administrators can manage users and roles.</p>`;return}
+ if(roleEd){b.innerHTML=urRoleForm();urRoleBind();return}
+ if(userEd){b.innerHTML=urUserForm();urUserBind();return}
+ b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3><span class="sp"></span><div class="ur-seg"><button type="button" data-urt="users" class="${UR.tab==="users"?"on":""}">Users</button><button type="button" data-urt="roles" class="${UR.tab==="roles"?"on":""}">Roles</button></div></div>${urMe()}${UR.tab==="roles"?urRoles():urUsers()}`}
+function urUsers(){const L=USERS.filter(u=>UR.filter==="all"||(UR.filter==="active"?u.active:!u.active));
+ return`<div class="ur-top"><select class="ur-sel" id="urf" aria-label="Show users"><option value="all"${UR.filter==="all"?" selected":""}>All users</option><option value="active"${UR.filter==="active"?" selected":""}>Active users</option><option value="inactive"${UR.filter==="inactive"?" selected":""}>Inactive users</option></select><span class="sp"></span><button class="g" type="button" data-u2ref="1">Refresh</button><button class="b" type="button" data-u2new="1">+ New user</button></div>
+ ${usersErr?`<p class="bad" style="font-size:13px">${esc(usersErr)}</p>`:""}<table class="urt"><thead><tr><th>User details</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>${L.map(u=>{const r=S.roles[u.role]||{};return`<tr><td><div class="who">${avatar(u.name)}<div><button class="lnk" type="button" data-u2ed="${u.id}">${esc(u.name)}</button>${u.contact?`<div class="sub">${esc(u.contact)}</div>`:""}</div></div></td><td data-l="Role">${esc(r.name||u.role)}</td><td data-l="Status"><span class="pill ${u.active?"act":"off"}">${u.active?"Active":"Inactive"}</span></td><td><div class="acts2"><button class="g" type="button" data-u2ed="${u.id}">Edit</button><button class="g" type="button" data-u2tog="${u.id}">${u.active?"Mark as inactive":"Mark as active"}</button><button class="g dng" type="button" data-u2del="${u.id}">Delete</button></div></td></tr>`}).join("")||`<tr><td colspan="4" class="mu">${usersErr?"":"No users to show."}</td></tr>`}</tbody></table>`}
+function urRoles(pre){const L=roleList();const cnt=id=>USERS.filter(u=>u.role===id).length;
+ return`<div class="ur-top"><h3 style="font-size:16px">Roles</h3><span class="sp"></span><button class="b" type="button" data-r2new="1">New role</button></div>${pre?'<p class="mu" style="font-size:13px;margin:-6px 0 10px">You can prepare roles now; they apply once sign-in is on.</p>':""}
+ <table class="urt"><thead><tr><th>Role name</th><th>Description</th><th>Users</th></tr></thead><tbody>${L.map(r=>`<tr><td><button class="lnk" type="button" data-r2ed="${r.id}">${esc(r.name||r.id)}</button></td><td data-l="Description" style="color:var(--mu);font-size:13px">${esc(roleDesc(r))}</td><td data-l="Users">${cnt(r.id)}</td></tr>`).join("")||'<tr><td colspan="3" class="mu">No roles yet. They appear after the first sync.</td></tr>'}</tbody></table>`}
+function urRoleForm(){const r=roleEd,adm=!!r.admin,A=m=>aclOf(r,m);
+ const sec=RMOD.map(([g,rows])=>`<div class="rsec"><div class="rsh">${g}</div><table class="rmx"><thead><tr><th>Particulars</th><th>Full</th>${RCOLS.map(c=>`<th>${RLBL[c]}</th>`).join("")}<th>Others</th></tr></thead><tbody>${rows.map(([m,l,acts,ex])=>{const a=A(m);
+  return`<tr data-m="${m}"><td class="pn">${l}</td><td><label class="rc"><input type="checkbox" data-full="1" aria-label="Full access to ${l}"><span>Full</span></label></td>${RCOLS.map(c=>acts.includes(c)?`<td><label class="rc"><input type="checkbox" data-a="${c}"${a[c]?" checked":""} aria-label="${RLBL[c]} ${l}"><span>${RLBL[c]}</span></label></td>`:`<td class="na0"><span class="na">—</span></td>`).join("")}<td class="ot">${ex.map(([k,t])=>`<label class="rc"><input type="checkbox" data-a="${k}"${a[k]?" checked":""}><span>${t}</span></label>`).join("")||'<span class="na">—</span>'}</td></tr>`}).join("")}</tbody></table></div>`).join("");
+ return`<div class="ur-page"><div class="ur-hd"><button class="ur-bk" type="button" data-r2cx="1" aria-label="Back to roles">‹</button><h3>${r.id?"Edit role":"New role"}</h3></div>
+ <form id="frole2"><div class="ur-f"><label class="lb req" for="r2n">Role name*</label><input id="r2n" required maxlength="60" value="${esc(r.name||"")}"><label class="lb" for="r2d">Description</label><div><textarea id="r2d" maxlength="500" placeholder="Max. 500 characters" style="min-height:70px">${esc(r.description||"")}</textarea></div></div>
+ <label class="ur-adm"><input type="checkbox" id="r2a"${adm?" checked":""}><div><b>Full access (administrator)</b><span>Unrestricted access to everything, including managing users and roles.</span></div></label>
+ <div id="r2m"${adm?' class="hide"':""}>${sec}</div><div id="ur-msg" class="msg"></div>
+ <div class="ur-bar"><button class="b">Save</button><button class="g" type="button" data-r2cx="1">Cancel</button>${r.id&&!PRESET_IDS.includes(r.id)?`<button class="g dng" type="button" data-r2del="1">Delete role</button>`:""}</div></form></div>`}
+function urSyncFull(tr){const bx=[...tr.querySelectorAll("input[data-a]")],on=bx.filter(x=>x.checked).length,f=tr.querySelector("[data-full]");f.checked=on===bx.length;f.indeterminate=on>0&&on<bx.length}
+function urRoleBind(){const f=$("frole2");if(!f){if($("r2n"))return;return}
+ f.querySelectorAll("tr[data-m]").forEach(urSyncFull);
+ $("r2a").onchange=()=>$("r2m").classList.toggle("hide",$("r2a").checked);
+ $("r2m").onchange=e=>{const i=e.target,tr=i.closest("tr[data-m]");if(!tr)return;const bx=[...tr.querySelectorAll("input[data-a]")],v=tr.querySelector('[data-a="view"]');
+  if(i.dataset.full)bx.forEach(x=>x.checked=i.checked);
+  else if(i.dataset.a==="view"&&!i.checked)bx.forEach(x=>x.checked=false);
+  else if(i.checked&&v)v.checked=true;
+  urSyncFull(tr)};
+ f.onsubmit=async e=>{e.preventDefault();const name=$("r2n").value.trim();if(!name){$("ur-msg").innerHTML='<span class="bad">Enter a role name.</span>';return}
+  const dup=roleList().find(x=>x.id!==roleEd.id&&(x.name||"").toLowerCase()===name.toLowerCase());if(dup){$("ur-msg").innerHTML='<span class="bad">A role with that name already exists.</span>';return}
+  const acl={};f.querySelectorAll("tr[data-m]").forEach(tr=>{const o={};tr.querySelectorAll("input[data-a]").forEach(x=>{if(x.checked)o[x.dataset.a]=true});if(Object.keys(o).length)acl[tr.dataset.m]=o});
+  const adm=$("r2a").checked,id=roleEd.id||rid(),old=S.roles[id]||{};
+  await put("roles",id,{...old,name,description:$("r2d").value.trim(),admin:adm,acl:adm?{}:acl,perms:adm?{}:coarseOf(acl)});roleEd=null;UR.tab="roles";renderUsers();schedSync()}}
+function urUserForm(){const u=userEd,roles=roleList();const rr=S.roles[u.role]||{};
+ return`<div class="ur-page"><div class="ur-hd"><button class="ur-bk" type="button" data-u2cx="1" aria-label="Back to users">‹</button><h3>${u.id?"Edit user":"New user"}</h3></div>
+ <form id="fuser2"><div class="ur-f"><label class="lb req" for="u2n">Name*</label><input id="u2n" required value="${esc(u.name||"")}" autocomplete="off">
+ <label class="lb" for="u2c">Email or phone</label><div><input id="u2c" value="${esc(u.contact||"")}" placeholder="Optional, for your reference"></div>
+ <label class="lb req" for="u2r">Role*</label><div><select id="u2r">${roles.map(r=>`<option value="${r.id}"${u.role===r.id?" selected":""}>${esc(r.name||r.id)}</option>`).join("")}</select><div class="hint" id="u2rd">${esc(roleDesc({id:u.role,...rr}))}</div></div>
+ <label class="lb${u.id?"":" req"}" for="u2p">${u.id?"New PIN":"PIN*"}</label><div><input id="u2p" type="password" inputmode="numeric" minlength="4" ${u.id?"":"required "}autocomplete="new-password" placeholder="${u.id?"Leave empty to keep the current PIN":"At least 4 characters"}"><div class="hint">The person signs in with this name and PIN.</div></div>
+ <span class="lb">Status</span><label class="ck" style="padding-top:8px"><input type="checkbox" id="u2a"${u.active!==false?" checked":""}> Active (can sign in)</label></div>
+ <div id="ur-msg" class="msg"></div><div class="ur-bar"><button class="b">Save</button><button class="g" type="button" data-u2cx="1">Cancel</button></div></form></div>`}
+function urUserBind(){const f=$("fuser2");if(!f)return;
+ $("u2r").onchange=()=>{const r=S.roles[$("u2r").value]||{};$("u2rd").textContent=roleDesc({id:$("u2r").value,...r})};
+ f.onsubmit=async e=>{e.preventDefault();const m=$("ur-msg"),name=$("u2n").value.trim(),pin=$("u2p").value;
+  if(pin&&pin.length<4){m.innerHTML='<span class="bad">The PIN needs at least 4 characters.</span>';return}
+  if(!online()||!CFG.url){m.innerHTML='<span class="bad">Go online to save users.</span>';return}
+  try{const body={action:"user_save",user:{id:userEd.id,name,contact:$("u2c").value.trim(),role:$("u2r").value,active:$("u2a").checked}};if(pin)body.ph=await hashPin(name,pin);
+   else if(userEd.id&&name.toLowerCase()!==(userEd.name||"").toLowerCase()){m.innerHTML='<span class="bad">Changing the name needs a new PIN (the PIN is tied to the name).</span>';return}
+   m.textContent="Saving…";const r=await api(body);if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;userEd=null;UR.tab="users";renderUsers()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||x)}</span>`}}}
+document.addEventListener("change",e=>{if(e.target.id==="urf"){UR.filter=e.target.value;renderUsers()}});
+document.addEventListener("click",async e=>{const bt=e.target.closest&&e.target.closest("#usrb button");if(!bt)return;const d=bt.dataset;
+ if(d.urt){UR.tab=d.urt;renderUsers()}
+ if(d.u2new){userEd={role:(S.roles.viewer?"viewer":(roleList()[0]||{}).id),active:true};renderUsers();setTimeout(()=>$("u2n")&&$("u2n").focus(),30)}
+ if(d.u2ed){userEd={...USERS.find(u=>u.id===d.u2ed)};renderUsers()}
+ if(d.u2cx){userEd=null;renderUsers()}
+ if(d.u2ref){await loadUsers();renderUsers()}
+ if(d.u2tog){const u=USERS.find(x=>x.id===d.u2tog);if(!u)return;try{const r=await api({action:"user_save",user:{...u,active:!u.active}});if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;usersErr=""}catch(x){usersErr=String(x.message||x)}renderUsers()}
+ if(d.u2del){const u=USERS.find(x=>x.id===d.u2del);if(!u||!confirm("Delete user "+u.name+"? They will no longer be able to sign in."))return;const r=await api({action:"user_delete",id:u.id});if(r.ok){USERS=r.users;usersErr=""}else usersErr=r.error||"Failed";renderUsers()}
+ if(d.r2new){roleEd={name:"",description:"",admin:false,acl:{stock:{view:true},events:{view:true},plan:{view:true},pl:{view:true},moves:{view:true},rp:{view:true}}};renderUsers();setTimeout(()=>$("r2n")&&$("r2n").focus(),30)}
+ if(d.r2ed){roleEd=JSON.parse(JSON.stringify({id:d.r2ed,...S.roles[d.r2ed]}));if(!roleEd.acl&&!roleEd.admin){roleEd.acl={};Object.keys(RDEF).forEach(m=>{const a=aclOf(roleEd,m);if(Object.keys(a).length)roleEd.acl[m]=a})}renderUsers();window.scrollTo(0,$("usrc").offsetTop-60)}
+ if(d.r2cx){roleEd=null;UR.tab="roles";renderUsers()}
+ if(d.r2del&&roleEd&&roleEd.id){if(USERS.some(u=>u.role===roleEd.id)){$("ur-msg").innerHTML='<span class="bad">Some users have this role. Give them another role first.</span>';return}if(!confirm("Delete role "+roleEd.name+"?"))return;await del("roles",roleEd.id);roleEd=null;UR.tab="roles";renderUsers()}});
+renderUsers();applyAccess();
 </script></body></html>
