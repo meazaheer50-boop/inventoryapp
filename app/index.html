@@ -1725,8 +1725,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.16.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.16.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.16.1","6 Nov 2026",["Android app: Take photo on the repair form now opens the camera instead of the gallery, and you can keep tapping it to add several photos (Choose from gallery already lets you pick many at once)"]],
  ["1.16.0","5 Nov 2026",["Users and roles like Zoho Books (Settings > Users and roles): a Users list with role and status, New user, mark inactive; a Roles list with descriptions; and a role page where you tick Full, View, Create, Edit and Delete for each area, plus extra rights (adjust stock, import, dispatch and returns, resolve repairs, import invoices). Buttons a person is not allowed to use are hidden. Works on the phone too"]],
  ["1.15.2","5 Nov 2026",["Laptop screens: the Invoices and Repairs tables now fit without being cut off on the right (the Picklist and action buttons wrap instead)"]],
  ["1.15.1","5 Nov 2026",["Item stock box: shows Free to book, or Short for upcoming events in red when events need more than you have (instead of a minus number). Phone: the separate Edit button is gone from event and item pages, use the pencil at the top"]],
@@ -2217,4 +2218,15 @@ document.addEventListener("click",async e=>{const bt=e.target.closest&&e.target.
  if(d.r2cx){roleEd=null;UR.tab="roles";renderUsers()}
  if(d.r2del&&roleEd&&roleEd.id){if(USERS.some(u=>u.role===roleEd.id)){$("ur-msg").innerHTML='<span class="bad">Some users have this role. Give them another role first.</span>';return}if(!confirm("Delete role "+roleEd.name+"?"))return;await del("roles",roleEd.id);roleEd=null;UR.tab="roles";renderUsers()}});
 renderUsers();applyAccess();
+
+/* v1.16.1: "Take photo" opens the real camera in the Android app (the app's built-in browser ignores capture and shows the gallery) */
+{const native=()=>{try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}};
+ const cam=()=>{try{return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Camera}catch(e){return null}};
+ let busy=false;
+ document.addEventListener("click",async e=>{const lb=e.target.closest&&e.target.closest("label.pbtn");if(!lb||!lb.querySelector("#rpcam")||!native()||!cam())return;
+  e.preventDefault();e.stopPropagation();if(busy)return;busy=true;const m=$("rpm");
+  try{const r=await cam().getPhoto({quality:85,width:1600,resultType:"dataUrl",source:"CAMERA",correctOrientation:true,saveToGallery:false});
+   if(r&&r.dataUrl){const b=await (await fetch(r.dataUrl)).blob();await addRpPhotos([new File([b],"photo-"+Date.now()+".jpg",{type:b.type||"image/jpeg"})]);if(m)m.innerHTML='<span class="ok">Photo added. Tap Take photo to add another.</span>'}}
+  catch(x){const t=String(x&&x.message||x);if(!/cancel/i.test(t)&&m)m.innerHTML=`<span class="bad">${esc("Could not open the camera: "+t)}</span>`}
+  busy=false},true)}
 </script></body></html>

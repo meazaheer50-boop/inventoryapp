@@ -1,6 +1,6 @@
 {
   "name": "everafter-inventory-android",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "private": true,
   "description": "Everafter Events inventory - Android app (Capacitor)",
   "scripts": {
@@ -10,7 +10,8 @@
   "dependencies": {
     "@capacitor/android": "7.6.10",
     "@capacitor/core": "7.6.10",
-    "@capacitor/app": "7.1.2"
+    "@capacitor/app": "7.1.2",
+    "@capacitor/camera": "7.0.5"
   },
   "devDependencies": {
     "@capacitor/cli": "7.6.10"
