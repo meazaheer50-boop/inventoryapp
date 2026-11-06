@@ -1,7 +1,9 @@
 name: Build Windows app
 on:
   push:
+    branches: ['main']
     tags: ['v*']
+    paths: ['app/version.json', 'package.json', 'main.js', '.github/workflows/build.yml']
   workflow_dispatch:
 jobs:
   windows:

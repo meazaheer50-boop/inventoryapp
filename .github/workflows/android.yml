@@ -2,7 +2,7 @@ name: Build Android APK
 on:
   workflow_dispatch:
   push:
-    paths: ['mobile/**', '.github/workflows/android.yml']
+    paths: ['mobile/**', 'app/version.json', '.github/workflows/android.yml']
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -18,10 +18,12 @@ jobs:
           mkdir -p www && cp -r ../app/. www/
           npm install --no-audit --no-fund
           npx cap sync android
-      - name: Build debug APK
+      - name: Use the app's fixed signing key (so a new APK installs over the old one)
+        run: mkdir -p ~/.android && cp mobile/android/everafter-debug.keystore ~/.android/debug.keystore
+      - name: Build APK
         working-directory: mobile/android
-        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon && cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/everafter-inventory-$(node -p "require('../../app/version.json').version").apk
       - uses: actions/upload-artifact@v4
         with:
           name: everafter-inventory-apk
-          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          path: mobile/android/app/build/outputs/apk/debug/everafter-inventory-*.apk
