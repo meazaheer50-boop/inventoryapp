@@ -1746,9 +1746,11 @@ $("fm").onsubmit=e=>{e.preventDefault();const iid=$("mi").value,q=parseInt($("mq
 $("md").value=today();
 render();
 (async()=>{
+ try{const r=await fetch("config.json",{cache:"no-store"});if(r.ok){const c=await r.json();if(c&&c.url){const cu=localStorage.getItem("ev_url")||"";if(!cu||(cu===c.url&&c.key&&localStorage.getItem("ev_key")!==c.key)){localStorage.setItem("ev_url",c.url);localStorage.setItem("ev_key",c.key||"")}}}}catch(e){}
  try{await loadLocal()}catch(e){say("This browser blocked local storage, so data will not be kept on this device.")}
  $("cfu").value=CFG.url;$("cfk").value=CFG.key;$("cfd").value=CFG.dev;
  $("syn").onclick=()=>syncNow(true);
+ try{const cb=document.createElement("button");cb.type="button";cb.className="g";cb.style.marginTop="10px";cb.textContent="Copy team setup";cb.title="Copies the sync URL and key so they can be built into the app";cb.onclick=async()=>{const t=JSON.stringify({url:CFG.url,key:CFG.key});try{await navigator.clipboard.writeText(t);say("Team setup copied.")}catch(e){prompt("Copy this:",t)}};$("fcfg").after(cb)}catch(e){}
  $("fcfg").onsubmit=e=>{e.preventDefault();try{localStorage.setItem("ev_url",$("cfu").value.trim());localStorage.setItem("ev_key",$("cfk").value.trim());localStorage.setItem("ev_dev",$("cfd").value.trim())}catch(x){}syncNow(true)};
  addEventListener("online",()=>syncNow());addEventListener("offline",updSyn);
  document.addEventListener("visibilitychange",()=>{if(!document.hidden)syncNow()});
@@ -1769,9 +1771,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.22.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.22.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
- ["1.22.0","8 Nov 2026",["Invoices: picklist, event and create links now sit in one tidy \"Links\" dropdown","Users: the first administrator can add an email; invitation emails now link to the APK and Windows installer on the website"]],
+ ["1.22.1","8 Nov 2026",["Android: branded start-up screen instead of the placeholder logo","The app can ship with the sync URL and key built in, so new users only sign in","Invoices: picklist, event and create links now sit in one tidy \"Links\" dropdown","Users: the first administrator can add an email; invitation emails now link to the APK and Windows installer on the website"]],
  ["1.21.0","8 Nov 2026",["Events: new Event details tab with instructions for the event (set-up notes, access, contacts, special requests) and photos (take a photo or choose several from the gallery; tap a photo to enlarge). Everything syncs to the other devices"]],
  ["1.20.0","8 Nov 2026",["Users: add a person by name, email and role and they get an email with a sign-up link (they choose their own PIN) plus the download links for the Android and Windows apps and an invitation code. In the app, tap I have an invitation code (sign-in screen, Settings or Home) to join. Invited people show as Invited with a Resend invitation button. You can still set a PIN yourself instead. Update Code.gs to turn this on"]],
  ["1.19.1","8 Nov 2026",["Smoother app, especially on Android: a tap now redraws only the screen you are on instead of rebuilding every page (about half the work), the header, pills and photos no longer flash again after each tap, the item picker keeps its place when you add an item, and taps respond without the double-tap delay"]],
