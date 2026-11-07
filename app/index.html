@@ -714,6 +714,9 @@ table.rmx{table-layout:fixed}.rmx th:first-child,.rmx td.pn{width:28%}.rmx th:nt
 }
 .xnew #enxt{flex:1;min-width:0}.xnew #enxq{width:64px;text-align:center;padding-left:4px;padding-right:4px}
 @media(max-width:760px){.xnew #enxt{flex:1 1 100%;height:44px}.xnew #enxq{height:44px;width:72px}}
+.dtgrp{position:relative;display:inline-flex;gap:8px;align-items:center}
+@media(max-width:760px){.dtgrp{display:none!important}}
+@media(min-width:761px){.tbar.tm:not(:has(.bulk:not(.hide))){display:none!important}}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -818,7 +821,7 @@ table.rmx{table-layout:fixed}.rmx th:first-child,.rmx td.pn{width:28%}.rmx th:nt
 <div id="lb" class="ov hide" style="z-index:60;flex-direction:column;gap:10px;cursor:zoom-out"><img id="lbi" alt="" style="max-width:min(96vw,1100px);max-height:86vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff"><div id="lbc" style="color:#fff;font-size:15px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6)"></div></div>
 <div id="ov" class="ov hide"><form id="fadj" class="dlg"><h3>Adjust stock</h3><div id="adjn" class="mu"></div><label>Change in quantity (+ to add, − to remove)<input id="adq" type="number" step="1" required></label><label>Reason<select id="adr"><option>New purchase</option><option>Damaged</option><option>Lost</option><option>Recount</option><option>Other</option></select></label><label>Notes<input id="adn"></label><div id="adm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-cx="1">Cancel</button></div></form></div></div>
 <script>
-const S={items:{},events:{},movements:{},settings:{},itemlog:{},invoices:{},picklists:{},repairs:{},filters:{},tasks:{},resources:{},roles:{}};let assets=true,db=null,openEv={},armed=null;
+const S={items:{},events:{},movements:{},settings:{},itemlog:{},invoices:{},picklists:{},repairs:{},filters:{},tasks:{},resources:{},roles:{},invdel:{}};let assets=true,db=null,openEv={},armed=null;
 // ---------- offline storage + Google Sheets sync ----------
 const CFG={get url(){try{return localStorage.getItem("ev_url")||""}catch(e){return""}},get key(){try{return localStorage.getItem("ev_key")||""}catch(e){return""}},get dev(){try{return localStorage.getItem("ev_dev")||""}catch(e){return""}}};
 let lastWarn="",idb=null,syncing=false,syncTimer=null,lastErr="",lastSync=0;const PH={},phBusy=new Set();
@@ -859,7 +862,7 @@ async function syncNow(manual){
   const dirty=(await idbp(tx("rec").getAll())).filter(r=>r.dirty),changes={};
   dirty.forEach(r=>{(changes[r.c]=changes[r.c]||[]).push({id:r.id,updated:r.updated,deleted:!!r.deleted,data:r.data})});
   const res=await api({action:"sync",since:(await getMeta("since"))||0,changes});
-  for(const c of ["items","events","movements","itemlog","settings","picklists","repairs","filters","tasks","resources","roles"])for(const row of (res[c]||[])){
+  for(const c of ["items","events","movements","itemlog","settings","picklists","repairs","filters","tasks","resources","roles","invdel"])for(const row of (res[c]||[])){
    const loc=await idbp(tx("rec").get([c,row.id]));if(loc&&loc.dirty&&loc.updated>row.updated)continue;
    await idbp(tx("rec","readwrite").put({c,id:row.id,updated:row.updated,deleted:row.deleted?1:0,data:row.data,dirty:0}));
    if(row.deleted)delete S[c][row.id];else S[c][row.id]=row.data}
@@ -1046,7 +1049,7 @@ document.addEventListener("change",e=>{if(e.target.id==="txf"){txf=e.target.valu
 
 function zUrl(v){const b=((S.settings.main||{}).zlink||"").trim();if(b&&v.zid)return b.replace(/\/+$/,"")+"/"+encodeURIComponent(v.zid);return v.url&&/^https?:\/\//i.test(v.url)?v.url:""}
 const zA=(v,html,cls)=>{const u=zUrl(v);return u?`<a class="${cls||"zl"}" href="${esc(u)}" target="_blank" rel="noopener" title="Open in Zoho Books">${html}</a>`:""};
-const invs=()=>Object.entries(S.invoices).map(([id,v])=>({id,...v}));
+const invs=()=>Object.entries(S.invoices).filter(([id])=>!S.invdel[id]).map(([id,v])=>({id,...v}));
 const open=v=>(+v.balance||0)>0&&!/^(void|draft)$/i.test(v.status||"");
 function invState(v){const st=(v.status||"").toLowerCase();if(st==="void")return"Void";if(st==="draft")return"Draft";if(!(+v.balance>0))return"Paid";if(v.due&&v.due<today())return"Overdue";return/partial/.test(st)?"Partially paid":"Unpaid"}
 const fm=(v,c)=>((c||(S.settings.main||{}).cur||"")+" "+(+v||0).toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2})).trim();
@@ -1067,7 +1070,7 @@ function renderInv(){
  const L=all.filter(v=>{if(!fpass("inv",v))return false;const st=invState(v);if(f==="unpaid"&&!open(v))return false;if(f==="overdue"&&st!=="Overdue")return false;if(f==="soon"&&!(open(v)&&v.due>=t&&v.due<=w))return false;if(f==="paid"&&st!=="Paid")return false;return invMatch(v,q,dateKey(q))});
  L.sort(so==="dued"?(a,b)=>(b.due||"").localeCompare(a.due||""):so==="amt"?(a,b)=>b.balance-a.balance:so==="cust"?(a,b)=>a.customer.localeCompare(b.customer):(a,b)=>(a.due||"9999").localeCompare(b.due||"9999"));
  $("invt").innerHTML=L.map(v=>{const st=invState(v),d=Math.round((Date.parse(v.due)-Date.parse(t))/864e5),dt=!open(v)||isNaN(d)?"":d<0?`${-d} day${d===-1?"":"s"} overdue`:d===0?"Due today":`in ${d} day${d===1?"":"s"}`;
-  return`<tr><td>${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`}</td><td>${esc(v.customer)}</td><td class="mu" style="white-space:normal;min-width:150px">${esc(v.bill)}</td><td class="mu">${esc(v.date)}</td><td>${esc(v.due)}</td><td class="${st==="Overdue"?"bad":"mu"}">${dt}</td><td class="n">${fm(v.total,v.currency)}</td><td class="n">${fm(v.balance,v.currency)}</td><td><span class="pill ${st==="Paid"||st==="Void"||st==="Draft"?"off":""}" ${st==="Overdue"?'style="background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)"':""}>${st}</span></td><td>${plLinks(v)}</td></tr>`}).join("")||`<tr><td colspan="10" class="mu" style="padding:22px">${all.length?"No invoices match this filter.":"No invoices yet. Click <b>Import from Zoho Books</b> to bring them in."}</td></tr>`}
+  return`<tr><td>${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`}</td><td>${esc(v.customer)}</td><td class="mu" style="white-space:normal;min-width:150px">${esc(v.bill)}</td><td class="mu">${esc(v.date)}</td><td>${esc(v.due)}</td><td class="${st==="Overdue"?"bad":"mu"}">${dt}</td><td class="n">${fm(v.total,v.currency)}</td><td class="n">${fm(v.balance,v.currency)}</td><td><span class="pill ${st==="Paid"||st==="Void"||st==="Draft"?"off":""}" ${st==="Overdue"?'style="background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)"':""}>${st}</span></td><td>${plLinks(v)} <button class="g dng" type="button" data-ivdel="${v.id}">Delete</button></td></tr>`}).join("")||`<tr><td colspan="10" class="mu" style="padding:22px">${all.length?"No invoices match this filter.":"No invoices yet. Click <b>Import from Zoho Books</b> to bring them in."}</td></tr>`}
 function billAddr(o){const parts=[],ba=o.billing_address;if(ba&&typeof ba==="object")["address","street","attention","city","state","zip","code","country"].forEach(k=>ba[k]&&parts.push(ba[k]));else if(ba)parts.push(ba);
  ["billing_street","billing_city","billing_state","billing_zip","billing_code","billing_country","billing_location"].forEach(k=>o[k]&&parts.push(o[k]));return[...new Set(parts.map(x=>String(x).trim()).filter(Boolean))].join(", ")}
 function parseInvoices(text){const t=text.trim(),num=v=>parseFloat(String(v??"").replace(/[^\d.\-]/g,""))||0;let rows=[];
@@ -1565,7 +1568,7 @@ function bEvents(){const t=today(),c={up:[],now:[],done:[]};
 function bInv(){const q=$("invq").value.trim().toLowerCase(),t=today(),w7=new Date(Date.parse(t)+7*864e5).toISOString().slice(0,10),c={ov:[],soon:[],later:[],paid:[]};
  invs().filter(v=>fpass("inv",v)).filter(v=>!/^void$/i.test(v.status||"")&&invMatch(v,q,dateKey(q))).sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999")).forEach(v=>{
   const k=invState(v)==="Paid"?"paid":v.due&&v.due<t?"ov":v.due&&v.due<=w7?"soon":"later";
-  c[k].push(kcard("inv",v.id,`${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`} <span class="mu">${esc(v.customer)}</span>${v.bill?sub("\ud83d\udccd "+esc(v.bill)):""}<div style="margin-top:6px">Due ${esc(v.due)}</div><div><b>${fm(v.balance,v.currency)}</b> <span class="mu">of ${fm(v.total,v.currency)}</span></div><div class="row" style="margin-top:8px">${plLinks(v)}</div>`))});
+  c[k].push(kcard("inv",v.id,`${zA(v,`<b>${esc(v.number)}</b> \u2197`)||`<b>${esc(v.number)}</b>`} <span class="mu">${esc(v.customer)}</span>${v.bill?sub("\ud83d\udccd "+esc(v.bill)):""}<div style="margin-top:6px">Due ${esc(v.due)}</div><div><b>${fm(v.balance,v.currency)}</b> <span class="mu">of ${fm(v.total,v.currency)}</span></div><div class="row" style="margin-top:8px">${plLinks(v)} <button class="g dng" type="button" data-ivdel="${v.id}">Delete</button></div>`))});
  c.paid.reverse();
  return kb("inv",[{key:"ov",title:"Overdue",color:"var(--bad)",cards:c.ov},{key:"soon",title:"Due in 7 days",color:"var(--warn)",cards:c.soon},{key:"later",title:"Due later",color:"var(--ac)",cards:c.later},{key:"paid",title:"Paid",color:"var(--ok)",cards:c.paid}],false)}
 function bPL(){const q=$("plq").value.trim().toLowerCase(),c={draft:[],out:[],partly:[],returned:[]},K={Draft:"draft","Out on site":"out","Partly returned":"partly",Returned:"returned"};
@@ -1759,8 +1762,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.18.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.19.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.19.0","8 Nov 2026",["Invoices can now be deleted (Delete button on each invoice, desktop and phone). A deleted invoice is hidden on every device and stays hidden when the list syncs again from Zoho Books; Deleted invoices lets you restore it. Linked events and picklists keep the invoice number. Update Code.gs to share deletions between devices","Desktop: toolbars are tighter. On Events the New event, Filter and List/Board buttons sit on the same row as the hint text, and on Inventory, Invoices, Picklists and Repairs the Columns and Print buttons join the main toolbar row; on Movements the Filter and List/Board buttons share the Columns row"]],
  ["1.18.1","7 Nov 2026",["Phone: on the Items tab of events and picklists the Add a note card now sits above the long item picker so it is easy to reach; larger tick boxes in the loading checklist; the In warehouse and short text no longer crowds the remove button on picklist rows"]],
  ["1.18.0","7 Nov 2026",["Events: add a note for something that is not in the item list (for example 10 red cushions, client brings), with a quantity, on the event Items tab. Notes show on the event Overview and are copied into a picklist (and its loading checklist) by Fill from event reservations. They never change stock"]],
  ["1.17.0","7 Nov 2026",["Picklists: add a note for something that is not in the item list (for example 10 red cushions, client brings), with a quantity. Notes appear in the loading checklist and can be ticked off, show in the Items tab after dispatch, and are copied when you clone a picklist. They never change stock"]],
@@ -2025,7 +2029,7 @@ function authOn(){return lsGet("ev_auth")==="1"}
 const UC=()=>{try{return JSON.parse(lsGet("ev_ucache")||"{}")}catch(e){return{}}};
 const MODN={stock:"Inventory and items",events:"Events and calendar",plan:"Planner",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Business settings",users:"Users and roles"};
 const TABMOD={stock:"stock",item:"stock",events:"events",evd:"events",cal:"events",plan:"plan",inv:"inv",pl:"pl",rp:"rp",moves:"moves"};
-const CMOD={items:"stock",events:"events",movements:"moves",settings:"settings",picklists:"pl",repairs:"rp",tasks:"plan",resources:"plan",invoices:"inv",roles:"users"};
+const CMOD={items:"stock",events:"events",movements:"moves",settings:"settings",picklists:"pl",repairs:"rp",tasks:"plan",resources:"plan",invoices:"inv",invdel:"inv",roles:"users"};
 function ME(){if(!authOn())return{name:"",role:"",admin:true,perms:{},legacy:true};const s=SESS();if(!s)return null;const r=S.roles[s.role]||s.rsnap||{};return{name:s.name,role:s.role,admin:!!r.admin,perms:r.perms||{},acl:r.acl||null,roleName:r.name||s.role}}
 function can(mod,lvl){const m=ME();if(!m)return false;if(m.admin)return true;const l=(m.perms&&m.perms[mod])||"none";return lvl==="edit"?l==="edit":l!=="none"}
 function deny(c){const m=CMOD[c];if(m&&!can(m,"edit")){say("You do not have permission to change this.");setTimeout(()=>say(""),4000);return true}return false}
@@ -2170,7 +2174,7 @@ function coarseOf(acl){const p={};Object.keys(RDEF).forEach(m=>{const a=acl[m]||
 /* hide buttons a person may not use */
 const HIDE={create:{stock:'[data-nw],[data-cl],[data-hq="n-item"]',events:'[data-nev2],[data-nev],[data-hq="n-event"]',plan:'#pnew,#pms,[data-tkn],#pgen,[data-tkg]',pl:'[data-npl],[data-npe],[data-plcl],[data-hq="n-pl"]',moves:'#moves form',rp:'[data-nr],[data-hq="n-rp"]'},
  edit:{stock:'#item [data-ed],#item [data-ia],#phm,#stock input.bk,#stock input.bka',events:'#evd [data-eed],#evd .stp,#evd [data-rr],#evd .rpw,#evd #rpl,#evd [data-radd],#evd .enadd',pl:'[data-plsave],#plE [data-plrm],#plE [data-plstep],#plE [data-padd],#plE .xadd',rp:'[data-rpe],[data-rps]',settings:'#fs button.b'},
- delete:{stock:'#item [data-dl]',events:'[data-evdel],[data-de]',pl:'[data-pldel]',moves:'[data-dm]',rp:'[data-rpd]'},
+ delete:{inv:'[data-ivdel],#ivrest',stock:'#item [data-dl]',events:'[data-evdel],[data-de]',pl:'[data-pldel]',moves:'[data-dm]',rp:'[data-rpd]'},
  adjust:{stock:'[data-ad]'},import:{stock:'#im,#cb,#phm',inv:'#invi,#invb'},dispatch:{pl:'[data-pldisp],[data-plret],#plE .retbar,[data-ldall],[data-ldnone]'},resolve:{rp:'[data-rpr]'}};
 {const _aa=applyAccess;applyAccess=function(){_aa.apply(this,arguments);const m=ME();let css="";
  if(m&&!m.admin)for(const [act,mods] of Object.entries(HIDE))for(const [mod,sel] of Object.entries(mods))if(!canDo(mod,act==="edit"&&mod==="moves"?"create":act))css+=sel+"{display:none!important}\n";
@@ -2282,4 +2286,27 @@ document.addEventListener("change",e=>{const t=e.target.dataset;if(!t||emode!=="
  if(t.enq!==undefined)evXset(X=>{if(X[+t.enq])X[+t.enq].qty=Math.max(1,parseInt(e.target.value)||1)});
  if(t.ent!==undefined){const v=e.target.value.trim();if(v)evXset(X=>{if(X[+t.ent])X[+t.ent].text=v.slice(0,160)});else{const x=((S.events[ecur]||{}).extras||[])[+t.ent];if(x)e.target.value=x.text}}});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="enxt"){e.preventDefault();const b=document.querySelector("[data-enadd]");if(b)b.click()}});
+
+/* ===== desktop: tighter toolbars ===== */
+function tidyBars(){if(innerWidth<761)return;
+ for(const k of ["st","invt","plt","rpt"]){const bar=$("tb_"+k);if(!bar||bar.dataset.tm)continue;const la=bar.closest(".card")&&bar.closest(".card").querySelector(".ltb .la"),cb=bar.querySelector("[data-colb]"),pb=bar.querySelector("[data-prb]");if(!la||!cb||!pb)continue;
+  const g=document.createElement("span");g.className="dtgrp";g.append(cb,pb);la.append(g);bar.dataset.tm="1";bar.classList.add("tm")}
+ const ev=$("events");if(ev&&!ev.dataset.tm){const rows=ev.querySelectorAll(":scope>.row");if(rows.length>=2&&rows[1].querySelector("[data-fl]")){const r1=rows[0],r2=rows[1],nb=r1.querySelector("[data-nev2]");if(nb){[...r2.children].forEach(c=>nb.before(c));r2.remove();r1.style.justifyContent="flex-start";r1.style.gap="8px";r1.style.flexWrap="wrap";r1.firstElementChild.style.flex="1 1 280px";ev.dataset.tm="1"}}}
+ const bar=$("tb_ml"),mv=$("moves");if(bar&&mv&&!bar.dataset.tm){const r=[...mv.querySelectorAll(":scope>.row")].find(x=>x.querySelector("[data-fl]")),col=bar.querySelector("[data-colb]");if(r&&col){[...r.children].forEach(c=>col.before(c));r.remove();bar.dataset.tm="1"}}}
+{const _r0=render;render=function(){const r=_r0.apply(this,arguments);try{tidyBars()}catch(e){}return r}}
+addEventListener("resize",()=>{try{tidyBars()}catch(e){}});setTimeout(()=>{try{tidyBars()}catch(e){}},0);
+
+/* ===== delete invoices (hidden on every device; restorable) ===== */
+function ivRestoreHtml(){const L=Object.entries(S.invdel).map(([k,d])=>({k,...d})).sort((a,b)=>(b.at||0)-(a.at||0));
+ return`<h3>Deleted invoices</h3><p class="mu" style="font-size:13px;margin-top:0">These are hidden in the app. Restore one to show it again.</p>`+(L.length?L.map(d=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd)"><span><b>${esc(d.n||d.k)}</b> <span class="mu">${esc(d.c||"")}</span></span><button class="g" type="button" data-ivre="${esc(d.k)}">Restore</button></div>`).join(""):'<p class="mu">No deleted invoices.</p>')}
+function ivUI(){const n=Object.keys(S.invdel).length;let b=$("ivrest");const la=$("invi")&&$("invi").parentElement;
+ if(!b&&la){b=document.createElement("button");b.id="ivrest";b.type="button";b.className="g hide";la.append(b);const c=document.createElement("div");c.id="ivdc";c.className="card hide";$("invc").after(c)}
+ if(!b)return;b.textContent="Deleted ("+n+")";b.classList.toggle("hide",!n);if(!n)$("ivdc").classList.add("hide");else if(!$("ivdc").classList.contains("hide"))$("ivdc").innerHTML=ivRestoreHtml()}
+{const _ri=renderInv;renderInv=function(){const r=_ri.apply(this,arguments);try{ivUI()}catch(e){}return r}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-ivdel],[data-ivre],#ivrest");if(!t)return;
+ if(t.id==="ivrest"){const c=$("ivdc");c.innerHTML=ivRestoreHtml();c.classList.toggle("hide");return}
+ if(t.dataset.ivre){const k=t.dataset.ivre;delete S.invdel[k];saveRec("invdel",k,{},1);schedSync();render();return}
+ const k=t.dataset.ivdel,v=S.invoices[k];if(!v)return;if(!canDo("inv","delete")){say("You do not have permission to delete invoices.");setTimeout(()=>say(""),4000);return}
+ if(!confirm("Delete invoice "+v.number+(v.customer?" ("+v.customer+")":"")+"?\n\nIt is hidden on every device and stays hidden when the list syncs again from Zoho Books. Linked events and picklists keep the invoice number. You can restore it from Deleted invoices."))return;
+ const d={n:v.number,c:v.customer||"",at:Date.now()};S.invdel[k]=d;saveRec("invdel",k,d,0);schedSync();render()});
 </script></body></html>
