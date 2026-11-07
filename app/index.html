@@ -664,7 +664,7 @@ table.urt{width:100%;border-collapse:collapse}.urt th{font-size:12px;text-transf
 .urt .who{display:flex;align-items:center;gap:12px}.urt .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:15px;flex:0 0 38px}
 .urt .lnk{background:none;border:0;padding:0;font:inherit;font-weight:600;color:var(--ac);cursor:pointer;text-align:left}.urt .lnk:hover{text-decoration:underline}
 .urt .sub{font-size:12px;color:var(--mu);margin-top:2px}.urt .acts2{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
-.pill.act{background:#e5f4ea;color:#1f7a44;border-color:#cbe8d5}
+.pill.act{background:#e5f4ea;color:#1f7a44;border-color:#cbe8d5}.pill.inv{background:#fdf1d8;color:#8a6422;border-color:#efdfbb}.ur-mode{display:grid;gap:8px;padding-top:6px}.ur-mode .ck{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.4}.ur-mode .ck input{width:auto;flex:none;margin:2px 0 0}
 .ur-page .ur-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px}.ur-page .ur-hd h3{margin:0;font-size:18px}
 .ur-bk{border:1px solid var(--bd);background:#fff;border-radius:10px;width:34px;height:34px;cursor:pointer;font-size:18px;line-height:1}
 .ur-f{display:grid;grid-template-columns:170px minmax(0,460px);gap:12px 18px;align-items:start;margin-bottom:16px}.ur-f>.lb{font-size:13px;color:var(--tx);padding-top:9px}.ur-f>.lb.req{color:var(--bad)}.ur-f .hint{font-size:12px;color:var(--mu);margin-top:4px}
@@ -1764,8 +1764,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.19.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.20.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.20.0","8 Nov 2026",["Users: add a person by name, email and role and they get an email with a sign-up link (they choose their own PIN) plus the download links for the Android and Windows apps and an invitation code. In the app, tap I have an invitation code (sign-in screen, Settings or Home) to join. Invited people show as Invited with a Resend invitation button. You can still set a PIN yourself instead. Update Code.gs to turn this on"]],
  ["1.19.1","8 Nov 2026",["Smoother app, especially on Android: a tap now redraws only the screen you are on instead of rebuilding every page (about half the work), the header, pills and photos no longer flash again after each tap, the item picker keeps its place when you add an item, and taps respond without the double-tap delay"]],
  ["1.19.0","8 Nov 2026",["Invoices can now be deleted (Delete button on each invoice, desktop and phone). A deleted invoice is hidden on every device and stays hidden when the list syncs again from Zoho Books; Deleted invoices lets you restore it. Linked events and picklists keep the invoice number. Update Code.gs to share deletions between devices","Desktop: toolbars are tighter. On Events the New event, Filter and List/Board buttons sit on the same row as the hint text, and on Inventory, Invoices, Picklists and Repairs the Columns and Print buttons join the main toolbar row; on Movements the Filter and List/Board buttons share the Columns row"]],
  ["1.18.1","7 Nov 2026",["Phone: on the Items tab of events and picklists the Add a note card now sits above the long item picker so it is easy to reach; larger tick boxes in the loading checklist; the In warehouse and short text no longer crowds the remove button on picklist rows"]],
@@ -2055,7 +2056,7 @@ $("flg").onsubmit=async e=>{e.preventDefault();const name=$("lgu").value.trim(),
 function applyAccess(){const ro=Object.keys(MODN).filter(m=>m!=="users"&&!can(m,"edit"));document.body.dataset.ro=ro.join(" ");
  document.querySelectorAll("nav button").forEach(b=>{const m=TABMOD[b.dataset.t];b.classList.toggle("hide",!!m&&!can(m,"view"))})}
 function signOut(){setSess(null);gate();renderUsers()}
-let USERS=[],roleEd=null,userEd=null,usersErr="";
+let USERS=[],roleEd=null,userEd=null,usersErr="",usersNote="";
 async function loadUsers(){if(!online()||!CFG.url){usersErr="Go online to manage users.";return}try{const r=await api({action:"user_list"});if(r.error)throw new Error(r.error);USERS=r.users;usersErr=""}catch(e){usersErr=String(e.message||e)}}
 function renderUsers(){const b=$("usrb");if(!b)return;const me=ME();
  if(!authOn()){
@@ -2206,7 +2207,7 @@ renderUsers=function(){const b=$("usrb");if(!b)return;const me=ME();
  b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3><span class="sp"></span><div class="ur-seg"><button type="button" data-urt="users" class="${UR.tab==="users"?"on":""}">Users</button><button type="button" data-urt="roles" class="${UR.tab==="roles"?"on":""}">Roles</button></div></div>${urMe()}${UR.tab==="roles"?urRoles():urUsers()}`}
 function urUsers(){const L=USERS.filter(u=>UR.filter==="all"||(UR.filter==="active"?u.active:!u.active));
  return`<div class="ur-top"><select class="ur-sel" id="urf" aria-label="Show users"><option value="all"${UR.filter==="all"?" selected":""}>All users</option><option value="active"${UR.filter==="active"?" selected":""}>Active users</option><option value="inactive"${UR.filter==="inactive"?" selected":""}>Inactive users</option></select><span class="sp"></span><button class="g" type="button" data-u2ref="1">Refresh</button><button class="b" type="button" data-u2new="1">+ New user</button></div>
- ${usersErr?`<p class="bad" style="font-size:13px">${esc(usersErr)}</p>`:""}<table class="urt"><thead><tr><th>User details</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>${L.map(u=>{const r=S.roles[u.role]||{};return`<tr><td><div class="who">${avatar(u.name)}<div><button class="lnk" type="button" data-u2ed="${u.id}">${esc(u.name)}</button>${u.contact?`<div class="sub">${esc(u.contact)}</div>`:""}</div></div></td><td data-l="Role">${esc(r.name||u.role)}</td><td data-l="Status"><span class="pill ${u.active?"act":"off"}">${u.active?"Active":"Inactive"}</span></td><td><div class="acts2"><button class="g" type="button" data-u2ed="${u.id}">Edit</button><button class="g" type="button" data-u2tog="${u.id}">${u.active?"Mark as inactive":"Mark as active"}</button><button class="g dng" type="button" data-u2del="${u.id}">Delete</button></div></td></tr>`}).join("")||`<tr><td colspan="4" class="mu">${usersErr?"":"No users to show."}</td></tr>`}</tbody></table>`}
+ ${usersNote}${usersErr?`<p class="bad" style="font-size:13px">${esc(usersErr)}</p>`:""}<table class="urt"><thead><tr><th>User details</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>${L.map(u=>{const r=S.roles[u.role]||{};return`<tr><td><div class="who">${avatar(u.name)}<div><button class="lnk" type="button" data-u2ed="${u.id}">${esc(u.name)}</button>${(u.email||u.contact)?`<div class="sub">${esc(u.email||u.contact)}</div>`:""}</div></div></td><td data-l="Role">${esc(r.name||u.role)}</td><td data-l="Status"><span class="pill ${u.pending?(u.expired?"off":"inv"):u.active?"act":"off"}">${u.pending?(u.expired?"Invite expired":"Invited"):u.active?"Active":"Inactive"}</span></td><td><div class="acts2"><button class="g" type="button" data-u2ed="${u.id}">Edit</button>${u.pending?`<button class="g" type="button" data-u2inv="${u.id}">Resend invitation</button>`:""}<button class="g" type="button" data-u2tog="${u.id}">${u.active?"Mark as inactive":"Mark as active"}</button><button class="g dng" type="button" data-u2del="${u.id}">Delete</button></div></td></tr>`}).join("")||`<tr><td colspan="4" class="mu">${usersErr?"":"No users to show."}</td></tr>`}</tbody></table>`}
 function urRoles(pre){const L=roleList();const cnt=id=>USERS.filter(u=>u.role===id).length;
  return`<div class="ur-top"><h3 style="font-size:16px">Roles</h3><span class="sp"></span><button class="b" type="button" data-r2new="1">New role</button></div>${pre?'<p class="mu" style="font-size:13px;margin:-6px 0 10px">You can prepare roles now; they apply once sign-in is on.</p>':""}
  <table class="urt"><thead><tr><th>Role name</th><th>Description</th><th>Users</th></tr></thead><tbody>${L.map(r=>`<tr><td><button class="lnk" type="button" data-r2ed="${r.id}">${esc(r.name||r.id)}</button></td><td data-l="Description" style="color:var(--mu);font-size:13px">${esc(roleDesc(r))}</td><td data-l="Users">${cnt(r.id)}</td></tr>`).join("")||'<tr><td colspan="3" class="mu">No roles yet. They appear after the first sync.</td></tr>'}</tbody></table>`}
@@ -2232,29 +2233,38 @@ function urRoleBind(){const f=$("frole2");if(!f){if($("r2n"))return;return}
   const acl={};f.querySelectorAll("tr[data-m]").forEach(tr=>{const o={};tr.querySelectorAll("input[data-a]").forEach(x=>{if(x.checked)o[x.dataset.a]=true});if(Object.keys(o).length)acl[tr.dataset.m]=o});
   const adm=$("r2a").checked,id=roleEd.id||rid(),old=S.roles[id]||{};
   await put("roles",id,{...old,name,description:$("r2d").value.trim(),admin:adm,acl:adm?{}:acl,perms:adm?{}:coarseOf(acl)});roleEd=null;UR.tab="roles";renderUsers();schedSync()}}
-function urUserForm(){const u=userEd,roles=roleList();const rr=S.roles[u.role]||{};
+function urUserForm(){const u=userEd,roles=roleList(),isNew=!u.id,rr=S.roles[u.role]||{},em=u.email||(/@/.test(u.contact||"")?u.contact:"");
  return`<div class="ur-page"><div class="ur-hd"><button class="ur-bk" type="button" data-u2cx="1" aria-label="Back to users">‹</button><h3>${u.id?"Edit user":"New user"}</h3></div>
  <form id="fuser2"><div class="ur-f"><label class="lb req" for="u2n">Name*</label><input id="u2n" required value="${esc(u.name||"")}" autocomplete="off">
- <label class="lb" for="u2c">Email or phone</label><div><input id="u2c" value="${esc(u.contact||"")}" placeholder="Optional, for your reference"></div>
+ <label class="lb${isNew?" req":""}" for="u2e">Email${isNew?"*":""}</label><div><input id="u2e" type="email" value="${esc(em)}" placeholder="name@example.com" autocomplete="off"><div class="hint">${isNew?"The invitation is sent to this address.":"Used to send the invitation."}</div></div>
  <label class="lb req" for="u2r">Role*</label><div><select id="u2r">${roles.map(r=>`<option value="${r.id}"${u.role===r.id?" selected":""}>${esc(r.name||r.id)}</option>`).join("")}</select><div class="hint" id="u2rd">${esc(roleDesc({id:u.role,...rr}))}</div></div>
- <label class="lb${u.id?"":" req"}" for="u2p">${u.id?"New PIN":"PIN*"}</label><div><input id="u2p" type="password" inputmode="numeric" minlength="4" ${u.id?"":"required "}autocomplete="new-password" placeholder="${u.id?"Leave empty to keep the current PIN":"At least 4 characters"}"><div class="hint">The person signs in with this name and PIN.</div></div>
+ ${isNew?`<span class="lb">Sign-up</span><div class="ur-mode"><label class="ck"><input type="radio" name="u2m" value="invite" checked> Email an invitation: the person gets a sign-up link, the download links for the app, and chooses their own PIN</label><label class="ck"><input type="radio" name="u2m" value="pin"> I will set a PIN myself</label></div>`:""}
+ <div id="u2pw" style="display:${isNew?"none":"contents"}"><label class="lb" for="u2p">${isNew?"PIN*":"New PIN"}</label><div><input id="u2p" type="password" inputmode="numeric" minlength="4" autocomplete="new-password" placeholder="${isNew?"At least 4 characters":"Leave empty to keep the current PIN"}"><div class="hint">The person signs in with this name and PIN.</div></div></div>
+ ${u.pending?`<span class="lb">Invitation</span><div><span class="pill ${u.expired?"off":"inv"}">${u.expired?"Expired":"Sent, waiting for sign-up"}</span> <button class="g" type="button" data-u2inv="${u.id}">Resend invitation</button></div>`:""}
  <span class="lb">Status</span><label class="ck" style="padding-top:8px"><input type="checkbox" id="u2a"${u.active!==false?" checked":""}> Active (can sign in)</label></div>
- <div id="ur-msg" class="msg"></div><div class="ur-bar"><button class="b">Save</button><button class="g" type="button" data-u2cx="1">Cancel</button></div></form></div>`}
-function urUserBind(){const f=$("fuser2");if(!f)return;
+ <div id="ur-msg" class="msg"></div><div class="ur-bar"><button class="b" id="u2go">${isNew?"Send invitation":"Save"}</button><button class="g" type="button" data-u2cx="1">Cancel</button></div></form></div>`}
+function inviteNote(r,email){if(r.emailed)return`<p class="ok" style="font-size:13px;margin:0 0 10px">Invitation sent to <b>${esc(email)}</b>.</p>`;
+ return`<div class="warnb" style="margin-bottom:10px"><b>The email could not be sent</b>${r.mailError?" ("+esc(r.mailError)+")":""}. The account is created; send this link yourself:<br><input readonly value="${esc(r.link||"")}" onclick="this.select()" style="width:100%;margin-top:6px"></div>`}
+function urUserBind(){const f=$("fuser2");if(!f)return;const isNew=!userEd.id,mode=()=>{const c=document.querySelector('input[name="u2m"]:checked');return c?c.value:"edit"};
  $("u2r").onchange=()=>{const r=S.roles[$("u2r").value]||{};$("u2rd").textContent=roleDesc({id:$("u2r").value,...r})};
- f.onsubmit=async e=>{e.preventDefault();const m=$("ur-msg"),name=$("u2n").value.trim(),pin=$("u2p").value;
-  if(pin&&pin.length<4){m.innerHTML='<span class="bad">The PIN needs at least 4 characters.</span>';return}
+ f.querySelectorAll('input[name="u2m"]').forEach(x=>x.onchange=()=>{const pin=mode()==="pin";$("u2pw").style.display=pin?"contents":"none";$("u2go").textContent=pin?"Save":"Send invitation"});
+ f.onsubmit=async e=>{e.preventDefault();const m=$("ur-msg"),name=$("u2n").value.trim(),pin=$("u2p").value,email=$("u2e").value.trim(),inv=isNew&&mode()==="invite";
+  if(!inv&&pin&&pin.length<4){m.innerHTML='<span class="bad">The PIN needs at least 4 characters.</span>';return}
+  if(isNew&&!inv&&!pin){m.innerHTML='<span class="bad">Enter a PIN, or choose to email an invitation.</span>';return}
+  if(inv&&!email){m.innerHTML='<span class="bad">Enter the email address to send the invitation to.</span>';return}
   if(!online()||!CFG.url){m.innerHTML='<span class="bad">Go online to save users.</span>';return}
-  try{const body={action:"user_save",user:{id:userEd.id,name,contact:$("u2c").value.trim(),role:$("u2r").value,active:$("u2a").checked}};if(pin)body.ph=await hashPin(name,pin);
-   else if(userEd.id&&name.toLowerCase()!==(userEd.name||"").toLowerCase()){m.innerHTML='<span class="bad">Changing the name needs a new PIN (the PIN is tied to the name).</span>';return}
-   m.textContent="Saving…";const r=await api(body);if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;userEd=null;UR.tab="users";renderUsers()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||x)}</span>`}}}
+  try{const body={action:"user_save",user:{id:userEd.id,name,email,contact:userEd.contact||"",role:$("u2r").value,active:$("u2a").checked}};if(inv)body.invite=true;else if(pin)body.ph=await hashPin(name,pin);
+   if(!inv&&!pin&&userEd.id&&name.toLowerCase()!==(userEd.name||"").toLowerCase()&&!userEd.pending){m.innerHTML='<span class="bad">Changing the name needs a new PIN (the PIN is tied to the name).</span>';return}
+   m.textContent=inv?"Sending the invitation…":"Saving…";const r=await api(body);if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;userEd=null;UR.tab="users";usersNote=inv?inviteNote(r,email):"";renderUsers()}
+  catch(x){let t=String(x.message||x);if(inv&&/Set a PIN/.test(t))t="The server script needs the update that adds invitations: deploy the new Code.gs first.";m.innerHTML=`<span class="bad">${esc(t)}</span>`}}}
 document.addEventListener("change",e=>{if(e.target.id==="urf"){UR.filter=e.target.value;renderUsers()}});
 document.addEventListener("click",async e=>{const bt=e.target.closest&&e.target.closest("#usrb button");if(!bt)return;const d=bt.dataset;
  if(d.urt){UR.tab=d.urt;renderUsers()}
  if(d.u2new){userEd={role:(S.roles.viewer?"viewer":(roleList()[0]||{}).id),active:true};renderUsers();setTimeout(()=>$("u2n")&&$("u2n").focus(),30)}
  if(d.u2ed){userEd={...USERS.find(u=>u.id===d.u2ed)};renderUsers()}
  if(d.u2cx){userEd=null;renderUsers()}
- if(d.u2ref){await loadUsers();renderUsers()}
+ if(d.u2ref){usersNote="";await loadUsers();renderUsers()}
+ if(d.u2inv){const u=USERS.find(x=>x.id===d.u2inv);if(!u)return;if(!u.email){usersErr="Add an email address for "+u.name+" first (Edit).";renderUsers();return}bt.disabled=true;try{const r=await api({action:"user_invite",id:u.id});if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;usersErr="";usersNote=inviteNote(r,u.email);userEd=null}catch(x){usersErr=String(x.message||x)}renderUsers()}
  if(d.u2tog){const u=USERS.find(x=>x.id===d.u2tog);if(!u)return;try{const r=await api({action:"user_save",user:{...u,active:!u.active}});if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;usersErr=""}catch(x){usersErr=String(x.message||x)}renderUsers()}
  if(d.u2del){const u=USERS.find(x=>x.id===d.u2del);if(!u||!confirm("Delete user "+u.name+"? They will no longer be able to sign in."))return;const r=await api({action:"user_delete",id:u.id});if(r.ok){USERS=r.users;usersErr=""}else usersErr=r.error||"Failed";renderUsers()}
  if(d.r2new){roleEd={name:"",description:"",admin:false,acl:{stock:{view:true},events:{view:true},plan:{view:true},pl:{view:true},moves:{view:true},rp:{view:true}}};renderUsers();setTimeout(()=>$("r2n")&&$("r2n").focus(),30)}
@@ -2323,4 +2333,39 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
 {const keep=fn=>function(){const f=()=>["rpl","ppl"].map(i=>document.getElementById(i)).find(e=>e&&e.offsetParent);const el=f();let top=null,st=0;if(el){top=el.getBoundingClientRect().top;st=el.scrollTop}
   const r=fn.apply(this,arguments);const e2=f();if(e2&&top!==null){const d=e2.getBoundingClientRect().top-top;if(d)window.scrollBy({top:d,left:0,behavior:"instant"});e2.scrollTop=st}return r};
  if(typeof renderEvD==="function")renderEvD=keep(renderEvD);if(typeof renderPLE==="function")renderPLE=keep(renderPLE)}
+
+/* ===== joining with an invitation (link or code from the email) ===== */
+{const post=async(url,body)=>{const r=await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});if(!r.ok)throw new Error("Server error "+r.status);return r.json()};
+ const parse=t=>{t=String(t||"").trim();const m=t.match(/[?&]invite=([^&#\s]+)/);if(m)t=decodeURIComponent(m[1]);t=t.replace(/^EV1\./,"").replace(/\s+/g,"");try{const j=JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g,"+").replace(/_/g,"/")))));return j&&j.s&&j.t?j:null}catch(e){return null}};
+ let inv=null,info=null;
+ const ov=document.createElement("div");ov.id="ivo";ov.className="ov hide";ov.style.cssText="z-index:101;background:var(--bg)";
+ ov.innerHTML=`<form id="fiv" class="dlg"><h3 id="ivh">Join with an invitation</h3><div id="ivi" class="mu" style="font-size:13px"></div>
+  <div id="ivc1"><label>Invitation code or link<input id="ivcode" placeholder="Paste it from your email" autocomplete="off"></label><button class="b" type="button" id="ivnext">Continue</button></div>
+  <div id="ivc2" class="hide"><label>Choose a PIN (at least 4 characters)<input id="ivp" type="password" inputmode="numeric" minlength="4" autocomplete="new-password"></label><label>Repeat the PIN<input id="ivp2" type="password" inputmode="numeric" autocomplete="new-password"></label><button class="b" id="ivgo">Create my account</button></div>
+  <div id="ivm" class="msg"></div><button class="g" type="button" id="ivcx" style="margin-top:8px">Not now</button></form>`;
+ document.body.appendChild(ov);
+ const say2=h=>{$("ivm").innerHTML=h};
+ async function check(raw){inv=parse(raw);if(!inv){say2('<span class="bad">That code does not look right. Copy the whole code from the email.</span>');return false}
+  say2("Checking the invitation…");try{const r=await post(inv.s,{action:"invite_info",token:inv.t});if(!r.ok)throw new Error(r.error||"Invitation not valid");info=r;
+   $("ivh").textContent="Welcome, "+r.name;$("ivi").textContent="You were invited as "+(r.roleName||"a team member")+". Choose a PIN to finish creating your account.";$("ivc1").classList.add("hide");$("ivc2").classList.remove("hide");say2("");setTimeout(()=>$("ivp").focus(),50);return true}
+  catch(x){say2(`<span class="bad">${esc(String(x.message||x))}</span>`);$("ivc1").classList.remove("hide");$("ivc2").classList.add("hide");return false}}
+ window.ivOpen=async raw=>{inv=null;info=null;$("ivh").textContent="Join with an invitation";$("ivi").textContent="";$("ivcode").value="";$("ivp").value="";$("ivp2").value="";say2("");$("ivc1").classList.remove("hide");$("ivc2").classList.add("hide");ov.classList.remove("hide");if(raw){await check(raw)}else setTimeout(()=>$("ivcode").focus(),50)};
+ $("ivnext").onclick=()=>check($("ivcode").value);
+ $("ivcode").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();check($("ivcode").value)}};
+ $("ivcx").onclick=()=>{ov.classList.add("hide");try{if(/[?&]invite=/.test(location.search))history.replaceState(null,"",location.pathname)}catch(e){}};
+ $("fiv").onsubmit=async e=>{e.preventDefault();if(!inv||!info)return;const pin=$("ivp").value;
+  if(pin.length<4){say2('<span class="bad">The PIN needs at least 4 characters.</span>');return}if(pin!==$("ivp2").value){say2('<span class="bad">The two PINs are different.</span>');return}
+  say2("Creating your account…");$("ivgo").disabled=true;
+  try{let ph;try{ph=await hashPin(info.name,pin)}catch(x){throw new Error("This browser cannot create the account securely (it needs https).")}
+   const r=await post(inv.s,{action:"invite_accept",token:inv.t,ph});if(!r.ok)throw new Error(r.error||"Failed");
+   ls("ev_url",inv.s);ls("ev_key",r.key);ls("ev_auth","1");const uc=UC();uc[info.name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,ph};ls("ev_ucache",JSON.stringify(uc));
+   setSess({uid:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,token:r.token});
+   say2('<span class="ok">Your account is ready. Opening the app…</span>');setTimeout(()=>location.replace(location.pathname),700)}
+  catch(x){say2(`<span class="bad">${esc(String(x.message||x))}</span>`);$("ivgo").disabled=false}};
+ // entry points: the link, a button on the sign-in screen, Settings and the home screen
+ try{const q=new URLSearchParams(location.search).get("invite");if(q)setTimeout(()=>ivOpen(q),300)}catch(e){}
+ document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-ivopen]")){e.preventDefault();ivOpen()}});
+ const flg=document.getElementById("flg");if(flg)flg.insertAdjacentHTML("beforeend",'<button class="lnk" type="button" data-ivopen="1" style="margin-top:10px">I have an invitation code</button>');
+ const cfg=document.getElementById("fcfg");if(cfg)cfg.insertAdjacentHTML("afterend",'<p style="margin:10px 0 0"><button class="g" type="button" data-ivopen="1">I have an invitation code</button></p>');
+ {const hc=document.getElementById("homec");if(hc){const put=()=>{if(!CFG.url&&!document.getElementById("ivcard")&&hc.children.length)hc.insertAdjacentHTML("afterbegin",'<div class="card" id="ivcard"><b>Joining your team?</b><p class="mu" style="margin:6px 0 10px;font-size:13px">If you received an invitation email, enter the code from it to create your account and connect this app.</p><button class="b" type="button" data-ivopen="1">I have an invitation code</button></div>')};new MutationObserver(put).observe(hc,{childList:true});put()}}}
 </script></body></html>
