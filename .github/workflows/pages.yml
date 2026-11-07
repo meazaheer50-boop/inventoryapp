@@ -3,11 +3,15 @@ on:
   push:
     branches: [main]
     paths: ['app/**']
+  workflow_run:
+    workflows: ['Build Android APK', 'Build Windows app']
+    types: [completed]
   workflow_dispatch:
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -19,9 +23,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Add the latest APK and Windows installer to the site
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p site && cp -r app/. site/ && mkdir -p site/downloads
+          fetch() { # workflow file, artifact name, pattern, target name
+            id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$1" --status success --limit 1 --json databaseId -q '.[0].databaseId')
+            [ -z "$id" ] && return 0
+            rm -rf tmp_dl && gh run download "$id" --repo "$GITHUB_REPOSITORY" -n "$2" -D tmp_dl || return 0
+            f=$(ls tmp_dl/$3 2>/dev/null | head -1); [ -n "$f" ] && cp "$f" "site/downloads/$4"
+          }
+          fetch android.yml everafter-inventory-apk '*.apk' everafter-inventory.apk
+          fetch build.yml windows-installer '*.exe' everafter-inventory-setup.exe
+          ls -la site/downloads
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: app
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v4
