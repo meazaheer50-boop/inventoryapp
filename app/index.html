@@ -717,6 +717,8 @@ table.rmx{table-layout:fixed}.rmx th:first-child,.rmx td.pn{width:28%}.rmx th:nt
 .dtgrp{position:relative;display:inline-flex;gap:8px;align-items:center}
 @media(max-width:760px){.dtgrp{display:none!important}}
 @media(min-width:761px){.tbar.tm:not(:has(.bulk:not(.hide))){display:none!important}}
+.warnb,.dh,.hdr,.pill,img.th,.phbox img,.rth,.kb .kcard,.ldbox.on{animation:none!important}
+button,a,select,summary,label,[role=button]{touch-action:manipulation}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -1274,7 +1276,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")$("lb").classList.ad
 {const tin=()=>{document.querySelectorAll(".tbd").forEach(t=>{t.classList.remove("tin");void t.offsetWidth;t.classList.add("tin");setTimeout(()=>t.classList.remove("tin"),400)})};
  document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest(".tabs button");if(t)setTimeout(tin,0);
   const b=e.target.closest&&e.target.closest("button.b,button.g");if(b&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const r=b.getBoundingClientRect(),sp=document.createElement("span");sp.className="rip";sp.style.left=(e.clientX-r.left)+"px";sp.style.top=(e.clientY-r.top)+"px";b.appendChild(sp);setTimeout(()=>sp.remove(),600)}},true);
- const _st=showTab;showTab=function(t){const r=_st.apply(this,arguments);const el=$(t);if(el){el.classList.add("stag");setTimeout(()=>el.classList.remove("stag"),800)}return r}}
+ const _st=showTab;showTab=function(t){const r=_st.apply(this,arguments);const el=$(t);if(el){el.classList.add("stag");setTimeout(()=>el.classList.remove("stag"),450)}return r}}
 
 /* ===== phone app shell: drawer, app bar, FAB, home, table labels ===== */
 {const isPhone=()=>matchMedia("(max-width:760px)").matches;
@@ -1762,8 +1764,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.19.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.19.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.19.1","8 Nov 2026",["Smoother app, especially on Android: a tap now redraws only the screen you are on instead of rebuilding every page (about half the work), the header, pills and photos no longer flash again after each tap, the item picker keeps its place when you add an item, and taps respond without the double-tap delay"]],
  ["1.19.0","8 Nov 2026",["Invoices can now be deleted (Delete button on each invoice, desktop and phone). A deleted invoice is hidden on every device and stays hidden when the list syncs again from Zoho Books; Deleted invoices lets you restore it. Linked events and picklists keep the invoice number. Update Code.gs to share deletions between devices","Desktop: toolbars are tighter. On Events the New event, Filter and List/Board buttons sit on the same row as the hint text, and on Inventory, Invoices, Picklists and Repairs the Columns and Print buttons join the main toolbar row; on Movements the Filter and List/Board buttons share the Columns row"]],
  ["1.18.1","7 Nov 2026",["Phone: on the Items tab of events and picklists the Add a note card now sits above the long item picker so it is easy to reach; larger tick boxes in the loading checklist; the In warehouse and short text no longer crowds the remove button on picklist rows"]],
  ["1.18.0","7 Nov 2026",["Events: add a note for something that is not in the item list (for example 10 red cushions, client brings), with a quantity, on the event Items tab. Notes show on the event Overview and are copied into a picklist (and its loading checklist) by Fill from event reservations. They never change stock"]],
@@ -2309,4 +2312,15 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
  const k=t.dataset.ivdel,v=S.invoices[k];if(!v)return;if(!canDo("inv","delete")){say("You do not have permission to delete invoices.");setTimeout(()=>say(""),4000);return}
  if(!confirm("Delete invoice "+v.number+(v.customer?" ("+v.customer+")":"")+"?\n\nIt is hidden on every device and stays hidden when the list syncs again from Zoho Books. Linked events and picklists keep the invoice number. You can restore it from Deleted invoices."))return;
  const d={n:v.number,c:v.customer||"",at:Date.now()};S.invdel[k]=d;saveRec("invdel",k,d,0);schedSync();render()});
+
+/* ===== smoothness: only redraw the screen that is showing, and never replay entrance animations on a redraw ===== */
+{const RT={renderList:["stock","item"],renderCal:["cal"],renderInv:["inv"],renderPL:["pl"],renderRP:["rp"],renderBoards:["stock","events","inv","pl","rp","moves"],renderFilters:["stock","events","inv","pl","rp","moves","cal"]},dirty=new Set(),orig={};
+ const shown=ids=>ids.some(i=>{const e=document.getElementById(i);return e&&!e.classList.contains("hide")});
+ for(const n of Object.keys(RT)){if(typeof window[n]!=="function")continue;orig[n]=window[n];window[n]=function(){if(!shown(RT[n])){dirty.add(n);return}dirty.delete(n);return orig[n].apply(this,arguments)}}
+ const _s=showTab;showTab=function(){const r=_s.apply(this,arguments);for(const n of [...dirty])if(shown(RT[n])){dirty.delete(n);try{orig[n]()}catch(e){console.error(e)}}return r}}
+
+/* keep the item picker (and the page) exactly where it was when a tap redraws the page, so the screen does not jump */
+{const keep=fn=>function(){const f=()=>["rpl","ppl"].map(i=>document.getElementById(i)).find(e=>e&&e.offsetParent);const el=f();let top=null,st=0;if(el){top=el.getBoundingClientRect().top;st=el.scrollTop}
+  const r=fn.apply(this,arguments);const e2=f();if(e2&&top!==null){const d=e2.getBoundingClientRect().top-top;if(d)window.scrollBy({top:d,left:0,behavior:"instant"});e2.scrollTop=st}return r};
+ if(typeof renderEvD==="function")renderEvD=keep(renderEvD);if(typeof renderPLE==="function")renderPLE=keep(renderPLE)}
 </script></body></html>
