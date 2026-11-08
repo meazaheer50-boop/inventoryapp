@@ -37,6 +37,11 @@ jobs:
           fetch android.yml everafter-inventory-apk '*.apk' everafter-inventory.apk
           fetch build.yml windows-installer '*.exe' everafter-inventory-setup.exe
           ls -la site/downloads
+          if [ -f site/downloads/everafter-inventory.apk ]; then
+            unzip -tq site/downloads/everafter-inventory.apk | tail -1
+            AS=$(ls -d $ANDROID_HOME/build-tools/*/apksigner | tail -1); "$AS" verify --print-certs site/downloads/everafter-inventory.apk | head -4 || true
+            sha256sum site/downloads/everafter-inventory.apk
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
