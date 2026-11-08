@@ -1754,7 +1754,7 @@ $("fm").onsubmit=e=>{e.preventDefault();const iid=$("mi").value,q=parseInt($("mq
 $("md").value=today();
 render();
 (async()=>{
- try{const r=await fetch("config.json",{cache:"no-store"});if(r.ok){const c=await r.json();if(c&&c.url){const cu=localStorage.getItem("ev_url")||"";if(!cu||(cu===c.url&&c.key&&localStorage.getItem("ev_key")!==c.key)){localStorage.setItem("ev_url",c.url);localStorage.setItem("ev_key",c.key||"")}}}}catch(e){}
+ try{const r=await fetch("config.json",{cache:"no-store"});if(r.ok){const c=await r.json();if(c&&c.url){const cu=localStorage.getItem("ev_url")||"";if(!cu||(cu===c.url&&c.key&&localStorage.getItem("ev_key")!==c.key)){if(!cu&&!localStorage.getItem("ev_skip"))localStorage.setItem("ev_auth","1");localStorage.setItem("ev_url",c.url);localStorage.setItem("ev_key",c.key||"");try{gate()}catch(e){}}}}}catch(e){}
  try{await loadLocal()}catch(e){say("This browser blocked local storage, so data will not be kept on this device.")}
  $("cfu").value=CFG.url;$("cfk").value=CFG.key;$("cfd").value=CFG.dev;
  $("syn").onclick=()=>syncNow(true);
@@ -1779,8 +1779,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.22.7";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.22.8";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.22.8","8 Nov 2026",["The app now comes with the server link and access key built in: a new install asks only for email and password"]],
  ["1.22.7","8 Nov 2026",["Sign-in screen keeps the server link and access key in a collapsible box (shows the current values) so an administrator can switch to another Google Sheet"]],
  ["1.22.6","8 Nov 2026",["Sign in with your email and password (the word PIN is now password; passwords can be letters and numbers). People never have to enter the server link or key once the app is set up"]],
  ["1.22.5","8 Nov 2026",["First start on a new phone or computer now shows a sign-in screen (server link and access key once, then name and PIN)"]],
