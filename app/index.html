@@ -1779,8 +1779,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.22.6";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.22.7";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.22.7","8 Nov 2026",["Sign-in screen keeps the server link and access key in a collapsible box (shows the current values) so an administrator can switch to another Google Sheet"]],
  ["1.22.6","8 Nov 2026",["Sign in with your email and password (the word PIN is now password; passwords can be letters and numbers). People never have to enter the server link or key once the app is set up"]],
  ["1.22.5","8 Nov 2026",["First start on a new phone or computer now shows a sign-in screen (server link and access key once, then name and PIN)"]],
  ["1.22.4","8 Nov 2026",["Check for update now compares with the website version, so the Android and Windows apps can see when a newer version exists and link to its download"]],
@@ -2515,4 +2516,7 @@ document.addEventListener("change",e=>{const t=e.target;if(!t.matches||!t.matche
   if(email&&SESS()){const mm=em();mm[email]=SESS().name;try{localStorage.setItem("ev_emailmap",JSON.stringify(mm))}catch(x){}}
   else if(email){u.value=v}
   if(m.textContent==="Wrong name or PIN")m.innerHTML='<span class="bad">Wrong email or password</span>'}}}
+/* ===== sign-in screen always lets an administrator see and change the server link and key ===== */
+{const lg=document.getElementById("lgn"),lgs=document.getElementById("lgs");if(lg&&lgs){const sync=()=>{if(lg.classList.contains("hide"))return;lgs.classList.remove("hide");const d=lgs.querySelector("details"),u=document.getElementById("lgsu"),k=document.getElementById("lgsk");if(document.activeElement!==u&&document.activeElement!==k){u.value=CFG.url||"";k.value=CFG.key||""}d.open=!CFG.url;d.querySelector("summary").textContent=CFG.url?"Server link and access key (change to use another Google Sheet)":"Server settings (administrator, needed once)"};
+ new MutationObserver(sync).observe(lg,{attributes:true,attributeFilter:["class"]});sync()}}
 </script></body></html>
