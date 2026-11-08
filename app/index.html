@@ -1778,8 +1778,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.22.3";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.22.4";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.22.4","8 Nov 2026",["Check for update now compares with the website version, so the Android and Windows apps can see when a newer version exists and link to its download"]],
  ["1.22.3","8 Nov 2026",["Select several rows or cards on Items, Events, Invoices, Picklists, Repairs and Movements (phone and desktop) and act on them together: delete, change status, export to CSV, print, create picklists or events","Items list: new Free to book column (in warehouse minus upcoming reservations)"]],
  ["1.22.2","8 Nov 2026",["Home: greeting with your name","Android: branded start-up screen instead of the placeholder logo","The app can ship with the sync URL and key built in, so new users only sign in","Invoices: picklist, event and create links now sit in one tidy \"Links\" dropdown","Users: the first administrator can add an email; invitation emails now link to the APK and Windows installer on the website"]],
  ["1.21.0","8 Nov 2026",["Events: new Event details tab with instructions for the event (set-up notes, access, contacts, special requests) and photos (take a photo or choose several from the gallery; tap a photo to enlarge). Everything syncs to the other devices"]],
@@ -1849,8 +1850,10 @@ function renderVer(){$("vcur").textContent="Version "+APP_VERSION;const L=verAll
  $("vlog").innerHTML=L.map(c=>`<div style="margin-bottom:10px"><b>${c[0]}</b> <span class="mu">${c[1]}${c[0]===APP_VERSION?" \u00b7 installed":""}</span><ul style="margin:4px 0 0;padding-left:20px">${c[2].map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")+(CHANGES.length>3?`<button class="g" type="button" data-verall="1">${verAll?"Show fewer":"Show older versions ("+(CHANGES.length-3)+")"}</button>`:"");$("vlog").style.maxHeight=verAll?"420px":"";$("vlog").style.overflowY=verAll?"auto":""}
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-verall]")){verAll=!verAll;renderVer()}});
 async function checkVer(manual){const st=$("vst");if(manual)st.textContent="Checking\u2026";
- try{const r=await fetch("version.json?"+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json(),n=String(j.version||"");
-  if(n&&n!==APP_VERSION){st.innerHTML='<span class="warn">Version '+esc(n)+' is available.</span>';$("vrel").classList.remove("hide");say("A new version ("+n+") is available. See Settings.")}
+ try{const SITE="https://meazaheer50-boop.github.io/inventoryapp/",web=/github\.io$/.test(location.hostname),ua=navigator.userAgent,app=/Electron/i.test(ua)?"exe":(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())||/; wv\)/i.test(ua)?"apk":"";
+  const r=await fetch((web?"":SITE)+"version.json?"+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const j=await r.json(),n=String(j.version||"");
+  const nv=v=>String(v).split(".").map(x=>parseInt(x)||0),newer=(a,b)=>{const x=nv(a),y=nv(b);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
+  if(n&&newer(n,APP_VERSION)){const dl=app?` <a href="${SITE}downloads/${app==="apk"?"everafter-inventory.apk":"everafter-inventory-setup.exe"}" target="_blank" rel="noopener"><b>Download ${app==="apk"?"the new APK":"the new installer"}</b></a>`:"";st.innerHTML='<span class="warn">Version '+esc(n)+' is available.</span>'+dl;if(!app)$("vrel").classList.remove("hide");say("A new version ("+n+") is available. See Settings.")}
   else{st.innerHTML='<span class="ok">You have the latest version.</span>';$("vrel").classList.add("hide")}}
  catch(e){st.textContent=manual?"Could not check (offline, or this copy cannot reach the website).":""}}
 $("vchk").onclick=()=>checkVer(true);
