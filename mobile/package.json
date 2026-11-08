@@ -1,6 +1,6 @@
 {
   "name": "everafter-inventory-android",
-  "version": "1.22.4",
+  "version": "1.22.5",
   "private": true,
   "description": "Everafter Events inventory - Android app (Capacitor)",
   "scripts": {
