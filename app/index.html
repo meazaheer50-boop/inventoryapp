@@ -761,6 +761,19 @@ button.lnk{background:none;border:0;box-shadow:none;color:#8a6420;text-decoratio
 }
 #lgs summary{margin-bottom:6px}#lgs label{margin-top:8px}#lgs{margin-bottom:6px}
 #fcfg+button{margin-right:8px}#fcfg+button+p{display:inline-block;margin:10px 0 0!important}
+
+/* v1.23.1 bottom sheet / bar open+close animation */
+@media(max-width:760px){
+#msheet{display:block;visibility:visible;opacity:1;transition:opacity .25s ease,visibility 0s}
+#msheet.hide{display:block!important;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .22s ease,visibility 0s .26s}
+#msheet>div{animation:none!important;transform:none;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+#msheet.hide>div{transform:translateY(105%);transition:transform .24s cubic-bezier(.4,0,.8,.6)}
+#fab{transition:transform .2s ease,opacity .2s ease}
+#fab.hide{display:grid!important;opacity:0;transform:scale(.6);pointer-events:none;visibility:hidden;transition:transform .2s ease,opacity .2s ease,visibility 0s .2s}
+}
+.msb{transition:opacity .22s ease,transform .26s cubic-bezier(.2,.8,.2,1),visibility 0s}
+.msb.hide{display:flex!important;opacity:0;visibility:hidden;pointer-events:none;transform:translateX(-50%) translateY(24px);transition:opacity .18s ease,transform .22s ease,visibility 0s .22s}
+@media(max-width:760px){.msb.hide{transform:translateY(24px)}}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -1811,8 +1824,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.23.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.23.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.23.1","11 Nov 2026",["Bottom action sheet, selection bar and add button slide and fade in and out again"]],
  ["1.23.0","11 Nov 2026",["Full design check on phone, tablet and desktop","Items list (desktop): long item names wrap so Rate, Stock on hand, In warehouse and Free to book always stay on screen","Movements and other lists: long names wrap instead of pushing columns off screen; invoice Links menu no longer cut off","Phone: tick boxes on the Items list, In warehouse and Free to book shown on each item, cleaner highlight for selected rows","Phone: the selection bar shows Select all and Clear on top with the actions below, and no longer sits over the + button","Tablets: working top menu, finger-sized buttons, Movements form fits the screen","Tidier sign-in server settings and Settings sync buttons"]],
  ["1.22.10","8 Nov 2026",["Invoices: Billing location is now called Venue location and is taken from the shipping address when the invoice has one (otherwise the billing address)","Android: tabs on event and item pages no longer flicker when you scroll them sideways"]],
  ["1.22.9","8 Nov 2026",["Sign-in screen: First time? Set up the administrator link, and the error now says why the server could not be reached"]],
