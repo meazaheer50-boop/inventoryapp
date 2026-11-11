@@ -391,7 +391,7 @@ button.b,button.g{position:relative;overflow:hidden}.rip{position:absolute;width
  .sc table:not(.avt) td:first-child{font-size:16px;font-weight:600;border-bottom:0!important;padding-bottom:4px!important;margin-bottom:0}
  .sc table:not(.avt) td:first-child .th.sm,.sc table:not(.avt) td .th.sm{width:56px;height:56px;border-radius:14px;font-size:22px}
  .sc table:not(.avt) td:first-child .nm{gap:14px}
- #st td:nth-child(3),#st td:nth-child(6),#st td:nth-child(7){display:none}
+ #st td:nth-child(3),#st td:nth-child(8){display:none}
  #home .hm-t{grid-template-columns:1fr 1fr}#home .hm-t button{min-height:88px}#home .hm-q{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}#home .hm-q button{width:auto}#home .hm-q i{width:100%;max-width:74px}
  #events>.row:first-child{display:none}#events>.row:nth-child(2){padding:10px 16px;margin:0!important;justify-content:flex-start!important}
  .erow{border-radius:0!important;border-left:0!important;border-right:0!important;margin:0!important;box-shadow:none!important;padding:14px 16px!important;border-bottom:1px solid var(--bd)}.erow .top>div:last-child{display:none}
@@ -730,6 +730,37 @@ input.ms{width:18px;height:18px;margin:0 8px 0 0;vertical-align:middle;accent-co
 @media(max-width:760px){.msb{left:10px;right:10px;transform:none;bottom:calc(90px + env(safe-area-inset-bottom,0px));max-width:none}input.ms,input.bk{width:22px;height:22px}}
 @media print{.msb,input.ms{display:none!important}.ms-np{display:none!important}}
 button.lnk{background:none;border:0;box-shadow:none;color:#8a6420;text-decoration:underline;font-weight:600;font-size:13.5px;min-height:40px;padding:6px 4px;cursor:pointer;text-align:center}
+
+/* ===== UI/UX pass 1.23.0 ===== */
+.msb .msh{display:flex;align-items:center;gap:6px;flex:none}.msb .msh b{margin-right:4px}
+@media(min-width:761px){
+ #st td:first-child,#ml td:nth-child(2),#ml td:nth-child(3),#plt td:nth-child(2),#rpt td:nth-child(2),#rpt td:nth-child(4){white-space:normal!important}
+ #st td:first-child .nm{min-width:190px}#st td:first-child{max-width:460px}#ml td:nth-child(3) .nm{min-width:170px}
+ #invt td:last-child{white-space:nowrap}
+}
+@media(min-width:761px) and (max-width:1700px){#st td,table:has(#st) th{padding-left:10px!important;padding-right:10px!important}table:has(#st) th{white-space:normal!important;line-height:1.25;vertical-align:bottom}table:has(#st) th.n{min-width:64px}#st td:nth-child(3){white-space:normal!important}#st td:first-child .nm{min-width:230px}.lksel{max-width:112px}}
+@media(pointer:coarse) and (min-width:761px){.pg button,.cnav button{min-width:40px}}
+/* tablets in portrait: a working top menu instead of a clipped side bar */
+@media(min-width:761px) and (max-width:900px){
+ .app{flex-direction:column!important}
+ .sb{width:auto!important;height:auto!important;position:sticky!important;top:0;z-index:30;flex-direction:row!important;align-items:center;padding:8px 12px!important;gap:12px!important;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+ .sb::-webkit-scrollbar{display:none}.sb .brand span,.sb .brand small{display:none}
+ .sb nav{flex-direction:row!important;flex-wrap:nowrap;gap:4px;flex:none}.sb nav button{width:auto!important;white-space:nowrap;padding:9px 12px!important;flex:none}
+ .split{grid-template-columns:1fr!important}.il{display:none!important}
+ #fm .iw,#fm label,#fm select,#fm input{min-width:0;max-width:100%}#fm .iw{flex-wrap:wrap}
+}
+/* touch screens that use the desktop layout: finger-sized controls */
+@media(pointer:coarse) and (min-width:761px){button,select,input:not([type=checkbox]):not([type=radio]):not([type=file]){min-height:40px}.seg button{min-height:38px}.bk,.bka,input.ms{width:20px;height:20px}}
+@media(max-width:760px){
+ #st input.bk{display:inline-block!important;flex:none;margin:0 2px 0 0;align-self:center}
+ tr.msel{background:var(--acs)}tr.msel>td{background:transparent!important}
+ .msb{flex-direction:column;align-items:stretch;gap:8px;padding:10px 12px;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important}
+ .msb .msh{justify-content:flex-start}.msb .msh b{flex:1}
+ .msb .msa{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:22px}
+ body.mson #fab{display:none!important}
+}
+#lgs summary{margin-bottom:6px}#lgs label{margin-top:8px}#lgs{margin-bottom:6px}
+#fcfg+button{margin-right:8px}#fcfg+button+p{display:inline-block;margin:10px 0 0!important}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -1780,8 +1811,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.22.10";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.23.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.23.0","11 Nov 2026",["Full design check on phone, tablet and desktop","Items list (desktop): long item names wrap so Rate, Stock on hand, In warehouse and Free to book always stay on screen","Movements and other lists: long names wrap instead of pushing columns off screen; invoice Links menu no longer cut off","Phone: tick boxes on the Items list, In warehouse and Free to book shown on each item, cleaner highlight for selected rows","Phone: the selection bar shows Select all and Clear on top with the actions below, and no longer sits over the + button","Tablets: working top menu, finger-sized buttons, Movements form fits the screen","Tidier sign-in server settings and Settings sync buttons"]],
  ["1.22.10","8 Nov 2026",["Invoices: Billing location is now called Venue location and is taken from the shipping address when the invoice has one (otherwise the billing address)","Android: tabs on event and item pages no longer flicker when you scroll them sideways"]],
  ["1.22.9","8 Nov 2026",["Sign-in screen: First time? Set up the administrator link, and the error now says why the server could not be reached"]],
  ["1.22.8","8 Nov 2026",["The app now comes with the server link and access key built in: a new install asks only for email and password"]],
@@ -2448,9 +2480,9 @@ document.addEventListener("change",e=>{const t=e.target;if(!t.matches||!t.matche
   if(m==="rp"&&e)a.push(["ms","start","Start repair"],["ms","done","Mark repaired"]);
   a.push(["ms","exp","Export"],["ms","prt","Print"]);if(canDo(M,"delete"))a.push(["ms","del","Delete","dng"]);return a}
  function bar(){let b=document.getElementById("msb");if(!b){b=document.createElement("div");b.id="msb";b.className="msb hide";document.body.appendChild(b)}
-  const m=cur(),n=m?setOf(m).size:0;if(!m||!n){b.classList.add("hide");return}
+  const m=cur(),n=m?setOf(m).size:0;if(!m||!n){b.classList.add("hide");document.body.classList.remove("mson");return}
   const key=m+"|"+n;b.dataset.m=m;b.querySelector&&0;
-  b.innerHTML=`<b>${n} selected</b><span class="msa">${acts(m).map(([k,v,l,c])=>`<button type="button" class="${c||""}" ${k==="bk"?`data-bk2="${v}"`:`data-ms="${v}"`}>${l}</button>`).join("")}<button type="button" data-ms="all">Select all</button><button type="button" data-ms="clr">Clear</button></span>`;b.classList.remove("hide")}
+  b.innerHTML=`<div class="msh"><b>${n} selected</b><button type="button" data-ms="all">Select all</button><button type="button" data-ms="clr">Clear</button></div><span class="msa">${acts(m).map(([k,v,l,c])=>`<button type="button" class="${c||""}" ${k==="bk"?`data-bk2="${v}"`:`data-ms="${v}"`}>${l}</button>`).join("")}</span>`;b.classList.remove("hide");document.body.classList.add("mson")}
  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
  function csv(m,ids){let head,rows;
   if(m==="events"){head=["Event","Client","Start","End","Item types","Pieces","Invoice"];rows=ids.map(i=>{const e=S.events[i];return[e.name,e.client||"",e.start,e.end,Object.keys(e.reservations||{}).length,evPieces(e),e.invoice||""]})}
