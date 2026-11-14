@@ -10,7 +10,7 @@ function createWindow() {
     width: 1366, height: 860, minWidth: 420, minHeight: 600,
     backgroundColor: '#f6f1e9', autoHideMenuBar: true,
     icon: path.join(__dirname, 'build', 'icon.png'),
-    webPreferences: { contextIsolation: true, sandbox: true }
+    webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false, webSecurity: true, devTools: !app.isPackaged }
   });
   win.loadFile(path.join(__dirname, 'app', 'index.html'));
   // Zoho Books and other web links open in the normal browser, never inside the app window.
@@ -31,6 +31,11 @@ app.whenReady().then(() => {
       cb({ responseHeaders: h });
     }
   );
+  // Only the camera (item and repair photos) and copying to the clipboard are allowed; every other browser permission is refused.
+  const allowed = new Set(['media', 'clipboard-sanitized-write', 'fullscreen']);
+  session.defaultSession.setPermissionRequestHandler((wc, permission, cb) => cb(allowed.has(permission)));
+  session.defaultSession.setPermissionCheckHandler((wc, permission) => allowed.has(permission));
+  app.on('web-contents-created', (e, wc) => wc.on('will-attach-webview', ev => ev.preventDefault()));
   Menu.setApplicationMenu(null);
   createWindow();
   if (app.isPackaged) {

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline' file:; img-src 'self' data: blob: file:; font-src 'self' data: file:; media-src 'self' blob: data: mediastream:; connect-src 'self' file: data: blob: https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com https://meazaheer50-boop.github.io; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; worker-src 'self'; manifest-src 'self'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Everafter Inventory</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#2a211b"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
@@ -900,7 +902,7 @@ async function syncNow(manual){
  if(!online()){if(manual)say("You are offline. Changes are saved on this device and will sync later.");updSyn();return}
  syncing=true;lastErr="";updSyn();
  try{
-  {const ss=SESS();if(ss&&!ss.token&&ss.ph){const r=await api({action:"login",name:ss.name,ph:ss.ph});if(r.ok){ss.token=r.token;ss.role=r.user.role;ss.rsnap=r.user.roleData;setSess(ss)}else{setSess(null);throw new Error("login required")}}}
+  {const ss=SESS();if(ss&&!ss.token&&ss.ph){const r=await api({action:"login",name:ss.name,ph:ss.ph});if(r.ok){ss.token=r.token;delete ss.ph;ss.role=r.user.role;ss.rsnap=r.user.roleData;setSess(ss)}else{setSess(null);throw new Error("login required")}}}
   for(const p of (await idbp(tx("photos").getAll())).filter(x=>x.pending)){
    const r=await api({action:"photo_put",b64:p.b64,mime:p.mime,name:p.id});
    await idbp(tx("photos","readwrite").put({id:r.id,mime:p.mime,b64:p.b64}));await idbp(tx("photos","readwrite").delete(p.id));
@@ -1096,7 +1098,7 @@ function renderItem(){
 document.addEventListener("input",e=>{const i=e.target.id;if(i==="af"||i==="at"){chk[i==="af"?"f":"t"]=e.target.value;const r=$("ar");if(r)r.innerHTML=availHtml()}});
 document.addEventListener("change",e=>{if(e.target.id==="txf"){txf=e.target.value;renderItem()}});
 
-function zUrl(v){const b=((S.settings.main||{}).zlink||"").trim();if(b&&v.zid)return b.replace(/\/+$/,"")+"/"+encodeURIComponent(v.zid);return v.url&&/^https?:\/\//i.test(v.url)?v.url:""}
+function zUrl(v){const b=((S.settings.main||{}).zlink||"").trim();if(b&&v.zid&&/^https:\/\//i.test(b))return b.replace(/\/+$/,"")+"/"+encodeURIComponent(v.zid);return v.url&&/^https?:\/\//i.test(v.url)?v.url:""}
 const zA=(v,html,cls)=>{const u=zUrl(v);return u?`<a class="${cls||"zl"}" href="${esc(u)}" target="_blank" rel="noopener" title="Open in Zoho Books">${html}</a>`:""};
 const invs=()=>Object.entries(S.invoices).filter(([id])=>!S.invdel[id]).map(([id,v])=>({id,...v}));
 const open=v=>(+v.balance||0)>0&&!/^(void|draft)$/i.test(v.status||"");
@@ -1815,8 +1817,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.23.1";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.24.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.24.0","14 Nov 2026",["Security update: sign-in locks for 15 minutes after 5 wrong passwords, changing a password signs out other devices, new passwords need at least 8 characters, the offline sign-in cache no longer keeps the password hash, stricter content rules for the web page, and the Android app is now a release build (no debugging, no backups of its data). Update Code.gs to switch on the server part"]],
  ["1.23.1","11 Nov 2026",["Users and roles: the Sign-up choice no longer squeezes its text into a thin column on phones"]],
  ["1.23.0","11 Nov 2026",["Full design check on phone, tablet and desktop","Items list (desktop): long item names wrap so Rate, Stock on hand, In warehouse and Free to book always stay on screen","Movements and other lists: long names wrap instead of pushing columns off screen; invoice Links menu no longer cut off","Phone: tick boxes on the Items list, In warehouse and Free to book shown on each item, cleaner highlight for selected rows","Phone: the selection bar shows Select all and Clear on top with the actions below, and no longer sits over the + button","Tablets: working top menu, finger-sized buttons, Movements form fits the screen","Tidier sign-in server settings and Settings sync buttons"]],
  ["1.22.10","8 Nov 2026",["Invoices: Billing location is now called Venue location and is taken from the shipping address when the invoice has one (otherwise the billing address)","Android: tabs on event and item pages no longer flicker when you scroll them sideways"]],
@@ -2096,6 +2099,7 @@ const ls=(k,v)=>{if(v===undefined)return lsGet(k);try{if(v===null)localStorage.r
 function SESS(){try{return JSON.parse(lsGet("ev_sess")||"null")}catch(e){return null}}
 function setSess(o){ls("ev_sess",o?JSON.stringify(o):null)}
 function authOn(){return lsGet("ev_auth")==="1"}
+const offH=async ph=>{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("everafter-offline|"+ph));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")};
 const UC=()=>{try{return JSON.parse(lsGet("ev_ucache")||"{}")}catch(e){return{}}};
 const MODN={stock:"Inventory and items",events:"Events and calendar",plan:"Planner",moves:"Warehouse movements",pl:"Picklists",rp:"Repairs",inv:"Invoices",settings:"Business settings",users:"Users and roles"};
 const TABMOD={stock:"stock",item:"stock",events:"events",evd:"events",cal:"events",plan:"plan",inv:"inv",pl:"pl",rp:"rp",moves:"moves"};
@@ -2112,11 +2116,11 @@ $("flg").onsubmit=async e=>{e.preventDefault();const name=$("lgu").value.trim(),
  try{if(!online()||!CFG.url||!CFG.key)throw new Error("offline");
   const r=await api({action:"login",name,ph});
   if(!r.ok)throw new Error(r.error||"Wrong name or PIN");
-  uc[key]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,ph};ls("ev_ucache",JSON.stringify(uc));
+  uc[key]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,oh:await offH(ph)};ls("ev_ucache",JSON.stringify(uc));
   setSess({uid:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,token:r.token})}
  catch(x){const msg=String(x&&x.message||x);
-  if(msg==="Wrong name or PIN"||msg==="Wrong access key"||msg==="unauthorized"){m.innerHTML=`<span class="bad">${esc(msg==="unauthorized"?"Wrong access key (see Settings > Sync)":msg)}</span>`;return}
-  const c=uc[key];if(c&&c.ph===ph)setSess({uid:c.id,name:c.name,role:c.role,rsnap:c.rsnap,token:"",ph});
+  if(msg==="Wrong name or PIN"||msg==="Wrong access key"||msg==="unauthorized"||/^Too many/.test(msg)){m.innerHTML=`<span class="bad">${esc(msg==="unauthorized"?"Wrong access key (see Settings > Sync)":msg)}</span>`;return}
+  const c=uc[key];if(c&&(c.oh?c.oh===await offH(ph):c.ph===ph))setSess({uid:c.id,name:c.name,role:c.role,rsnap:c.rsnap,token:"",ph});
   else{m.innerHTML='<span class="bad">'+(online()?"Could not reach the server"+(msg&&msg!=="offline"?" ("+esc(msg.slice(0,120))+")":"")+".":"You are offline, and this device has not seen that sign-in before.")+"</span>";return}}
  $("lgp").value="";m.textContent="";$("lgn").classList.add("hide");applyAccess();render();renderUsers();syncNow();showTab("stock")};
 function applyAccess(){const ro=Object.keys(MODN).filter(m=>m!=="users"&&!can(m,"edit"));document.body.dataset.ro=ro.join(" ");
@@ -2126,23 +2130,23 @@ let USERS=[],roleEd=null,userEd=null,usersErr="",usersNote="";
 async function loadUsers(){if(!online()||!CFG.url){usersErr="Go online to manage users.";return}try{const r=await api({action:"user_list"});if(r.error)throw new Error(r.error);USERS=r.users;usersErr=""}catch(e){usersErr=String(e.message||e)}}
 function renderUsers(){const b=$("usrb");if(!b)return;const me=ME();
  if(!authOn()){
-  b.innerHTML=`<p class="mu" style="margin-top:0;font-size:13px">Sign-in is <b>off</b>: everyone with the sync key has full access. Create the first administrator to turn on sign-in for all devices. After that, each person signs in with a email and password, and what they can see and change depends on their role.</p><form id="fadm" class="row" style="align-items:flex-end"><label>Admin name<input id="adn1" required placeholder="e.g. Zaheer"></label><label>Your email (optional)<input id="ade1" type="email" placeholder="you@example.com" style="width:210px"></label><label>Password (4+ characters)<input id="adp1" type="password" inputmode="text" minlength="4" required style="width:150px"></label><button class="b">Turn on sign-in</button></form><div id="adm1" class="msg"></div><p class="mu" style="font-size:13px;margin:10px 0 0">Once sign-in is on, an <b>Add user</b> button appears here. You enter their <b>email, name and role</b>, and they get an email with a sign-up link.</p>`;
+  b.innerHTML=`<p class="mu" style="margin-top:0;font-size:13px">Sign-in is <b>off</b>: everyone with the sync key has full access. Create the first administrator to turn on sign-in for all devices. After that, each person signs in with a email and password, and what they can see and change depends on their role.</p><form id="fadm" class="row" style="align-items:flex-end"><label>Admin name<input id="adn1" required placeholder="e.g. Zaheer"></label><label>Your email (optional)<input id="ade1" type="email" placeholder="you@example.com" style="width:210px"></label><label>Password (8+ characters)<input id="adp1" type="password" inputmode="text" minlength="8" required style="width:150px"></label><button class="b">Turn on sign-in</button></form><div id="adm1" class="msg"></div><p class="mu" style="font-size:13px;margin:10px 0 0">Once sign-in is on, an <b>Add user</b> button appears here. You enter their <b>email, name and role</b>, and they get an email with a sign-up link.</p>`;
   $("fadm").onsubmit=async e=>{e.preventDefault();const name=$("adn1").value.trim(),pin=$("adp1").value,m=$("adm1");
    if(!online()||!CFG.url){m.innerHTML='<span class="bad">Connect the sync URL and key first, and go online.</span>';return}
    try{const ph=await hashPin(name,pin),r=await api({action:"user_save",user:{name,email:($("ade1").value||"").trim()},ph});if(!r.ok)throw new Error(r.error||"Failed");
-    ls("ev_auth","1");const uc=UC();uc[name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,ph};ls("ev_ucache",JSON.stringify(uc));
+    ls("ev_auth","1");const uc=UC();uc[name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,oh:await offH(ph)};ls("ev_ucache",JSON.stringify(uc));
     setSess({uid:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,token:r.token});applyAccess();syncNow(true);renderUsers()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||x)}</span>`}};return}
  const roles=Object.entries(S.roles).map(([id,v])=>({id,...v})).sort((a,c)=>(a.name||"").localeCompare(c.name||""));
  let h=`<div class="row" style="margin-bottom:12px"><span>Signed in as <b>${esc(me?me.name:"")}</b> <span class="mu">${esc(me?me.roleName||"":"")}</span></span><button class="g" type="button" data-usp="1">Change my password</button><button class="g" type="button" data-uso="1">Sign out</button></div>`;
  if(!can("users","edit")){b.innerHTML=h+'<p class="mu" style="font-size:13px;margin:0">Only administrators can manage users and roles.</p>';return}
  h+=`<h4 style="margin:14px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mu)">Users</h4>${usersErr?`<p class="bad" style="font-size:13px">${esc(usersErr)}</p>`:""}<div class="sc"><table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>${USERS.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${esc((S.roles[u.role]||{}).name||u.role)}</td><td><span class="pill ${u.active?"":"off"}">${u.active?"Active":"Disabled"}</span></td><td style="text-align:right"><div class="ucell" style="justify-content:flex-end"><button class="g" data-ued="${u.id}" type="button">Edit</button><button class="g dng" data-udl="${u.id}" type="button">Delete</button></div></td></tr>`).join("")||`<tr><td colspan="4" class="mu">No users loaded.</td></tr>`}</tbody></table></div><div class="row" style="margin-top:10px"><button class="b" data-unew="1" type="button">+ Add user</button><button class="g" data-uref="1" type="button">Refresh</button></div>`;
- if(userEd){const u=userEd;h+=`<form id="fuser" class="fg" style="margin-top:12px;padding:12px;border:1px solid var(--bd);border-radius:10px"><label>Name<input id="un" required value="${esc(u.name||"")}"></label><label>Role<select id="ur">${roles.map(r=>`<option value="${r.id}"${u.role===r.id?" selected":""}>${esc(r.name)}</option>`).join("")}</select></label><label>${u.id?"New password (leave empty to keep)":"Password (4+ characters)"}<input id="up" type="password" inputmode="text" ${u.id?"":"required "}minlength="4" autocomplete="new-password"></label><label class="ck" style="align-self:end"><input type="checkbox" id="ua"${u.active!==false?" checked":""}> Active</label><div class="w2 row"><button class="b">Save user</button><button class="g" type="button" data-ucx="1">Cancel</button><span id="um" class="msg"></span></div></form>`}
+ if(userEd){const u=userEd;h+=`<form id="fuser" class="fg" style="margin-top:12px;padding:12px;border:1px solid var(--bd);border-radius:10px"><label>Name<input id="un" required value="${esc(u.name||"")}"></label><label>Role<select id="ur">${roles.map(r=>`<option value="${r.id}"${u.role===r.id?" selected":""}>${esc(r.name)}</option>`).join("")}</select></label><label>${u.id?"New password (leave empty to keep)":"Password (8+ characters)"}<input id="up" type="password" inputmode="text" ${u.id?"":"required "}minlength="8" autocomplete="new-password"></label><label class="ck" style="align-self:end"><input type="checkbox" id="ua"${u.active!==false?" checked":""}> Active</label><div class="w2 row"><button class="b">Save user</button><button class="g" type="button" data-ucx="1">Cancel</button><span id="um" class="msg"></span></div></form>`}
  h+=`<h4 style="margin:22px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mu)">Roles</h4><div>${roles.map(r=>`<span class="rchip"><button type="button" data-red="${r.id}" style="color:var(--tx);font-size:13px">${esc(r.name)}${r.admin?" (full access)":""}</button></span>`).join("")}</div><div class="row" style="margin-top:6px"><button class="g" data-rnew="1" type="button">+ New role</button></div>`;
  if(roleEd){const r=roleEd,adm=!!r.admin;h+=`<form id="frole" style="margin-top:12px;padding:12px;border:1px solid var(--bd);border-radius:10px;display:block"><div class="row" style="margin-bottom:10px"><label>Role name<input id="rn" required value="${esc(r.name||"")}"></label><label class="ck" style="align-self:end"><input type="checkbox" id="radm"${adm?" checked":""}> Full access (administrator)</label></div><div id="rperms" class="pmx${adm?" hide":""}">${Object.entries(MODN).map(([m,l])=>`<span>${l}</span><select data-pm="${m}">${["none","view","edit"].map(v=>`<option value="${v}"${((r.perms||{})[m]||"none")===v?" selected":""}>${v==="none"?"No access":v==="view"?"View only":"View and edit"}</option>`).join("")}</select>`).join("")}</div><div class="row" style="margin-top:12px"><button class="b">Save role</button><button class="g" type="button" data-rcx2="1">Cancel</button>${r.id&&!PRESET_IDS.includes(r.id)?`<button class="g dng" type="button" data-rdel="1">Delete role</button>`:""}<span id="rm" class="msg"></span></div></form>`}
  b.innerHTML=h;
  if($("radm"))$("radm").onchange=()=>$("rperms").classList.toggle("hide",$("radm").checked);
  if($("fuser"))$("fuser").onsubmit=async e=>{e.preventDefault();const m=$("um"),name=$("un").value.trim(),pin=$("up").value;
-  if(pin&&pin.length<4){m.innerHTML='<span class="bad">Password needs at least 4 characters.</span>';return}
+  if(pin&&pin.length<8){m.innerHTML='<span class="bad">Password needs at least 8 characters.</span>';return}
   try{const body={action:"user_save",user:{id:userEd.id,name,role:$("ur").value,active:$("ua").checked}};if(pin)body.ph=await hashPin(name,pin);
    else if(userEd.id&&name.toLowerCase()!==(userEd.name||"").toLowerCase()){m.innerHTML='<span class="bad">Changing the name needs a new password.</span>';return}
    const r=await api(body);if(!r.ok)throw new Error(r.error||"Failed");USERS=r.users;userEd=null;renderUsers()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||x)}</span>`}};
@@ -2151,8 +2155,8 @@ function renderUsers(){const b=$("usrb");if(!b)return;const me=ME();
 const PRESET_IDS=["admin","manager","warehouse","viewer"];
 document.addEventListener("click",async e=>{const bt=e.target.closest&&e.target.closest("button");if(!bt)return;const d=bt.dataset;
  if(d.uso)signOut();
- if(d.usp){const o=prompt("Current password");if(o==null)return;const n=prompt("New password (4+ characters)");if(!n||n.length<4){say("Password not changed.");return}
-  try{const me=SESS(),r=await api({action:"user_pin",oldph:await hashPin(me.name,o),ph:await hashPin(me.name,n)});if(!r.ok)throw new Error(r.error);const uc=UC(),k=me.name.toLowerCase();if(uc[k]){uc[k].ph=await hashPin(me.name,n);ls("ev_ucache",JSON.stringify(uc))}say("PIN changed.")}catch(x){say(String(x.message||x))}setTimeout(()=>say(""),4000)}
+ if(d.usp){const o=prompt("Current password");if(o==null)return;const n=prompt("New password (8+ characters)");if(!n||n.length<8){say("Password not changed.");return}
+  try{const me=SESS(),r=await api({action:"user_pin",oldph:await hashPin(me.name,o),ph:await hashPin(me.name,n)});if(!r.ok)throw new Error(r.error);const uc=UC(),k=me.name.toLowerCase();if(uc[k]){uc[k].oh=await offH(await hashPin(me.name,n));delete uc[k].ph;ls("ev_ucache",JSON.stringify(uc))}if(r.token){const s2=SESS();if(s2){s2.token=r.token;setSess(s2)}}say("Password changed.")}catch(x){say(String(x.message||x))}setTimeout(()=>say(""),4000)}
  if(d.unew){userEd={role:"viewer",active:true};renderUsers()}
  if(d.ued){userEd=USERS.find(u=>u.id===d.ued);renderUsers()}
  if(d.ucx){userEd=null;renderUsers()}
@@ -2260,12 +2264,12 @@ const roleDesc=r=>r.description||ROLE_DESC[r.id]||(r.admin?ROLE_DESC.admin:"Cust
 function urMe(){const me=ME();if(!authOn()||!me)return"";return`<div class="ur-me">${avatar(me.name)}<span>Signed in as <b>${esc(me.name)}</b> · ${esc(me.roleName||"")}</span><span class="sp"></span><button class="g" type="button" data-usp="1">Change my password</button><button class="g" type="button" data-uso="1">Sign out</button></div>`}
 renderUsers=function(){const b=$("usrb");if(!b)return;const me=ME();
  if(!authOn()){
-  b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3></div><p class="mu" style="margin-top:0;font-size:13px">Sign-in is <b>off</b>: everyone with the sync key has full access. Create the first administrator to turn on sign-in for all devices. After that, each person signs in with a email and password, and what they can see and change depends on their role.</p><form id="fadm" class="row" style="align-items:flex-end"><label>Admin name<input id="adn1" required placeholder="e.g. Zaheer"></label><label>Password (4+ characters)<input id="adp1" type="password" inputmode="text" minlength="4" required style="width:150px"></label><button class="b">Turn on sign-in</button></form><div id="adm1" class="msg"></div>
+  b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3></div><p class="mu" style="margin-top:0;font-size:13px">Sign-in is <b>off</b>: everyone with the sync key has full access. Create the first administrator to turn on sign-in for all devices. After that, each person signs in with a email and password, and what they can see and change depends on their role.</p><form id="fadm" class="row" style="align-items:flex-end"><label>Admin name<input id="adn1" required placeholder="e.g. Zaheer"></label><label>Password (8+ characters)<input id="adp1" type="password" inputmode="text" minlength="8" required style="width:150px"></label><button class="b">Turn on sign-in</button></form><div id="adm1" class="msg"></div>
   <div style="margin-top:18px">${urRoles(true)}</div>`;
   $("fadm").onsubmit=async e=>{e.preventDefault();const name=$("adn1").value.trim(),pin=$("adp1").value,m=$("adm1");
    if(!online()||!CFG.url){m.innerHTML='<span class="bad">Connect the sync URL and key first, and go online.</span>';return}
    try{const ph=await hashPin(name,pin),r=await api({action:"user_save",user:{name},ph});if(!r.ok)throw new Error(r.error||"Failed");
-    ls("ev_auth","1");const uc=UC();uc[name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,ph};ls("ev_ucache",JSON.stringify(uc));
+    ls("ev_auth","1");const uc=UC();uc[name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,oh:await offH(ph)};ls("ev_ucache",JSON.stringify(uc));
     setSess({uid:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,token:r.token});applyAccess();syncNow(true);renderUsers()}catch(x){m.innerHTML=`<span class="bad">${esc(x.message||x)}</span>`}};
   if(roleEd)urRoleBind();return}
  if(!me||!me.admin){b.innerHTML=`<div class="ur-top"><h3>Users and roles</h3></div>${urMe()}<p class="mu" style="font-size:13px;margin:0">Only administrators can manage users and roles.</p>`;return}
@@ -2306,7 +2310,7 @@ function urUserForm(){const u=userEd,roles=roleList(),isNew=!u.id,rr=S.roles[u.r
  <label class="lb${isNew?" req":""}" for="u2e">Email${isNew?"*":""}</label><div><input id="u2e" type="email" value="${esc(em)}" placeholder="name@example.com" autocomplete="off"><div class="hint">${isNew?"The invitation is sent to this address.":"Used to send the invitation."}</div></div>
  <label class="lb req" for="u2r">Role*</label><div><select id="u2r">${roles.map(r=>`<option value="${r.id}"${u.role===r.id?" selected":""}>${esc(r.name||r.id)}</option>`).join("")}</select><div class="hint" id="u2rd">${esc(roleDesc({id:u.role,...rr}))}</div></div>
  ${isNew?`<span class="lb">Sign-up</span><div class="ur-mode"><label class="ck"><input type="radio" name="u2m" value="invite" checked> Email an invitation: the person gets a sign-up link, the download links for the app, and chooses their own password</label><label class="ck"><input type="radio" name="u2m" value="pin"> I will set a password myself</label></div>`:""}
- <div id="u2pw" style="display:${isNew?"none":"contents"}"><label class="lb" for="u2p">${isNew?"Password*":"New password"}</label><div><input id="u2p" type="password" inputmode="text" minlength="4" autocomplete="new-password" placeholder="${isNew?"At least 4 characters":"Leave empty to keep the current PIN"}"><div class="hint">The person signs in with this email and password.</div></div></div>
+ <div id="u2pw" style="display:${isNew?"none":"contents"}"><label class="lb" for="u2p">${isNew?"Password*":"New password"}</label><div><input id="u2p" type="password" inputmode="text" minlength="8" autocomplete="new-password" placeholder="${isNew?"At least 8 characters":"Leave empty to keep the current password"}"><div class="hint">The person signs in with this email and password.</div></div></div>
  ${u.pending?`<span class="lb">Invitation</span><div><span class="pill ${u.expired?"off":"inv"}">${u.expired?"Expired":"Sent, waiting for sign-up"}</span> <button class="g" type="button" data-u2inv="${u.id}">Resend invitation</button></div>`:""}
  <span class="lb">Status</span><label class="ck" style="padding-top:8px"><input type="checkbox" id="u2a"${u.active!==false?" checked":""}> Active (can sign in)</label></div>
  <div id="ur-msg" class="msg"></div><div class="ur-bar"><button class="b" id="u2go">${isNew?"Send invitation":"Save"}</button><button class="g" type="button" data-u2cx="1">Cancel</button></div></form></div>`}
@@ -2316,7 +2320,7 @@ function urUserBind(){const f=$("fuser2");if(!f)return;const isNew=!userEd.id,mo
  $("u2r").onchange=()=>{const r=S.roles[$("u2r").value]||{};$("u2rd").textContent=roleDesc({id:$("u2r").value,...r})};
  f.querySelectorAll('input[name="u2m"]').forEach(x=>x.onchange=()=>{const pin=mode()==="pin";$("u2pw").style.display=pin?"contents":"none";$("u2go").textContent=pin?"Save":"Send invitation"});
  f.onsubmit=async e=>{e.preventDefault();const m=$("ur-msg"),name=$("u2n").value.trim(),pin=$("u2p").value,email=$("u2e").value.trim(),inv=isNew&&mode()==="invite";
-  if(!inv&&pin&&pin.length<4){m.innerHTML='<span class="bad">The password needs at least 4 characters.</span>';return}
+  if(!inv&&pin&&pin.length<8){m.innerHTML='<span class="bad">The password needs at least 8 characters.</span>';return}
   if(isNew&&!inv&&!pin){m.innerHTML='<span class="bad">Enter a password, or choose to email an invitation.</span>';return}
   if(inv&&!email){m.innerHTML='<span class="bad">Enter the email address to send the invitation to.</span>';return}
   if(!online()||!CFG.url){m.innerHTML='<span class="bad">Go online to save users.</span>';return}
@@ -2408,7 +2412,7 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
  const ov=document.createElement("div");ov.id="ivo";ov.className="ov hide";ov.style.cssText="z-index:101;background:var(--bg)";
  ov.innerHTML=`<form id="fiv" class="dlg"><h3 id="ivh">Join with an invitation</h3><div id="ivi" class="mu" style="font-size:13px"></div>
   <div id="ivc1"><label>Invitation code or link<input id="ivcode" placeholder="Paste it from your email" autocomplete="off"></label><button class="b" type="button" id="ivnext">Continue</button></div>
-  <div id="ivc2" class="hide"><label>Choose a password (at least 4 characters)<input id="ivp" type="password" inputmode="text" minlength="4" autocomplete="new-password"></label><label>Repeat the PIN<input id="ivp2" type="password" inputmode="text" autocomplete="new-password"></label><button class="b" id="ivgo">Create my account</button></div>
+  <div id="ivc2" class="hide"><label>Choose a password (at least 8 characters)<input id="ivp" type="password" inputmode="text" minlength="8" autocomplete="new-password"></label><label>Repeat the password<input id="ivp2" type="password" inputmode="text" autocomplete="new-password"></label><button class="b" id="ivgo">Create my account</button></div>
   <div id="ivm" class="msg"></div><button class="g" type="button" id="ivcx" style="margin-top:8px">Not now</button></form>`;
  document.body.appendChild(ov);
  const say2=h=>{$("ivm").innerHTML=h};
@@ -2421,11 +2425,11 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
  $("ivcode").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();check($("ivcode").value)}};
  $("ivcx").onclick=()=>{ov.classList.add("hide");try{if(/[?&]invite=/.test(location.search))history.replaceState(null,"",location.pathname)}catch(e){}};
  $("fiv").onsubmit=async e=>{e.preventDefault();if(!inv||!info)return;const pin=$("ivp").value;
-  if(pin.length<4){say2('<span class="bad">The password needs at least 4 characters.</span>');return}if(pin!==$("ivp2").value){say2('<span class="bad">The two PINs are different.</span>');return}
+  if(pin.length<8){say2('<span class="bad">The password needs at least 8 characters.</span>');return}if(pin!==$("ivp2").value){say2('<span class="bad">The two passwords are different.</span>');return}
   say2("Creating your account…");$("ivgo").disabled=true;
   try{let ph;try{ph=await hashPin(info.name,pin)}catch(x){throw new Error("This browser cannot create the account securely (it needs https).")}
    const r=await post(inv.s,{action:"invite_accept",token:inv.t,ph});if(!r.ok)throw new Error(r.error||"Failed");
-   ls("ev_url",inv.s);ls("ev_key",r.key);ls("ev_auth","1");const uc=UC();uc[info.name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,ph};ls("ev_ucache",JSON.stringify(uc));
+   ls("ev_url",inv.s);ls("ev_key",r.key);ls("ev_auth","1");const uc=UC();uc[info.name.toLowerCase()]={id:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,oh:await offH(ph)};ls("ev_ucache",JSON.stringify(uc));
    setSess({uid:r.user.id,name:r.user.name,role:r.user.role,rsnap:r.user.roleData,token:r.token});
    say2('<span class="ok">Your account is ready. Opening the app…</span>');setTimeout(()=>location.replace(location.pathname),700)}
   catch(x){say2(`<span class="bad">${esc(String(x.message||x))}</span>`);$("ivgo").disabled=false}};
@@ -2551,7 +2555,7 @@ document.addEventListener("change",e=>{const t=e.target;if(!t.matches||!t.matche
 {const f=document.getElementById("flg");if(f&&f.onsubmit){const orig=f.onsubmit,em=()=>{try{return JSON.parse(localStorage.getItem("ev_emailmap")||"{}")}catch(e){return{}}};
  f.onsubmit=async e=>{e.preventDefault();const u=document.getElementById("lgu"),m=document.getElementById("lgm"),v=u.value.trim();let email="";
   if(v.includes("@")){email=v.toLowerCase();let name=em()[email]||"";
-   if(online()&&CFG.url&&CFG.key){try{const r=await api({action:"user_by_email",email:v});if(r.ok&&r.name)name=r.name;else if(r.error&&!name){m.innerHTML='<span class="bad">Wrong email or password</span>';return}}catch(x){const t=String(x&&x.message||x);if(!name&&(t==="Wrong name or PIN"||/unauthorized|access key/i.test(t))){m.innerHTML='<span class="bad">'+(t==="Wrong name or PIN"?"Wrong email or password":"Wrong access key")+"</span>";return}}}
+   if(online()&&CFG.url&&CFG.key){try{const r=await api({action:"user_by_email",email:v});if(r.ok&&r.name)name=r.name;else if(r.error&&/^Too many/.test(r.error)){m.innerHTML='<span class="bad">'+esc(r.error)+'</span>';return}else if(r.error&&!name){m.innerHTML='<span class="bad">Wrong email or password</span>';return}}catch(x){const t=String(x&&x.message||x);if(/^Too many/.test(t)){m.innerHTML='<span class="bad">'+esc(t)+'</span>';return}if(!name&&(t==="Wrong name or PIN"||/unauthorized|access key/i.test(t))){m.innerHTML='<span class="bad">'+(t==="Wrong name or PIN"?"Wrong email or password":"Wrong access key")+"</span>";return}}}
    if(!name){m.innerHTML='<span class="bad">'+(online()?"Could not reach the server.":"You are offline, and this device has not seen that sign-in before.")+"</span>";return}
    u.value=name}
   await orig.call(f,e);
@@ -2561,4 +2565,7 @@ document.addEventListener("change",e=>{const t=e.target;if(!t.matches||!t.matche
 /* ===== sign-in screen always lets an administrator see and change the server link and key ===== */
 {const lg=document.getElementById("lgn"),lgs=document.getElementById("lgs");if(lg&&lgs){const sync=()=>{if(lg.classList.contains("hide"))return;lgs.classList.remove("hide");const d=lgs.querySelector("details"),u=document.getElementById("lgsu"),k=document.getElementById("lgsk");if(document.activeElement!==u&&document.activeElement!==k){u.value=CFG.url||"";k.value=CFG.key||""}d.open=!CFG.url;d.querySelector("summary").textContent=CFG.url?"Server link and access key (change to use another Google Sheet)":"Server settings (administrator, needed once)"};
  new MutationObserver(sync).observe(lg,{attributes:true,attributeFilter:["class"]});sync()}}
+
+/* ===== 1.24.0 security: the offline sign-in cache keeps a one-way check value, never the password hash ===== */
+(async()=>{try{const uc=UC();let ch=false;for(const k in uc){if(uc[k]&&uc[k].ph){uc[k].oh=await offH(uc[k].ph);delete uc[k].ph;ch=true}}if(ch)ls("ev_ucache",JSON.stringify(uc))}catch(e){}})();
 </script></body></html>

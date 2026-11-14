@@ -5,7 +5,7 @@
   "backgroundColor": "#f6f1e9",
   "android": {
     "allowMixedContent": false,
-    "webContentsDebuggingEnabled": true,
+    "webContentsDebuggingEnabled": false,
     "adjustMarginsForEdgeToEdge": "force"
   }
 }

@@ -18,16 +18,17 @@ jobs:
           mkdir -p www && cp -r ../app/. www/
           npm install --no-audit --no-fund
           npx cap sync android
-      - name: Use the app's fixed signing key (so a new APK installs over the old one)
-        run: mkdir -p ~/.android && cp mobile/android/everafter-debug.keystore ~/.android/debug.keystore
       - name: Build APK
         working-directory: mobile/android
-        run: chmod +x gradlew && (for i in 1 2 3 4; do ./gradlew assembleDebug --no-daemon && break; echo "Attempt $i failed, retrying"; sleep 20; [ $i = 4 ] && exit 1; done) && cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/everafter-inventory-$(node -p "require('../../app/version.json').version").apk
+        run: chmod +x gradlew && (for i in 1 2 3 4; do ./gradlew assembleRelease --no-daemon && break; echo "Attempt $i failed, retrying"; sleep 20; [ $i = 4 ] && exit 1; done) && cp app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/everafter-inventory-$(node -p "require('../../app/version.json').version").apk
       - name: Verify the APK is signed
         run: |
           AS=$(ls -d $ANDROID_HOME/build-tools/*/apksigner | tail -1)
-          for f in mobile/android/app/build/outputs/apk/debug/everafter-inventory-*.apk; do "$AS" verify --verbose --print-certs "$f" | head -8; done
+          for f in mobile/android/app/build/outputs/apk/release/everafter-inventory-*.apk; do "$AS" verify --verbose --print-certs "$f" | head -8; done
+          # the release APK must not be debuggable
+          AA=$(ls -d $ANDROID_HOME/build-tools/*/aapt2 | tail -1)
+          if "$AA" dump badging mobile/android/app/build/outputs/apk/release/everafter-inventory-*.apk | grep -q "application-debuggable"; then echo "APK is debuggable"; exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: everafter-inventory-apk
-          path: mobile/android/app/build/outputs/apk/debug/everafter-inventory-*.apk
+          path: mobile/android/app/build/outputs/apk/release/everafter-inventory-*.apk
