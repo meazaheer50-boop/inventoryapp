@@ -767,6 +767,25 @@ button.lnk{background:none;border:0;box-shadow:none;color:#8a6420;text-decoratio
 /* v1.23.1 sign-up choice on phone */
 .ur-mode .ck{display:flex!important;flex-direction:row!important;align-items:flex-start!important;gap:10px!important;width:100%!important;white-space:normal!important;line-height:1.4}
 .ur-mode .ck input{flex:0 0 20px!important;width:20px!important;height:20px!important;min-height:0!important;padding:0!important;margin:1px 0 0!important}
+
+/* 1.25.0 event photos and videos with notes */
+.evmg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.evmg .mt{display:flex;flex-direction:column;gap:4px;min-width:0}.evmg .pth{display:block}
+.evmg img.rth{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:10px;cursor:zoom-in;display:block}
+.evmg .mtn{font-size:13px;line-height:1.35;color:var(--tx);white-space:pre-wrap;overflow-wrap:anywhere}
+.evmg .lnk{align-self:flex-start;font-size:13px;padding:0;min-height:0}
+.vth{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1;border:0;border-radius:10px;background:#2a211b;overflow:hidden;cursor:pointer;padding:0}
+.vth video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.vth i{position:relative;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.88)}.vth i svg{width:22px;height:22px;fill:#2a211b;margin-left:3px}
+.vth .vst{position:absolute;left:0;right:0;bottom:6px;color:#fff;font-size:12px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.pbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mnr{display:flex;gap:12px;align-items:flex-start;margin:10px 0}.mnr img,.mnr video,.mnr .mnp{width:84px;height:84px;object-fit:cover;border-radius:10px;flex:none;background:#2a211b}
+.mnr .mnp{display:grid;place-items:center}.mnr .mnp svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:1.6}
+.mnr label{flex:1;min-width:0}.mnr textarea{width:100%;resize:vertical}
+#fmnd{max-height:90vh;overflow-y:auto}
+#vlb{z-index:120;background:rgba(0,0,0,.85)}#vlb .vlbx{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(960px,96vw)}
+#vlb video{width:100%;max-height:75vh;background:#000;border-radius:10px}#vlb .vlbc{color:#fff;font-size:14px;text-align:center;white-space:pre-wrap}
+@media(max-width:760px){.evmg{grid-template-columns:repeat(2,1fr);gap:12px}.evmg .pdel{width:26px;height:26px;top:-4px;right:-4px;font-size:16px}.mnr img,.mnr video,.mnr .mnp{width:64px;height:64px}}
 </style></head><body><div class="app"><aside class="sb"><div class="brand"><div class="logo">E</div><div><b id="bn">Everafter Events</b><span>Inventory</span></div></div>
 <nav><button data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg> Home</button><button data-t="stock" class="on"><svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg> Inventory</button><button data-t="events"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg> Events</button><button data-t="cal"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Calendar</button><button data-t="plan"><svg viewBox="0 0 24 24"><path d="M4 6h8M7 12h10M10 18h10"/><path d="M4 3v18"/></svg> Planner</button><button data-t="inv"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg> Invoices</button><button data-t="pl"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></svg> Picklists</button><button data-t="rp"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.5 2.5-2.4-.6-.6-2.4z"/></svg> Repairs</button><button data-t="moves"><svg viewBox="0 0 24 24"><path d="M7 7h13l-4-4M17 17H4l4 4"/></svg> Movements</button><button data-t="settings"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg> Settings</button></nav></aside>
 <main class="mn"><header class="tb"><button type="button" id="mham" aria-label="Menu"></button><div class="tbt"><h2 id="pt">Inventory</h2><div id="pdt" class="mu"></div></div><div class="tbr"><span id="note" class="msg"></span><button type="button" id="medit" aria-label="Edit"></button><button type="button" id="msrch" aria-label="Search"></button><button type="button" id="mmore" aria-label="More"></button><button class="g" id="syn" type="button" title="Sync now">Sync</button></div></header><div class="bd2">
@@ -865,7 +884,7 @@ button.lnk{background:none;border:0;box-shadow:none;color:#8a6420;text-decoratio
 <form id="frs" class="dlg hide"><h3 id="rsh">Resolve repair</h3><label>Outcome<select id="rso"><option value="repaired">Repaired \u2014 back in stock</option><option value="written_off">Cannot be repaired \u2014 write off</option></select></label><div class="row"><label style="flex:1">Final cost<input id="rsc" type="number" min="0" step="any"></label><label style="flex:1">Date<input id="rsd" type="date" required></label></div><label>Notes<input id="rsn"></label><div id="rsm" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" data-rcx="1">Cancel</button></div></form></div>
 <div id="evo" class="ov hide"><form id="fev" class="dlg"><h3>Create event from invoice</h3><div id="evi" class="mu"></div><label>Event name<input id="evn" required></label><label>Client<input id="evc"></label><div class="row"><label style="flex:1">Start (out)<input id="evs" type="date" required></label><label style="flex:1">End (back)<input id="eve" type="date" required></label></div><div id="evm" class="msg"></div><div class="row"><button class="b">Create event</button><button class="g" type="button" id="evx">Cancel</button></div></form></div>
 <div id="ptk" class="ov hide"><form id="fpk" class="dlg"><h3 id="pkh">New task</h3><label>Title<input id="pkt" required placeholder="e.g. Load the truck"></label><label class="ck"><input type="checkbox" id="pkm"> Milestone (a single key date)</label><label>Event<select id="pke"></select></label><div class="row"><label style="flex:1">Start<input id="pks" type="date" required></label><label style="flex:1" id="pkdw">End<input id="pkd" type="date"></label></div><label>Status<select id="pkx"><option value="todo">To do</option><option value="doing">In progress</option><option value="done">Done</option></select></label><div><div class="mu" style="font-size:12px;margin-bottom:4px">Assigned to</div><div id="pkr" class="pkr"></div></div><label>Notes<input id="pkn"></label><div id="pkmsg" class="msg"></div><div class="row"><button class="b">Save</button><button class="g" type="button" id="pkcx">Cancel</button><button class="g dng hide" type="button" id="pkdel">Delete</button></div></form></div>
-<div id="pge" class="ov hide"><form id="fpg" class="dlg"><h3>Plan from event</h3><p class="mu" style="margin:0;font-size:13px">Creates a standard set of tasks around the event dates: prepare items, load the truck, set up, collect and return, check in. The invoice due date is added as a milestone when the event has an invoice. You can then assign people and move the dates.</p><label>Event<select id="pgsel"></select></label><div id="pgm" class="msg"></div><div class="row"><button class="b">Create tasks</button><button class="g" type="button" id="pgcx">Cancel</button></div></form></div>
+<div id="pge" class="ov hide"><form id="fpg" class="dlg"><h3>Plan from event</h3><p class="mu" style="margin:0;font-size:13px">Creates a standard set of tasks around the event dates: prepare items, load the truck, set up, collect from the venue, return to the warehouse, check in. You can then assign people and move the dates.</p><label>Event<select id="pgsel"></select></label><div id="pgm" class="msg"></div><div class="row"><button class="b">Create tasks</button><button class="g" type="button" id="pgcx">Cancel</button></div></form></div>
 <div id="lgn" class="ov hide" style="z-index:100;background:var(--bg)"><form id="flg" class="dlg"><h3>Sign in</h3><div id="lgi" class="mu" style="font-size:13px">Everafter Events inventory</div><label>Email<input id="lgu" autocomplete="username" placeholder="you@example.com" autocapitalize="off" required></label><label>Password<input id="lgp" type="password" inputmode="text" autocomplete="current-password" required></label><div id="lgm" class="msg"></div><button class="b">Sign in</button><p class="mu" style="font-size:12px;margin:0">Once you have signed in on this device, you can sign in again offline.</p></form></div>
 <div id="scrim" class="hide"></div><aside id="drawer" aria-hidden="true"></aside><div id="msheet" class="hide"><div></div></div><button type="button" id="fab" class="hide" aria-label="Add"></button>
 <div id="lb" class="ov hide" style="z-index:60;flex-direction:column;gap:10px;cursor:zoom-out"><img id="lbi" alt="" style="max-width:min(96vw,1100px);max-height:86vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff"><div id="lbc" style="color:#fff;font-size:15px;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.6)"></div></div>
@@ -886,6 +905,7 @@ const online=()=>navigator.onLine!==false;
 function blobUrl(mime,b64){try{const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return URL.createObjectURL(new Blob([u],{type:mime}))}catch(e){return`data:${mime};base64,${b64}`}}
 const blobB64=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=()=>rej(new Error("Could not read the image"));r.readAsDataURL(b)});
 async function uploadPhoto(file){const b64=await blobB64(await shrink(file)),id="tmp_"+rid();await idbp(tx("photos","readwrite").put({id,mime:"image/jpeg",b64,pending:1}));PH[id]=blobUrl("image/jpeg",b64);return id}
+var VH={};
 function photoSrc(id){if(PH[id])return PH[id];if(idb&&!phBusy.has(id)){phBusy.add(id);loadPhoto(id)}return""}
 async function loadPhoto(id){let ok=false;try{let p=await idbp(tx("photos").get(id));if(!p&&online()&&CFG.url){const r=await api({action:"photo_get",id});p={id,mime:r.mime,b64:r.b64};await idbp(tx("photos","readwrite").put(p))}if(p){PH[id]=blobUrl(p.mime,p.b64);ok=true;render()}}catch(e){}setTimeout(()=>phBusy.delete(id),ok?0:60000)}
 async function api(body){const r=await fetch(CFG.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({key:CFG.key,token:(SESS()||{}).token||"",...body})});if(!r.ok)throw new Error("Server error "+r.status);const j=await r.json();if(j.error)throw new Error(j.error==="unauthorized"?"Wrong access key":j.error);return j}
@@ -904,11 +924,12 @@ async function syncNow(manual){
  try{
   {const ss=SESS();if(ss&&!ss.token&&ss.ph){const r=await api({action:"login",name:ss.name,ph:ss.ph});if(r.ok){ss.token=r.token;delete ss.ph;ss.role=r.user.role;ss.rsnap=r.user.roleData;setSess(ss)}else{setSess(null);throw new Error("login required")}}}
   for(const p of (await idbp(tx("photos").getAll())).filter(x=>x.pending)){
-   const r=await api({action:"photo_put",b64:p.b64,mime:p.mime,name:p.id});
-   await idbp(tx("photos","readwrite").put({id:r.id,mime:p.mime,b64:p.b64}));await idbp(tx("photos","readwrite").delete(p.id));
-   PH[r.id]=PH[p.id]||blobUrl(p.mime,p.b64);
+   let r;if(p.blob){try{r=await uploadVideo(p)}catch(x){lastWarn="A video could not be uploaded yet ("+String(x&&x.message||x).slice(0,100)+"). It stays on this device and is retried on the next sync.";say("");continue}}
+   else r=await api({action:"photo_put",b64:p.b64,mime:p.mime,name:p.id});
+   await idbp(tx("photos","readwrite").put(p.blob?{id:r.id,mime:p.mime,blob:p.blob,video:1}:{id:r.id,mime:p.mime,b64:p.b64}));await idbp(tx("photos","readwrite").delete(p.id));
+   if(p.blob)VH[r.id]=VH[p.id]||URL.createObjectURL(p.blob);else PH[r.id]=PH[p.id]||blobUrl(p.mime,p.b64);
    for(const [id,it] of Object.entries(S.items))if(it.photo===p.id){const d={...it,photo:r.id};S.items[id]=d;saveRec("items",id,d,0)}
-   for(const [id,ev] of Object.entries(S.events))if((ev.photos||[]).includes(p.id)){const d={...ev,photos:ev.photos.map(x=>x===p.id?r.id:x)};S.events[id]=d;saveRec("events",id,d,0)}
+   for(const [id,ev] of Object.entries(S.events))if((ev.photos||[]).includes(p.id)||(ev.videos||[]).includes(p.id)){const sw=x=>x===p.id?r.id:x,mn={...(ev.mnotes||{})};if(p.id in mn){mn[r.id]=mn[p.id];delete mn[p.id]}const d={...ev,photos:(ev.photos||[]).map(sw),videos:(ev.videos||[]).map(sw),mnotes:mn};S.events[id]=d;saveRec("events",id,d,0)}
    for(const [id,rp] of Object.entries(S.repairs))if((rp.photos||[]).includes(p.id)){const d={...rp,photos:rp.photos.map(x=>x===p.id?r.id:x)};S.repairs[id]=d;saveRec("repairs",id,d,0)}}
   const dirty=(await idbp(tx("rec").getAll())).filter(r=>r.dirty),changes={};
   dirty.forEach(r=>{(changes[r.c]=changes[r.c]||[]).push({id:r.id,updated:r.updated,deleted:!!r.deleted,data:r.data})});
@@ -1817,8 +1838,9 @@ $("fev").onsubmit=async e=>{e.preventDefault();
  await put("events",id,{name:$("evn").value.trim(),client:$("evc").value.trim(),start:$("evs").value,end:$("eve").value,reservations:{},invoice:evInv.number,invoiceKey:evInv.id});
  $("evo").classList.add("hide");showEvent(id)};
 
-const APP_VERSION="1.24.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
+const APP_VERSION="1.25.0";const _lc=String.prototype.localeCompare;String.prototype.localeCompare=function(o,l,opt){return _lc.call(this,o,l||undefined,opt||{numeric:true,sensitivity:"base"})};
 const CHANGES=[
+ ["1.25.0","16 Nov 2026",["Event details: a Videos section (record or choose a video, up to 150 MB; it uploads to Google Drive on the next sync and plays in the app)","Every photo and video needs a note explaining it; notes show under each one and can be edited","Plan from event: no more Invoice due milestone, and Collect from the venue and Return to the warehouse are now separate tasks","Update Code.gs for videos"]],
  ["1.24.0","14 Nov 2026",["Security update: sign-in locks for 15 minutes after 5 wrong passwords, changing a password signs out other devices, new passwords need at least 8 characters, the offline sign-in cache no longer keeps the password hash, stricter content rules for the web page, and the Android app is now a release build (no debugging, no backups of its data). Update Code.gs to switch on the server part"]],
  ["1.23.1","11 Nov 2026",["Users and roles: the Sign-up choice no longer squeezes its text into a thin column on phones"]],
  ["1.23.0","11 Nov 2026",["Full design check on phone, tablet and desktop","Items list (desktop): long item names wrap so Rate, Stock on hand, In warehouse and Free to book always stay on screen","Movements and other lists: long names wrap instead of pushing columns off screen; invoice Links menu no longer cut off","Phone: tick boxes on the Items list, In warehouse and Free to book shown on each item, cleaner highlight for selected rows","Phone: the selection bar shows Select all and Clear on top with the actions below, and no longer sits over the + button","Tablets: working top menu, finger-sized buttons, Movements form fits the screen","Tidier sign-in server settings and Settings sync buttons"]],
@@ -1992,11 +2014,9 @@ $("pgen").onclick=()=>{const ev=events();if(!ev.length){say("Create an event fir
  $("pgsel").innerHTML=ev.map(e=>`<option value="${e.id}">${esc(e.name)} (${esc(e.start)}${e.end!==e.start?" → "+esc(e.end):""})</option>`).join("");$("pgm").textContent="";$("pge").classList.remove("hide")};
 $("pgcx").onclick=()=>$("pge").classList.add("hide");
 $("fpg").onsubmit=async e=>{e.preventDefault();const id=$("pgsel").value,ev=S.events[id];if(!ev)return;
- const L=[["Source and prepare items","s",-5,-2],["Load the truck","s",-1,-1],["Set up / install on site","s",0,0],["Collect and return to warehouse","e",1,1],["Check in items and log repairs","e",2,2]];
+ const L=[["Source and prepare items","s",-5,-2],["Load the truck","s",-1,-1],["Set up / install on site","s",0,0],["Collect items from the venue","e",1,1],["Return items to the warehouse","e",1,1],["Check in items and log repairs","e",2,2]];
  const have=new Set(Object.values(S.tasks).filter(t=>t.eventId===id).map(t=>t.title));let k=0;
  for(const [title,base,a,b] of L){if(have.has(title))continue;const bs=base==="s"?ev.start:ev.end;await put("tasks",rid(),{title,eventId:id,start:addD(bs,a),end:addD(bs,b),status:"todo",res:[],ms:false});k++}
- const inv=ev.invoice?invs().find(v=>v.number===ev.invoice):null;
- if(inv&&inv.due&&!have.has("Invoice due")){await put("tasks",rid(),{title:"Invoice due",eventId:id,start:inv.due,end:inv.due,status:"todo",res:[],ms:true});k++}
  $("pge").classList.add("hide");P.from=addD(ev.start,-8);if(P.g!=="event"&&P.g!=="person"&&P.g!=="res")P.g="event";P.g="event";savePl();renderPlan();say(k?k+" task"+(k===1?"":"s")+" created for "+ev.name+".":"This event already has those tasks.");setTimeout(()=>say(""),5000)};
 $("pmg").onclick=()=>{const m=$("pmgr");m.classList.toggle("hide");if(!m.classList.contains("hide"))renderMgr()};
 function renderMgr(){const L=resList();$("pmgr").innerHTML=`<b style="font-size:13px">Team members, vehicles and equipment</b><div style="margin:10px 0">${L.map(r=>`<span class="rchip">${esc(r.name)} <span class="mu">${r.type==="person"?"person":esc(r.type)}</span><button type="button" data-prd="${r.id}" title="Remove">×</button></span>`).join("")||'<span class="mu" style="font-size:13px">Nobody yet.</span>'}</div><form id="fpr" class="row" style="align-items:flex-end"><label>Name<input id="prn" required placeholder="e.g. Anass, Truck 1"></label><label>Type<select id="prt"><option value="person">Team member</option><option value="vehicle">Vehicle</option><option value="equipment">Equipment</option></select></label><button class="b">Add</button></form>`;
@@ -2443,22 +2463,72 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest
 /* ===== event details tab: instructions and photos ===== */
 const evIns={};
 const PH_IC='<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
-function evDetailsHtml(e){const ro=!can("events","edit"),txt=evIns[ecur]!==undefined?evIns[ecur]:(e.instructions||""),ph=e.photos||[];
+const VID_IC='<svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg>',PLAY_IC='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+const MAXV=150*1024*1024,isVid=f=>/^video\//.test(f.type||"")||/\.(mp4|mov|3gp|webm|mkv|m4v)$/i.test(f.name||"");
+const mNote=(e,id)=>String((e.mnotes||{})[id]||"").trim();
+function mTile(e,kind,id,i,ro){const n=mNote(e,id),k=kind==="v"?"v":"p";
+ const th=kind==="v"?`<button type="button" class="vth" data-evvp="${esc(id)}" aria-label="Play video ${i+1}">${VH[id]?`<video src="${VH[id]}#t=0.1" preload="metadata" muted playsinline></video>`:""}<i>${PLAY_IC}</i><small class="vst"></small></button>`
+  :`<img class="rth" data-pv="${esc(id)}" data-cap="${esc(n||e.name)}" src="${photoSrc(id)}" alt="Event photo ${i+1}">`;
+ return`<div class="mt"><span class="pth">${th}${ro?"":`<button type="button" class="pdel evedit" data-evmx="${k}:${i}" title="Remove" aria-label="Remove">×</button>`}</span>
+  <div class="mtn">${n?esc(n):'<span class="bad">No note yet</span>'}</div>${ro?"":`<button type="button" class="lnk evedit" data-evmn="${k}:${i}">${n?"Edit note":"Add note"}</button>`}</div>`}
+function evDetailsHtml(e){const ro=!can("events","edit"),txt=evIns[ecur]!==undefined?evIns[ecur]:(e.instructions||""),ph=e.photos||[],vd=e.videos||[];
  return`<div class="xcard evcard" style="border-style:solid;background:var(--card)"><h4>Instructions <span class="mu">(set-up notes, access, contacts, special requests)</span></h4>
   <textarea id="evins" rows="8" placeholder="e.g. Venue access from 7am via the side gate. Ask for Mr Ramdin on arrival. Arch goes at the entrance, not on the stage."${ro?" readonly":""} style="width:100%;resize:vertical">${esc(txt)}</textarea>
   ${ro?"":`<div class="row evedit" style="margin-top:8px"><button class="b" type="button" data-evinsave="1">Save instructions</button><span id="evinm" class="msg"></span></div>`}</div>
  <div class="xcard evcard" style="border-style:solid;background:var(--card)"><h4>Photos <span class="mu">(${ph.length})</span></h4>
   ${ro?"":`<div class="row evedit" style="margin-bottom:10px"><label class="pbtn">${PH_IC}Take photo<input id="evcam" type="file" accept="image/*" capture="environment" hidden></label><label class="pbtn">Choose from gallery<input id="evpick" type="file" accept="image/*" multiple hidden></label><span id="evphm" class="msg"></span></div>`}
-  <div class="evph">${ph.map((id,i)=>`<span class="pth"><img class="rth" data-pv="${id}" data-cap="${esc(e.name)}" src="${photoSrc(id)}" alt="Event photo ${i+1}">${ro?"":`<button type="button" class="pdel evedit" data-evpx="${i}" title="Remove photo" aria-label="Remove photo">×</button>`}</span>`).join("")||'<span class="mu" style="font-size:13px">No photos yet.</span>'}</div></div>`}
+  <div class="evmg">${ph.map((id,i)=>mTile(e,"p",id,i,ro)).join("")||'<span class="mu" style="font-size:13px">No photos yet.</span>'}</div></div>
+ <div class="xcard evcard" style="border-style:solid;background:var(--card)"><h4>Videos <span class="mu">(${vd.length})</span></h4>
+  ${ro?"":`<div class="row evedit" style="margin-bottom:10px"><label class="pbtn">${VID_IC}Record video<input id="evvcam" type="file" accept="video/*" capture="environment" hidden></label><label class="pbtn">Choose video<input id="evvpick" type="file" accept="video/*" multiple hidden></label><span id="evvdm" class="msg"></span></div>`}
+  <div class="evmg">${vd.map((id,i)=>mTile(e,"v",id,i,ro)).join("")||'<span class="mu" style="font-size:13px">No videos yet. Short clips (under a minute) upload fastest.</span>'}</div></div>`}
 async function evSaveIns(){const ev=S.events[ecur],t=$("evins");if(!ev||!t)return;const v=t.value.trim();evIns[ecur]=undefined;delete evIns[ecur];await put("events",ecur,{...ev,instructions:v});const m=$("evinm");if(m){m.innerHTML='<span class="ok">Saved.</span>';setTimeout(()=>{const x=$("evinm");if(x)x.textContent=""},2500)}}
-async function evAddPhotos(files){const m=$("evphm");const ids=[];
- for(const f of files){try{if(m)m.textContent="Adding photo…";ids.push(await uploadPhoto(f))}catch(x){if(m)m.innerHTML=`<span class="bad">${esc(x.message||"Could not add that photo")}</span>`;break}}
- if(ids.length){const ev=S.events[ecur];if(ev){await put("events",ecur,{...ev,photos:[...(ev.photos||[]),...ids]});const m2=$("evphm");if(m2)m2.innerHTML=`<span class="ok">${ids.length} photo${ids.length===1?"":"s"} added.</span>`}}else if(m&&!m.innerHTML.includes("bad"))m.textContent=""}
+/* note dialog: every photo and video needs an explanation */
+function mediaDlg(items,title,save){let ov=$("mnd");if(!ov){document.body.insertAdjacentHTML("beforeend",'<div id="mnd" class="ov hide"><form id="fmnd" class="dlg" novalidate></form></div>');ov=$("mnd")}
+ const f=$("fmnd");f.innerHTML=`<h3>${esc(title)}</h3><p class="mu" style="margin:0 0 4px;font-size:13px">Write a short note for each one: what it shows and why it matters (for example, where the arch goes, a damaged table, the access gate).</p>
+  ${items.map((it,i)=>`<div class="mnr">${it.kind==="video"?(it.url?`<video src="${it.url}#t=0.1" preload="metadata" muted playsinline></video>`:`<span class="mnp">${VID_IC}</span>`):(it.url?`<img src="${it.url}" alt="">`:`<span class="mnp">${PH_IC}</span>`)}<label>Note${items.length>1?" "+(i+1):""}<textarea data-mn="${i}" rows="3" maxlength="500" placeholder="e.g. ${it.kind==="video"?"Walk-through of the hall: stage on the left, entrance arch by the main door":"Centrepiece layout for the head table"}">${esc(it.note||"")}</textarea></label></div>`).join("")}
+  <div id="mndm" class="msg"></div><div class="row"><button class="b" type="submit">${items.some(x=>x.isNew)?"Add":"Save note"}</button><button class="g" type="button" data-mncx="1">Cancel</button></div>`;
+ const close=()=>{ov.classList.add("hide");items.forEach(it=>{if(it.isNew&&it.url)try{URL.revokeObjectURL(it.url)}catch(e){}})};
+ f.querySelector("[data-mncx]").onclick=close;
+ f.onsubmit=async e=>{e.preventDefault();const notes=[...f.querySelectorAll("textarea[data-mn]")].map(t=>t.value.trim());const miss=notes.findIndex(x=>!x);
+  if(miss>=0){$("mndm").innerHTML='<span class="bad">Every '+(items.length>1?"photo and video needs":items[0].kind==="video"?"video needs":"photo needs")+' a note.</span>';f.querySelectorAll("textarea[data-mn]")[miss].focus();return}
+  close();await save(notes)};
+ ov.classList.remove("hide");setTimeout(()=>{const t=f.querySelector("textarea");t&&t.focus()},60)}
+async function storeVideo(f){const id="tmp_"+rid(),mime=f.type||"video/mp4";await idbp(tx("photos","readwrite").put({id,mime,blob:f,pending:1,video:1}));VH[id]=URL.createObjectURL(f);return id}
+async function evAddPhotos(files){const eid=ecur;files=[...files].filter(f=>f&&(isVid(f)||/^image\//.test(f.type||"")||/\.(jpe?g|png|webp|heic|gif)$/i.test(f.name||"")));
+ const big=files.filter(f=>isVid(f)&&f.size>MAXV);files=files.filter(f=>!big.includes(f));
+ const mm=()=>(files.some(isVid)||big.length?$("evvdm"):$("evphm"))||$("evphm");
+ if(big.length){const m=mm();if(m)m.innerHTML=`<span class="bad">${big.length===1?"That video is":"Some videos are"} larger than 150 MB. Record a shorter clip.</span>`}
+ if(!files.length)return;
+ const items=files.map(f=>({kind:isVid(f)?"video":"photo",url:URL.createObjectURL(f),isNew:true}));
+ const nv=items.filter(x=>x.kind==="video").length,np=items.length-nv;
+ mediaDlg(items,items.length===1?(nv?"New video":"New photo"):`${items.length} new ${nv&&np?"photos and videos":nv?"videos":"photos"}`,async notes=>{
+  const m=mm(),add={photos:[],videos:[],notes:{}};
+  for(let i=0;i<files.length;i++){const f=files[i];try{if(m)m.textContent=isVid(f)?"Saving video…":"Adding photo…";const id=isVid(f)?await storeVideo(f):await uploadPhoto(f);(isVid(f)?add.videos:add.photos).push(id);add.notes[id]=notes[i]}catch(x){if(m)m.innerHTML=`<span class="bad">${esc(x.message||"Could not add that file")}</span>`}}
+  const n=add.photos.length+add.videos.length;if(!n)return;const ev=S.events[eid];if(!ev)return;
+  await put("events",eid,{...ev,photos:[...(ev.photos||[]),...add.photos],videos:[...(ev.videos||[]),...add.videos],mnotes:{...(ev.mnotes||{}),...add.notes}});
+  const m2=mm();if(m2)m2.innerHTML=`<span class="ok">${n===1?(add.videos.length?"Video":"Photo")+" added":n+" added"}${add.videos.length?". Videos upload on the next sync.":"."}</span>`})}
+async function uploadVideo(p){const total=p.blob.size,CH=4*1024*1024;const st=await api({action:"media_start",mime:p.mime,size:total,name:p.id});let start=0,id="";
+ while(start<total){const end=Math.min(start+CH,total),b64=await blobB64(p.blob.slice(start,end));const r=await api({action:"media_chunk",session:st.session,b64,start,total});say("Uploading video… "+Math.round(end/total*100)+"%");if(r.id)id=r.id;start=end}
+ say("");if(!id)throw new Error("the upload did not finish");return{id}}
+async function getVideo(id,prog){if(VH[id])return VH[id];const p=await idbp(tx("photos").get(id));if(p&&p.blob){VH[id]=URL.createObjectURL(p.blob);return VH[id]}
+ if(!online()||!CFG.url)throw new Error("Go online to load this video.");
+ const parts=[];let start=0,total=1,mime="video/mp4";
+ while(start<total){const r=await api({action:"media_get",id,start,len:3*1024*1024});total=Number(r.total)||0;mime=r.mime||mime;const bin=atob(r.b64||""),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);if(!u.length)break;parts.push(u);start+=u.length;prog&&prog(start,total)}
+ const blob=new Blob(parts,{type:mime});try{await idbp(tx("photos","readwrite").put({id,mime,blob,video:1}))}catch(e){}VH[id]=URL.createObjectURL(blob);return VH[id]}
+function playVideo(url,cap){let o=$("vlb");if(!o){document.body.insertAdjacentHTML("beforeend",'<div id="vlb" class="ov hide"><div class="vlbx"><video id="vlbv" controls playsinline></video><div id="vlbc" class="vlbc"></div><button type="button" class="g" id="vlbx">Close</button></div></div>');o=$("vlb");
+  const stop=()=>{const v=$("vlbv");v.pause();v.removeAttribute("src");v.load();o.classList.add("hide")};$("vlbx").onclick=stop;o.addEventListener("click",e=>{if(e.target===o)stop()})}
+ const v=$("vlbv");v.src=url;$("vlbc").textContent=cap||"";o.classList.remove("hide");v.play&&v.play().catch(()=>{})}
 document.addEventListener("input",e=>{if(e.target.id==="evins")evIns[ecur]=e.target.value});
-document.addEventListener("change",e=>{if(e.target.id==="evcam"||e.target.id==="evpick"){const fs=[...e.target.files];e.target.value="";evAddPhotos(fs)}});
-document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-evinsave],[data-evpx]");if(!b)return;
+document.addEventListener("change",e=>{if(["evcam","evpick","evvcam","evvpick"].includes(e.target.id)){const fs=[...e.target.files];e.target.value="";evAddPhotos(fs)}});
+document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest("[data-evinsave],[data-evmx],[data-evmn],[data-evvp]");if(!b)return;
  if(b.dataset.evinsave){evSaveIns();return}
- const ev=S.events[ecur];if(!ev)return;if(!confirm("Remove this photo from the event?"))return;const ph=[...(ev.photos||[])];ph.splice(+b.dataset.evpx,1);put("events",ecur,{...ev,photos:ph})});
+ const eid=ecur,ev=S.events[eid];if(!ev)return;
+ if(b.dataset.evvp){const id=b.dataset.evvp,st=b.querySelector(".vst");if(b.dataset.busy)return;b.dataset.busy="1";
+  try{if(st)st.textContent="Loading…";const u=await getVideo(id,(a,t)=>{if(st&&t)st.textContent=Math.round(a/t*100)+"%"});if(st)st.textContent="";playVideo(u,mNote(ev,id)||ev.name);if(!b.querySelector("video"))render()}
+  catch(x){if(st)st.textContent="";say(String(x&&x.message||x));setTimeout(()=>say(""),5000)}delete b.dataset.busy;return}
+ const [k,ix]=(b.dataset.evmx||b.dataset.evmn).split(":"),key=k==="v"?"videos":"photos",list=[...(ev[key]||[])],id=list[+ix];if(id===undefined)return;
+ if(b.dataset.evmx){if(!confirm(k==="v"?"Remove this video from the event?":"Remove this photo from the event?"))return;list.splice(+ix,1);const mn={...(ev.mnotes||{})};delete mn[id];put("events",eid,{...ev,[key]:list,mnotes:mn});return}
+ mediaDlg([{kind:k==="v"?"video":"photo",url:k==="v"?(VH[id]||""):photoSrc(id),note:mNote(ev,id)}],k==="v"?"Video note":"Photo note",async n=>{const e2=S.events[eid];if(!e2)return;await put("events",eid,{...e2,mnotes:{...(e2.mnotes||{}),[id]:n[0]}})})});
 {const native=()=>{try{return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}},cam=()=>{try{return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Camera}catch(e){return null}};let busy=false;
  document.addEventListener("click",async e=>{const lb=e.target.closest&&e.target.closest("label.pbtn");if(!lb||!lb.querySelector("#evcam")||!native()||!cam())return;
   e.preventDefault();e.stopPropagation();if(busy)return;busy=true;const m=$("evphm");
